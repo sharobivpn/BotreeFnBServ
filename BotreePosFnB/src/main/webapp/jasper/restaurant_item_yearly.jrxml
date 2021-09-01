@@ -1,0 +1,353 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="restaurant_sales" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5cabdd2a-9eaa-4a9f-8dd8-6777e814a786">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="Table Dataset 1" uuid="975eb5c0-6c26-4a7e-b787-8c54852fe5a3">
+		<parameter name="W_EndDate" class="java.lang.String"/>
+		<parameter name="StoreId" class="java.lang.String"/>
+		<parameter name="W_StartDate" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer"/>
+		<field name="order_date" class="java.sql.Date"/>
+		<field name="store_id" class="java.lang.Integer"/>
+	</subDataset>
+	<subDataset name="dataset1" uuid="21a9d16a-5b64-492a-84c5-04141d779735">
+		<parameter name="W_Store_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no,mobile_no,email_id, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email_id" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="dataset2" uuid="939f78a8-fee6-4174-937a-d66a29f94c9e"/>
+	<subDataset name="dataset3" uuid="9d7cabab-ee9d-4fd4-a37d-579c9636cc3a"/>
+	<subDataset name="dataset4" uuid="d9b3d620-87dc-411b-822e-e9bed3e9d5cf"/>
+	<parameter name="W_StartDate" class="java.lang.String"/>
+	<parameter name="W_EndDate" class="java.lang.String"/>
+	<parameter name="W_StoreId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select a.id, a.name as NAME,year(c.order_date)as year,CAST(sum(b.quantityof_item) as UNSIGNED) as quantity,
+sum(b.total_price_by_item) as price,c.store_id from fm_m_food_items a,
+fo_t_orders_item b,fo_t_orders c where c.order_time=b.order_time and
+c.order_date between $P{W_StartDate} and $P{W_EndDate} and c.store_id=$P{W_StoreId} and a.id=b.item_id
+and c.cancel='N'
+group by NAME,year order by year asc]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="NAME" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="year" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantity" class="java.math.BigInteger">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="price" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="store_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{price}]]></variableExpression>
+	</variable>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<componentElement>
+				<reportElement x="153" y="0" width="270" height="70" uuid="c48f442b-2f21-436b-a495-b77e5284e3b2"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="4040c355-c0a0-4c34-801a-77a5050781f0">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="70" width="270">
+						<textField>
+							<reportElement x="37" y="1" width="207" height="20" uuid="9c7095c3-dd0b-4824-9186-3a20e06fd937"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif" size="14" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true">
+							<reportElement positionType="Float" x="37" y="24" width="178" height="14" uuid="c8a3122a-3535-4319-9747-1856a205120f"/>
+							<textElement textAlignment="Left">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" x="81" y="39" width="100" height="14" uuid="14d1f37d-6234-4709-b46c-70d68d667b2e"/>
+							<textElement textAlignment="Left">
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement positionType="Float" x="74" y="51" width="145" height="14" uuid="6c768213-84ff-4ba3-af53-758bba66412a"/>
+							<textElement>
+								<font fontName="Arial"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{email_id}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="37" y="38" width="44" height="14" uuid="1d09f8fb-a4e3-40a5-a742-fcca424dbe57"/>
+							<textElement>
+								<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="37" y="51" width="35" height="14" uuid="ad612155-761a-4f1e-9b81-cdd2db8edfd6"/>
+							<textElement>
+								<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<textField>
+				<reportElement x="499" y="17" width="53" height="14" uuid="53540fdb-8586-44a3-8c2e-7e60c3f88c7f"/>
+				<textFieldExpression><![CDATA[$P{W_EndDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="449" y="17" width="50" height="15" uuid="ea68c763-0183-44dd-9b2f-40005ad4cd08"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="449" y="2" width="50" height="15" uuid="95f76c2a-3491-4fe7-be7f-1e1dcc6104a9"/>
+				<textElement>
+					<font fontName="Arial" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[From:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="499" y="1" width="53" height="14" uuid="db998090-0bbf-4d20-91b4-4d683f266b80"/>
+				<textFieldExpression><![CDATA[$P{W_StartDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="65">
+			<line>
+				<reportElement x="0" y="62" width="557" height="1" uuid="e6ec5325-15e8-43fd-8857-8a4afb8ac427"/>
+			</line>
+			<line>
+				<reportElement x="0" y="40" width="557" height="1" uuid="fef4d632-11df-43c2-b763-25dc94fd4446"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="3" width="557" height="17" forecolor="#000000" backcolor="#CCCCCC" uuid="3bab1b33-3eaa-40e2-b7d7-21b6d169e70c"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Yearly Item Sales Report]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="281" y="20" width="85" height="16" uuid="42be920b-57e6-456a-9fef-45a79ce134a0"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="70167b06-1fd0-44b6-b332-c2ac1d48bbf3">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="16" width="85">
+						<textField>
+							<reportElement x="0" y="1" width="75" height="15" uuid="82c85872-6bee-4c6f-a3d9-0753f9439a5a"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font fontName="Arial" size="10" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="230" y="21" width="49" height="15" uuid="643f997f-d783-4c22-a8c5-9156ac6f912f"/>
+				<textElement>
+					<font fontName="Arial" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Currency:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="1" y="41" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="784d5f87-4df7-453e-8771-0240250ef856"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ORDER ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="95" y="41" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="20152161-8df4-43ff-bad9-ae69a8627205"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[ITEM NAME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="233" y="41" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="37d8a303-1905-4597-9aba-8c4d678186b9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[YEAR]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="349" y="42" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="9217a4a9-af44-473c-ba36-597193109eff"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[QUANTITY]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="473" y="41" width="79" height="20" isPrintWhenDetailOverflows="true" uuid="7851ce96-deb4-4a71-804c-01a1f532c88a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[PRICE]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="80" height="14" uuid="ea135ab1-6a8a-4e10-bf2e-8e1ed3f9391a"/>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="95" y="0" width="80" height="14" uuid="256e99e5-2178-46f4-9f59-5877c7752500"/>
+				<textFieldExpression><![CDATA[$F{NAME}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="236" y="0" width="75" height="14" uuid="45e9880e-fbcc-40cf-857d-f3b2bb94a28a"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$F{year}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="357" y="0" width="52" height="14" uuid="7ff00faa-0d62-466a-b626-2c75077a7336"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="469" y="0" width="60" height="14" uuid="3c161e17-bdc6-4eec-9725-e4a519074dcb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{price}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="86">
+			<line>
+				<reportElement x="0" y="2" width="557" height="1" uuid="b3f12c26-9f02-4e95-bb76-b37d800b7dfd"/>
+			</line>
+			<line>
+				<reportElement x="0" y="22" width="557" height="1" uuid="74acd004-009d-4c0e-8c2b-08e144ed46de"/>
+			</line>
+			<staticText>
+				<reportElement x="1" y="5" width="67" height="17" uuid="c8ce4e07-1ee1-4bfe-bf11-ac837ec15cb2"/>
+				<textElement>
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Total Gross:]]></text>
+			</staticText>
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement x="469" y="5" width="60" height="17" uuid="5899f04a-6fbe-4f22-8a7f-0846e8678aef"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

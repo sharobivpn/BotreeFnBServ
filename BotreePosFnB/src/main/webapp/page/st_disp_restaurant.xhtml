@@ -1,0 +1,339 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+
+
+
+<h:outputStylesheet>
+        .optionList {
+        height: 22px;
+        }
+ 
+        .vertical-menu-cell {
+        padding: 0px 4px 0px 4px;
+        }
+    </h:outputStylesheet>
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>IN ADMIN PANEL | Powered by Sharobitech</title>
+	<link rel="stylesheet" type="text/css" href="js/style.css" />
+	<script type="text/javascript" src="js/clockp.js"></script>
+	<script type="text/javascript" src="js/clockh.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/ddaccordion.js"></script>
+	<script type="text/javascript">
+		ddaccordion.init({
+			headerclass : "submenuheader", //Shared CSS class name of headers group
+			contentclass : "submenu", //Shared CSS class name of contents group
+			revealtype : "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+			mouseoverdelay : 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+			collapseprev : true, //Collapse previous content (so only one open at any time)? true/false 
+			defaultexpanded : [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+			onemustopen : false, //Specify whether at least one header should be open always (so never all headers closed)
+			animatedefault : false, //Should contents open by default be animated into view?
+			persiststate : true, //persist state of opened contents within browser session?
+			toggleclass : [ "", "" ], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+			togglehtml : [ "suffix",
+					"_$tag______________________________________________",
+					"_$tag_______________________________________________" ], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+			animatespeed : "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+			oninit : function(headers, expandedindices) { //custom code to run when headers have initalized
+				//do nothing
+			},
+			onopenclose : function(header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+				//do nothing
+			}
+		})
+	</script>
+
+	<script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+
+
+	<script language="javascript" type="text/javascript"
+		src="js/niceforms.js"></script>
+	<link rel="stylesheet" type="text/css" media="all"
+		href="js/niceforms-default.css" />
+
+</h:head>
+<h:body styleClass="st_header_login">
+	<f:metadata>
+		<f:viewParam id="id" name="id" value="#{restaurantMaster.id}" />
+		<f:viewParam id="name" name="name" value="#{restaurantMaster.name}" />
+		<f:viewParam id="address" name="address"
+			value="#{restaurantMaster.address}" />
+		<f:viewParam id="locality" name="locality"
+			value="#{restaurantMaster.locality}" />
+		<f:viewParam id="city" name="city" value="#{restaurantMaster.city}" />
+		<f:viewParam id="state" name="state" value="#{restaurantMaster.state}" />
+		<f:viewParam id="country" name="country"
+			value="#{restaurantMaster.country}" />
+		<f:viewParam id="phone" name="phone" value="#{restaurantMaster.phone}" />
+		<f:viewParam id="mobile" name="mobile"
+			value="#{restaurantMaster.mobile}" />
+		<f:viewParam id="category" name="category"
+			value="#{restaurantMaster.category}" />
+		<f:viewParam id="url" name="url" value="#{restaurantMaster.url}" />
+		<f:viewParam id="ip" name="ip" value="#{restaurantMaster.ip}" />
+		<f:viewParam id="operatingSystem" name="operatingSystem"
+			value="#{restaurantMaster.operatingSystem}" />
+		<f:viewParam id="ram" name="ram" value="#{restaurantMaster.ram}" />
+	</f:metadata>
+	<f:view locale="#{language.localeCode}">
+
+		<div id="main_container">
+
+			<div class="header">
+				<div class="logo">
+					<a href="#"><img src="js/images/logo.gif" alt="" title=""
+						border="0" /></a>
+				</div>
+				<div style="float: left; margin-top: 50px; margin-left: 150px;">
+
+					<h2
+						style="font-size: 24px; font-weight: bold; font-family: Tahoma;">#{sessionScope.selectedstore.storeName}</h2>
+				</div>
+				<div class="right_header">
+					<h:form>
+						<h:outputText value="#{msg['welcome']}" />, #{userController.loggdUser.userId} <h:commandLink
+							value="Logout" action="#{stUserController.logout}"></h:commandLink>
+					</h:form>
+				</div>
+
+			</div>
+
+
+			<div class="main_content" align="center">
+
+				<!-- <div class="menu"> -->
+				<h:form id="form1">
+
+					<rich:toolbar height="35px">
+						<!-- <h:panelGrid styleClass="vertical-menu-cell"
+						columnClasses="optionList" columns="1" cellspacing="0"
+						cellpadding="0"> -->
+
+						<rich:dropDownMenu mode="server">
+							<f:facet name="label">
+								<h:panelGroup>
+									<h:outputText value="Restaurant Management" />
+								</h:panelGroup>
+							</f:facet>
+							<rich:menuItem label="Restaurants" submitMode="server"
+								action="#{storeAddressController.showRestaurantForST}">
+								<f:param name="action" value="delete" />
+							</rich:menuItem>
+							<rich:menuItem label="Branches" submitMode="server"
+								action="#{storeAddressController.showStoreMasterForST}">
+								<f:param name="action" value="delete" />
+							</rich:menuItem>
+						</rich:dropDownMenu>
+						<rich:dropDownMenu mode="server">
+							<f:facet name="label">
+								<h:panelGroup>
+									<h:outputText value="#{msg['user.management']}" />
+								</h:panelGroup>
+							</f:facet>
+							<rich:menuItem label="#{msg['st.create.user']}"
+								submitMode="server" action="#{userController.stCreateUser}" />
+						</rich:dropDownMenu>
+
+						<!-- </h:panelGrid> -->
+					</rich:toolbar>
+				</h:form>
+
+				<h:form id="form2">
+					<rich:panel id="userpane">
+						<rich:extendedDataTable
+							value="#{storeAddressController.restaurantList}" var="restLst"
+							id="table" style="height:300px; width:850px;"
+							selectionMode="none" frozenColumns="2"
+							rowClasses="table-odd-row,table-even-row">
+
+							<rich:column width="50px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Id" />
+								</f:facet>
+								<h:outputText value="#{restLst.id}" />
+							</rich:column>
+							<rich:column width="150px" style="text-align:left;">
+								<f:facet name="header">
+									<h:outputText value="Restaurant Name" />
+								</f:facet>
+								<h:outputText value="#{restLst.name}" />
+							</rich:column>
+							<rich:column width="400px" style="text-align:left;">
+								<f:facet name="header">
+									<h:outputText value="Address" />
+								</f:facet>
+								<h:outputText value="#{restLst.address}" />
+							</rich:column>
+							<rich:column width="170px" style="text-align:left;">
+								<f:facet name="header">
+									<h:outputText value="Locality" />
+								</f:facet>
+								<h:outputText value="#{restLst.locality}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="City" />
+								</f:facet>
+								<h:outputText value="#{restLst.city}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="State" />
+								</f:facet>
+								<h:outputText value="#{restLst.state}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Country" />
+								</f:facet>
+								<h:outputText value="#{restLst.country}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Phone No" />
+								</f:facet>
+								<h:outputText value="#{restLst.phone}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Mobile No" />
+								</f:facet>
+								<h:outputText value="#{restLst.mobile}" />
+							</rich:column>
+							<rich:column width="80px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Category" />
+								</f:facet>
+								<h:outputText value="#{restLst.category}" />
+							</rich:column>
+							<rich:column width="170px" style="text-align:left;">
+								<f:facet name="header">
+									<h:outputText value="URL" />
+								</f:facet>
+								<h:outputText value="#{restLst.url}" />
+							</rich:column>
+							<rich:column width="120px" style="text-align:left;">
+								<f:facet name="header">
+									<h:outputText value="IP Address" />
+								</f:facet>
+								<h:outputText value="#{restLst.ip}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:left;">
+								<f:facet name="header">
+									<h:outputText value="System OS" />
+								</f:facet>
+								<h:outputText value="#{restLst.operatingSystem}" />
+							</rich:column>
+							<rich:column width="70px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="RAM" />
+								</f:facet>
+								<h:outputText value="#{restLst.ram}" />
+							</rich:column>
+
+							<rich:column width="80px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Activation Status" />
+								</f:facet>
+								<h:outputText value="#{restLst.activeFlag}" />
+							</rich:column>
+
+							<rich:column width="60px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Edit" />
+								</f:facet>
+								<h:commandLink value="Edit"
+									action="#{storeAddressController.editRestaurant}">
+									<f:param name="id" value="#{restLst.id}" />
+									<f:param name="name" value="#{restLst.name}" />
+									<f:param name="address" value="#{restLst.address}" />
+									<f:param name="locality" value="#{restLst.locality}" />
+									<f:param name="city" value="#{restLst.city}" />
+									<f:param name="state" value="#{restLst.state}" />
+									<f:param name="country" value="#{restLst.country}" />
+									<f:param name="phone" value="#{restLst.phone}" />
+									<f:param name="mobile" value="#{restLst.mobile}" />
+									<f:param name="category" value="#{restLst.category}" />
+									<f:param name="url" value="#{restLst.url}" />
+									<f:param name="ip" value="#{restLst.ip}" />
+									<f:param name="operatingSystem"
+										value="#{restLst.operatingSystem}" />
+									<f:param name="ram" value="#{restLst.ram}" />
+								</h:commandLink>
+							</rich:column>
+							<rich:column width="60px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Delete" />
+								</f:facet>
+								<h:commandLink value="Delete"
+									onclick="if (! confirm('Do you want to delete ?')) return false"
+									action="#{storeAddressController.deleteRestaurant}">
+									<f:param name="id" value="#{restLst.id}" />
+								</h:commandLink>
+							</rich:column>
+							<rich:column width="70px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="Activate" />
+								</f:facet>
+								<h:commandLink value="Activate"
+									onclick="if (! confirm('Do you want to activate the selected Restaurant ?')) return false"
+									action="#{storeAddressController.setRestaurantActive}">
+									<f:param name="id" value="#{restLst.id}" />
+								</h:commandLink>
+							</rich:column>
+							<rich:column width="110px" style="text-align:center;">
+								<f:facet name="header">
+									<h:outputText value="De-Activate" />
+								</f:facet>
+								<h:commandLink value="De-Activate"
+									onclick="if (! confirm('Do you want to deactivate the selected Restaurant ?')) return false"
+									action="#{storeAddressController.setRestaurantInActive}">
+									<f:param name="id" value="#{restLst.id}" />
+								</h:commandLink>
+							</rich:column>
+
+
+						</rich:extendedDataTable>
+					</rich:panel>
+
+				</h:form>
+				<!-- </div> -->
+				<h:form>
+					<h:commandButton value="Add New Restaurant"
+						action="#{storeAddressController.addRestaurant}"></h:commandButton>
+				</h:form>
+
+			</div>
+			<!--end of main content-->
+
+
+			<div class="footer">
+
+				<div class="left_footer">
+					Powered By Sharobi Technologies India Pvt. Ltd.
+				</div>
+				<!--<div class="right_footer"><a href="http://indeziner.com"><img src="js/images/indeziner_logo.gif" alt="" title="" border="0" /></a></div>-->
+
+			</div>
+		</div>
+
+	</f:view>
+
+</h:body>
+
+
+</html>

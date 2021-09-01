@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Context antiJARLocking="true" path="/">
+	<Resource name="jdbc/ResApp" 
+	    	 
+	    	  type="javax.sql.DataSource"
+			  factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+			  driverClassName="com.mysql.jdbc.Driver"
+	 		  url="jdbc:mysql://3.109.127.23:3306/restaurant"	  
+	 		  connectionProperties="useUnicode=yes;characterEncoding=utf8;"
+	    	  username="root"
+			  password="Sharobi@#$%321"
+			  initialSize="10"
+			  maxActive="450"
+			  maxIdle="50"
+			  minIdle="10"
+			  maxWait="30000"
+			  validationQuery="SELECT 1"
+     		  testOnBorrow="true"
+     		  minEvictableIdleTimeMillis="5000"
+			  removeAbandoned="true"
+			  removeAbandonedTimeout="90"
+			  logAbandoned="false" />
+
+</Context>
+
+ <!-- url="jdbc:mysql://192.168.1.110:3306/restaurant"		  
+ 		url="jdbc:mysql://192.168.1.198:3306/restaurant"
+ -->

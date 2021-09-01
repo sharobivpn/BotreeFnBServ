@@ -1,0 +1,310 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+
+
+
+<h:outputStylesheet>
+        .optionList {
+        height: 22px;
+        }
+ 
+        .vertical-menu-cell {
+        padding: 0px 4px 0px 4px;
+        }
+    </h:outputStylesheet>
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>IN ADMIN PANEL | Powered by Sharobitech</title>
+	<!-- <link rel="stylesheet" type="text/css" href="js/style.css" /> -->
+	<h:outputStylesheet name="css/style_#{sessionScope.cssId}.css" />
+	<script type="text/javascript" src="js/clockp.js"></script>
+	<script type="text/javascript" src="js/clockh.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/ddaccordion.js"></script>
+	<script type="text/javascript">
+		ddaccordion.init({
+			headerclass : "submenuheader", //Shared CSS class name of headers group
+			contentclass : "submenu", //Shared CSS class name of contents group
+			revealtype : "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+			mouseoverdelay : 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+			collapseprev : true, //Collapse previous content (so only one open at any time)? true/false 
+			defaultexpanded : [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+			onemustopen : false, //Specify whether at least one header should be open always (so never all headers closed)
+			animatedefault : false, //Should contents open by default be animated into view?
+			persiststate : true, //persist state of opened contents within browser session?
+			toggleclass : [ "", "" ], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+			togglehtml : [ "suffix",
+					"_$tag______________________________________________",
+					"_$tag_______________________________________________" ], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+			animatespeed : "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+			oninit : function(headers, expandedindices) { //custom code to run when headers have initalized
+				//do nothing
+			},
+			onopenclose : function(header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+				//do nothing
+			}
+		})
+	</script>
+
+	<script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+	<script type="text/javascript">
+		function phonenumber() {
+			var contact = document.getElementById('userFrm:contact').value;
+			var phoneno = /^\d{10}$/;
+
+			if (contact.match(phoneno)) {
+
+				return true;
+			} else {
+
+				alert("Please enter only numeric value in Contact No.");
+				return false;
+			}
+		}
+	</script>
+
+	<script language="javascript" type="text/javascript"
+		src="js/niceforms.js"></script>
+	<link rel="stylesheet" type="text/css" media="all"
+		href="js/niceforms-default.css" />
+
+
+	<style type="text/css">
+.rowstyle {
+	width: 200px;
+}
+</style>
+
+</h:head>
+<h:body styleClass="app_body_backgrnd">
+	<f:view locale="#{language.localeCode}">
+
+		<div id="main_container">
+
+			<div class="header">
+				<ui:include src="/page/common/header.xhtml" />
+				<div class="store-name-pos">
+
+					<!-- <h2 class="store-name-font">#{sessionScope.selectedstore.storeName}</h2> -->
+				</div>
+				<div class="right_header">
+					<h:form>
+						<h:outputText value="#{msg['welcome']}" />
+						<b>#{sessionScope.loggeduser.userId}</b>
+						<h:commandButton value="#{msg['Logout']}"
+							action="#{userController.logout}" styleClass="logoutBtn"></h:commandButton>
+					</h:form>
+				</div>
+
+			</div>
+
+			<div class="main_content" align="center">
+				<!-- <div class="menu"> -->
+				<ui:include src="/page/common/mainMenue_#{sessionScope.cssId}.xhtml" />
+
+				<rich:panel>
+					<div class="tabDesc">
+						<b><h:outputText value="#{msg['Add.A.New.Inventory.Type.Item']}" /></b>
+					</div>
+					<h:form id="inventoryItemsFrm">
+
+						<br />
+
+						<h:panelGrid id="panel" columns="3"
+							styleClass="panelGridPos_InventoryItem panelGridBackgrnd panelGridStyle_InventoryType"
+							width="982"  columnClasses="colstyle"
+							cellspacing="5">
+							
+							
+							<!-- <h:outputText value="#{msg['InventoryType.Item.Type']}:"
+								styleClass="required outputTextStyle" />
+
+							<h:inputText id="invTypeItemType"
+								value="#{inventoryController.inventoryItems.inventoryType}"
+								required="true"
+								requiredMessage="#{msg['InventoryTypeItemType.Is.Required']}"
+								validatorMessage="#{msg['Please.enter.text.length.between.3.and.15.only']}"
+								styleClass="inputTextStyle">
+
+								<f:validateLength minimum="3" maximum="15" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText> -->
+							
+							
+							<h:outputText value="#{msg['Select.Inventory.Type']}: "
+								styleClass="required outputTextStyle" />
+								
+							<h:selectOneMenu id="invTypeItemType"
+								value="#{inventoryController.newInventoryItems.inventoryType.id}" required="true"
+								requiredMessage="#{msg['Please.Select.An.Inventory.Type']}."
+								style="height:18px;width:222px;font-size:12px;">
+								<f:selectItem itemLabel="#{msg['Please.Select.One']}"
+									itemValue="#{null}" />
+								<f:selectItems value="#{inventoryController.selectItems}" />
+							</h:selectOneMenu>
+							<rich:message for="invTypeItemType" ajaxRendered="true" />
+							
+							<h:outputText value="#{msg['InventoryType.Item.Code']}:"
+								styleClass="required outputTextStyle" />
+
+							<h:inputText id="invTypeItemCode"
+								value="#{inventoryController.newInventoryItems.code}"
+								required="true"
+								requiredMessage="#{msg['InventoryTypeItemCode.Is.Required']}"
+								validatorMessage="#{msg['Please.enter.text.length.between.3.and.45.only']}"
+								styleClass="inputTextStyle">
+
+								<f:validateLength minimum="3" maximum="45" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="invTypeItemCode" ajaxRendered="true" />
+
+
+							<h:outputText value="#{msg['InventoryType.Item.Name']}:"
+								styleClass="required outputTextStyle" />
+
+							<h:inputText id="invTypeItemName"
+								value="#{inventoryController.newInventoryItems.name}"
+								required="true"
+								requiredMessage="#{msg['InventoryTypeItemName.Is.Required']}"
+								validatorMessage="#{msg['Please.enter.text.length.between.3.and.100.only']}"
+								styleClass="inputTextStyle">
+
+								<f:validateLength minimum="3" maximum="100" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="invTypeItemName" ajaxRendered="true" />
+							
+							
+							<h:outputText value="#{msg['InventoryType.Item.Quantity']}:"
+								styleClass="required outputTextStyle" />
+
+							<h:inputText id="invTypeItemQuantity"
+								value="#{inventoryController.newInventoryItems.quantity}"
+								required="true"
+								requiredMessage="#{msg['InventoryTypeItemQuantity.Is.Required']}"
+								validatorMessage="#{msg['Please.enter.text.length.between.1.and.15.only']}"
+								styleClass="inputTextStyle">
+
+								<f:validateLength minimum="1" maximum="15" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="invTypeItemQuantity" ajaxRendered="true" />
+							
+							
+							<h:outputText value="#{msg['InventoryType.Item.Unit']}:"
+								styleClass="required outputTextStyle" />
+
+							<h:inputText id="invTypeItemUnit"
+								value="#{inventoryController.newInventoryItems.unit}"
+								required="true"
+								requiredMessage="#{msg['InventoryTypeItemUnit.Is.Required']}"
+								validatorMessage="#{msg['Please.enter.text.length.between.2.and.10.only']}"
+								styleClass="inputTextStyle">
+
+								<f:validateLength minimum="2" maximum="10" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="invTypeItemUnit" ajaxRendered="true" />
+							
+							
+							
+							<h:outputText value="#{msg['InventoryType.Item.Rate']}:"
+								styleClass="required outputTextStyle" />
+
+							<h:inputText id="invTypeItemRate"
+								value="#{inventoryController.newInventoryItems.rate}"
+								required="true"
+								requiredMessage="#{msg['InventoryTypeItemRate.Is.Required']}"
+								styleClass="inputTextStyle">
+								
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="invTypeItemRate" ajaxRendered="true" />
+							
+							
+							<h:outputText value="#{msg['InventoryType.Item.Barcode']}:"
+								styleClass="required outputTextStyle" />
+
+							<h:inputText id="invTypeItemBarcode"
+								value="#{inventoryController.newInventoryItems.barcode}"
+								required="true"
+								requiredMessage="#{msg['InventoryTypeItemBarcode.Is.Required']}"
+								validatorMessage="#{msg['Please.enter.text.length.between.3.and.45.only']}"
+								styleClass="inputTextStyle">
+
+								<f:validateLength minimum="3" maximum="45" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="invTypeItemBarcode" ajaxRendered="true" />
+							
+							<h:outputText value="#{msg['Select.Inventory.Vendor']}: "
+								styleClass="required outputTextStyle" />
+								
+							<h:selectOneMenu id="invTypeVendor"
+								value="#{inventoryController.newInventoryItems.vendorId}" required="true"
+								requiredMessage="#{msg['Please.Select.An.Inventory.Vendor']}."
+								style="height:18px;width:222px;font-size:12px;">
+								<f:selectItem itemLabel="#{msg['Please.Select.One']}"
+									itemValue="#{null}" />
+								<f:selectItems value="#{inventoryController.selectVendors}" />
+							</h:selectOneMenu>
+							<rich:message for="invTypeItemType" ajaxRendered="true" />
+				
+							
+							<div class="divContBtnBelowTab">
+								<a4j:commandButton value="#{msg ['Submit']}"
+									action="#{inventoryController.addInventoryItem}"
+									styleClass="buttonBelowTab"  style="width:222px;"/>
+							</div>
+
+
+						</h:panelGrid>
+
+
+
+
+
+					</h:form>
+				</rich:panel>
+
+				<!-- </div> -->
+
+			</div>
+			<!--end of main content-->
+
+
+			<div class="footer">
+
+				<div class="left_footer">
+					IN ADMIN PANEL | Powered by <a href="http://www.sharobitech.com">Sharobitech</a>
+				</div>
+				<!--<div class="right_footer"><a href="http://indeziner.com"><img src="js/images/indeziner_logo.gif" alt="" title="" border="0" /></a></div>-->
+
+			</div>
+		</div>
+
+
+	</f:view>
+</h:body>
+
+
+</html>

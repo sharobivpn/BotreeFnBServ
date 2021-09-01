@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="flash_report" pageWidth="842" pageHeight="595" orientation="Landscape" whenNoDataType="AllSectionsNoDetail" columnWidth="802" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5cabdd2a-9eaa-4a9f-8dd8-6777e814a786">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset2" uuid="1f1a6336-ab2a-4427-bd8a-c8cac0fd3de9">
+		<field name="category" class="java.lang.String"/>
+		<field name="dtdata" class="java.lang.Double"/>
+		<field name="mtd" class="java.lang.Double"/>
+		<field name="ytd" class="java.lang.Double"/>
+	</subDataset>
+	<parameter name="W_HotelId" class="java.lang.String"/>
+	<parameter name="dataList" class="java.util.Collection"/>
+	<parameter name="W_Date" class="java.lang.String"/>
+	<parameter name="W_storeName" class="java.lang.String"/>
+	<parameter name="W_storeAdd" class="java.lang.String"/>
+	<parameter name="W_storePhone" class="java.lang.String"/>
+	<parameter name="W_storeEmail" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="68" splitType="Stretch">
+			<textField>
+				<reportElement x="273" y="3" width="236" height="20" uuid="9c7095c3-dd0b-4824-9186-3a20e06fd937"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_storeName}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="711" y="2" width="71" height="14" uuid="07e682ae-592b-410c-9bcb-b9d8afcb4b70"/>
+				<textFieldExpression><![CDATA[$P{W_Date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="671" y="2" width="40" height="14" uuid="94f11e1b-8840-4db3-a14d-6997d9764ed4"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="273" y="23" width="236" height="14" uuid="0d4a1251-5f13-4216-a88b-e2d07150edf4"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_storeAdd}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="273" y="37" width="236" height="14" uuid="6b2d3453-e02c-4783-8c75-7075f75ac450"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_storePhone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="273" y="51" width="236" height="14" uuid="fbf82805-bf9f-4d13-b8e5-1bfe2a5c197d"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_storeEmail}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="47">
+			<line>
+				<reportElement x="0" y="45" width="802" height="1" uuid="e6ec5325-15e8-43fd-8857-8a4afb8ac427"/>
+			</line>
+			<line>
+				<reportElement x="0" y="23" width="802" height="1" uuid="fef4d632-11df-43c2-b763-25dc94fd4446"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="7" width="802" height="15" forecolor="#000000" backcolor="#CCCCCC" uuid="3bab1b33-3eaa-40e2-b7d7-21b6d169e70c"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Flash Report]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="82" y="26" width="230" height="17" backcolor="#CCCC00" uuid="3749f864-3f12-4457-ade9-7d5f59b9c994"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[INCOME]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="312" y="26" width="120" height="17" backcolor="#CCCC00" uuid="3c4afb29-8062-463b-82f6-7bc19f1785ef"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[FTD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="432" y="26" width="120" height="17" backcolor="#CCCC00" uuid="e9f91eb2-7869-4dfd-a449-a1ea4a73bf38"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[MTD]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="552" y="26" width="106" height="17" backcolor="#CCCC00" uuid="d10e6806-75b8-4124-91d1-a852fb2bebc9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="false" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[YTD]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<componentElement>
+				<reportElement x="64" y="1" width="615" height="19" uuid="9c92de2e-2a23-45bb-b2b0-4f88dc44c69f"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset2" uuid="ec81b322-034f-4e77-a3ea-7ef534efa865">
+						<dataSourceExpression><![CDATA[new net.sf.jasperreports.engine.data.JRBeanCollectionDataSource($P{dataList})]]></dataSourceExpression>
+					</datasetRun>
+					<jr:listContents height="19" width="615">
+						<textField isBlankWhenNull="true">
+							<reportElement x="18" y="1" width="230" height="16" uuid="955dc68a-41c3-45b0-a00d-bdae18c8f1fd"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif" size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{category}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="248" y="1" width="120" height="16" uuid="560bdf86-0885-4acb-a941-d9a6c8b23f73"/>
+							<textElement textAlignment="Center">
+								<font fontName="SansSerif" size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[Math.round($F{dtdata}.floatValue())]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement x="488" y="1" width="106" height="16" uuid="98adcd97-87f6-4e92-a716-93decbfa2f9a"/>
+							<textElement textAlignment="Center">
+								<font fontName="SansSerif" size="9"/>
+							</textElement>
+							<textFieldExpression><![CDATA[Math.round($F{ytd}.floatValue())]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="false">
+							<reportElement x="368" y="1" width="120" height="16" uuid="07c33936-5365-4885-a1ff-2c0981f2ed6a"/>
+							<textElement textAlignment="Center">
+								<font size="9" isPdfEmbedded="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA[Math.round($F{mtd}.floatValue())]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</detail>
+	<summary>
+		<band height="6" splitType="Stretch"/>
+	</summary>
+</jasperReport>

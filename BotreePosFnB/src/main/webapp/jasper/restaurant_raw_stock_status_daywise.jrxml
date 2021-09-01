@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="restaurant_sales" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5cabdd2a-9eaa-4a9f-8dd8-6777e814a786">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset1" uuid="21a9d16a-5b64-492a-84c5-04141d779735">
+		<parameter name="W_Store_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no,mobile_no,email_id, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email_id" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="dataset2" uuid="939f78a8-fee6-4174-937a-d66a29f94c9e"/>
+	<subDataset name="dataset3" uuid="9d7cabab-ee9d-4fd4-a37d-579c9636cc3a"/>
+	<subDataset name="dataset4" uuid="d9b3d620-87dc-411b-822e-e9bed3e9d5cf"/>
+	<parameter name="W_Date" class="java.lang.String"/>
+	<parameter name="W_StoreId" class="java.lang.String"/>
+	<parameter name="W_DateStandard" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select edp.inv_type_item_id,edp.name,edp.final_edp,edp.unit as edp_unit,ifnull(stckin.final_stock_in,0) as final_stock_in,
+ifnull(stckin.unit,(select unit from rm_m_metric_unit
+where id=(select metric_unit_id from im_m_inv_type_items_c where id=edp.inv_type_item_id ))) as stock_in_unit,
+ifnull(stckout.final_stock_out,0) as final_stock_out,
+ifnull(stckout.unit,(select unit from rm_m_metric_unit
+where id=(select metric_unit_id from im_m_inv_type_items_c where id=edp.inv_type_item_id ))) as stock_out_unit,
+ifnull(saleout.final_sale_out,0) as final_sale_out,
+ifnull(saleout.unit,(select unit from rm_m_metric_unit
+where id=(select metric_unit_id from im_m_inv_type_items_c where id=edp.inv_type_item_id ))) as sale_out_unit,
+ifnull(ifnull((stckout.final_stock_out-saleout.final_sale_out),stckout.final_stock_out),0) as in_kitchen,
+ifnull(ifnull((stckin.final_stock_in-stckout.final_stock_out),stckin.final_stock_in),0) as current_stock,
+ifnull(stckin.item_rate,(select rate from im_m_inv_type_items_c where id=edp.inv_type_item_id )) as item_rate,
+ifnull(stckin.final_stock_in*item_rate,0) as stock_in_cost
+
+from
+
+(select a.inv_type_item_id,b.name,
+sum(a.metric_amount*d.required_quantity) as edp,a.metric_unit_id as edp_unit,b.metric_unit_id as master_unit_id,
+c.unit,get_conversion_fact(a.metric_unit_id,b.metric_unit_id) as conv_fact,
+sum(a.metric_amount*d.required_quantity)*get_conversion_fact(a.metric_unit_id,b.metric_unit_id) as final_edp
+from im_t_recipe_ingredient a, im_m_inv_type_items_c b,rm_m_metric_unit c,
+im_t_estimate_daily_prod_item_c d
+where d.item_id in (SELECT item_id FROM restaurant.im_t_estimate_daily_prod_item_c where created_date=$P{W_DateStandard}
+and delete_flag='N' and store_id=$P{W_StoreId} group by item_id) and a.item_id=d.item_id and a.store_id=d.store_id and a.delete_flag='N'
+and d.delete_flag='N' and b.delete_flag='N' and b.store_id=a.store_id and a.inv_type_item_id=b.id and c.id=b.metric_unit_id
+group by a.inv_type_item_id) edp
+
+left join
+
+(SELECT a.item_id, sum(a.item_quantity) as stock_in,a.unit_id as stock_in_unit, b.metric_unit_id as master_unit_id,
+c.unit,
+get_conversion_fact(a.unit_id,b.metric_unit_id) as conv_fact,sum(a.item_quantity)*get_conversion_fact(a.unit_id,b.metric_unit_id) as final_stock_in,
+a.item_rate
+FROM restaurant.im_t_raw_stock_in_items_c a,im_m_inv_type_items_c b,rm_m_metric_unit c
+where a.stock_in_id in
+(SELECT id FROM restaurant.im_t_raw_stock_in where edp_id in
+(SELECT id FROM restaurant.im_t_estimate_daily_prod_item where date=$P{W_DateStandard} and delete_flag='N' and store_id=$P{W_StoreId}))
+and a.item_id=b.id and c.id=b.metric_unit_id group by a.item_id) stckin on edp.inv_type_item_id=stckin.item_id
+
+left join
+
+(SELECT a.item_id, sum(a.item_quantity) as stock_out, a.unit_id as stock_out_unit,
+b.metric_unit_id as master_unit_id,c.unit,
+get_conversion_fact(a.unit_id,b.metric_unit_id) as conv_fact,sum(a.item_quantity)*get_conversion_fact(a.unit_id,b.metric_unit_id) as final_stock_out
+
+FROM restaurant.im_t_raw_stock_out_items_c a,im_m_inv_type_items_c b,rm_m_metric_unit c
+where a.stock_out_id in
+(SELECT id FROM restaurant.im_t_raw_stock_out  where edp_id in
+(SELECT id FROM restaurant.im_t_estimate_daily_prod_item where date=$P{W_DateStandard} and delete_flag='N' and store_id=$P{W_StoreId}))
+and a.item_id=b.id and c.id=b.metric_unit_id
+group by a.item_id) stckout on edp.inv_type_item_id=stckout.item_id
+
+left join
+
+((select z.item_id,z.inv_type_item_id,z.metric_unit_id,z.master_unit_id,sum(z.total_sale_out) as final_sale_out,c.unit from
+(select x.sale_out,y.store_id,y.item_id,y.inv_type_item_id,y.metric_amount,y.metric_unit_id,y.master_unit_id,
+x.sale_out*y.final_metric_amount as total_sale_out
+from (select item_id, sum(quantityof_item) as sale_out from fo_t_orders_item where order_time like $P{W_Date} and store_id =$P{W_StoreId}
+group by item_id) x,
+(
+SELECT a.store_id,a.item_id,a.inv_type_item_id,a.metric_amount,a.metric_unit_id,b.metric_unit_id as master_unit_id,
+get_conversion_fact(a.metric_unit_id,b.metric_unit_id) as conv_fact,metric_amount*get_conversion_fact(a.metric_unit_id,b.metric_unit_id) as final_metric_amount
+FROM restaurant.im_t_recipe_ingredient a, im_m_inv_type_items_c b where a.delete_flag='N' and b.delete_flag='N' and b.store_id=$P{W_StoreId} and a.store_id=$P{W_StoreId}
+and  a.inv_type_item_id=b.id) y where x.item_id=y.item_id) z,
+rm_m_metric_unit c where c.id=z.master_unit_id
+group by z.inv_type_item_id) ) saleout on edp.inv_type_item_id=saleout.inv_type_item_id;]]>
+	</queryString>
+	<field name="inv_type_item_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="final_edp" class="java.math.BigDecimal"/>
+	<field name="edp_unit" class="java.lang.String"/>
+	<field name="final_stock_in" class="java.math.BigDecimal"/>
+	<field name="stock_in_unit" class="java.lang.String"/>
+	<field name="final_stock_out" class="java.math.BigDecimal"/>
+	<field name="stock_out_unit" class="java.lang.String"/>
+	<field name="final_sale_out" class="java.lang.Double"/>
+	<field name="sale_out_unit" class="java.lang.String"/>
+	<field name="in_kitchen" class="java.lang.Double"/>
+	<field name="current_stock" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="item_rate" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="stock_in_cost" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="81" splitType="Stretch">
+			<componentElement>
+				<reportElement x="153" y="0" width="270" height="70" uuid="c48f442b-2f21-436b-a495-b77e5284e3b2"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="4040c355-c0a0-4c34-801a-77a5050781f0">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="70" width="270">
+						<textField isBlankWhenNull="true">
+							<reportElement x="37" y="1" width="207" height="20" uuid="9c7095c3-dd0b-4824-9186-3a20e06fd937"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif" size="14" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement positionType="Float" x="37" y="21" width="207" height="14" uuid="c8a3122a-3535-4319-9747-1856a205120f"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="81" y="35" width="163" height="15" uuid="14d1f37d-6234-4709-b46c-70d68d667b2e"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="81" y="50" width="163" height="14" uuid="6c768213-84ff-4ba3-af53-758bba66412a"/>
+							<textElement>
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{email_id}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="37" y="35" width="44" height="15" uuid="1d09f8fb-a4e3-40a5-a742-fcca424dbe57"/>
+							<textElement>
+								<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="37" y="50" width="44" height="14" uuid="ad612155-761a-4f1e-9b81-cdd2db8edfd6"/>
+							<textElement>
+								<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="62">
+			<line>
+				<reportElement x="0" y="61" width="555" height="1" uuid="e6ec5325-15e8-43fd-8857-8a4afb8ac427"/>
+			</line>
+			<line>
+				<reportElement x="0" y="37" width="555" height="1" uuid="fef4d632-11df-43c2-b763-25dc94fd4446"/>
+			</line>
+			<staticText>
+				<reportElement x="442" y="-80" width="40" height="14" uuid="93cc349b-e29b-49ff-90c6-ea1bc93f8b42"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="3" width="555" height="17" forecolor="#000000" backcolor="#CCCCCC" uuid="3bab1b33-3eaa-40e2-b7d7-21b6d169e70c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Daily Expenditure Report]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="482" y="-80" width="71" height="14" uuid="68b39170-d077-4370-896b-72ee5dabe1c3"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{W_Date}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="46" y="38" width="60" height="23" isPrintWhenDetailOverflows="true" uuid="d86fa361-d029-4d30-8baf-ed0d8315f3e6"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Item Name]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="289" y="20" width="77" height="16" uuid="42be920b-57e6-456a-9fef-45a79ce134a0"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="70167b06-1fd0-44b6-b332-c2ac1d48bbf3">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="16" width="77">
+						<textField>
+							<reportElement x="0" y="1" width="75" height="15" uuid="82c85872-6bee-4c6f-a3d9-0753f9439a5a"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font fontName="SansSerif" size="10" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="3" y="38" width="33" height="24" isPrintWhenDetailOverflows="true" uuid="2ac7e329-589c-41c5-b2f0-b4cf962ec4d9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[SL No.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="238" y="21" width="49" height="15" uuid="643f997f-d783-4c22-a8c5-9156ac6f912f"/>
+				<textElement>
+					<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Currency:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="117" y="38" width="61" height="23" isPrintWhenDetailOverflows="true" uuid="7bdcde44-c849-4a54-896d-9d84d27ff3a1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[EDP]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="187" y="38" width="65" height="23" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="063687d6-7831-44f8-ab68-b6c71f1a02e0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Stock In]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="261" y="38" width="65" height="23" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="873295c1-46d6-4b98-af56-57466dfd461f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Stock Out]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="337" y="38" width="62" height="23" isPrintInFirstWholeBand="true" isPrintWhenDetailOverflows="true" uuid="7ad5a6c0-11d1-46f1-b26e-4a6ecb4a240e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Sale Out]]></text>
+			</staticText>
+			<staticText>
+				<reportElement stretchType="RelativeToBandHeight" x="410" y="37" width="55" height="24" isPrintWhenDetailOverflows="true" uuid="512f6303-1f72-4db8-b7b2-eba3ace1d754"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Not Used]]></text>
+			</staticText>
+			<staticText>
+				<reportElement positionType="FixRelativeToBottom" stretchType="RelativeToBandHeight" x="474" y="38" width="75" height="23" isPrintWhenDetailOverflows="true" uuid="f1081ccc-55fc-4bcc-96c2-112ab3f5dbb0"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Current Stock]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField>
+				<reportElement x="42" y="0" width="70" height="16" uuid="63a6e6bb-a6a3-47bc-a4c6-f0a1ca54dd2a"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;(###0.00)">
+				<reportElement x="187" y="0" width="40" height="16" uuid="304994c5-dcb3-4074-9920-e3818f685499"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{final_stock_in}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="226" y="0" width="26" height="16" uuid="972fa239-4895-4ac2-a570-fca4989f73bc"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{stock_in_unit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;(###0.00)">
+				<reportElement x="261" y="0" width="40" height="16" uuid="07ab394a-8a6a-4b0a-a657-ccc2ba19c832"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{final_stock_out}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="300" y="0" width="26" height="16" uuid="427cfb4a-4285-4c12-8700-cd9dd581cdca"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{stock_out_unit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;(###0.00)">
+				<reportElement x="337" y="0" width="40" height="16" uuid="a7b29a24-50d5-46b8-b2b9-c985a8c8019c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{final_sale_out}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="376" y="0" width="23" height="16" uuid="11c064e6-6ba2-4545-b336-2cb7504d4683"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{sale_out_unit}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;(###0.00)">
+				<reportElement x="410" y="0" width="55" height="16" uuid="68456f85-c1f5-44e4-949b-1b61324277f3"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{in_kitchen}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;(###0.00)">
+				<reportElement x="474" y="0" width="75" height="16" uuid="c9c2e48c-43dd-4169-8c64-67d6b0c4f17d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{current_stock}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="3" y="0" width="33" height="16" uuid="a2f239cb-a17a-43c2-a131-c3f245bb4479"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$V{REPORT_COUNT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;(###0.00)">
+				<reportElement x="117" y="0" width="40" height="16" uuid="6dbd868f-7054-4599-add7-f2f7832a2d05"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{final_edp}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="157" y="0" width="21" height="16" uuid="24b92fbd-1ee0-4919-92b2-7ca0be8aabe0"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{edp_unit}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="86">
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="b3f12c26-9f02-4e95-bb76-b37d800b7dfd"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="restaurant_sales" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5cabdd2a-9eaa-4a9f-8dd8-6777e814a786">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="58"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset1" uuid="21a9d16a-5b64-492a-84c5-04141d779735">
+		<parameter name="W_Store_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no,mobile_no,email_id, store_name,is_refund FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email_id" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="is_refund" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="dataset2" uuid="3ad18c9a-57e9-403e-8cb8-534e8fc36ca2">
+		<parameter name="W_store_Id" class="java.lang.String"/>
+		<parameter name="W_start_Date" class="java.lang.String"/>
+		<parameter name="W_end_Date" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[select xx.expenditure_type,xx.type_name,sum(xx.net_amt) as tot_exp
+from
+(select exp.id,exp.expenditure_type,expt.type_name,exp.voucher_id,exp.particulars,exp.net_amt
+from ac_t_daily_expenditure exp
+left join ac_m_expenditure_type expt on exp.expenditure_type=expt.id
+where expenditure_type not in(0,1)  and delete_flag='N' and exp.store_id=$P{W_store_Id}
+and created_date between $P{W_start_Date} and $P{W_end_Date})xx
+group by xx.expenditure_type]]>
+		</queryString>
+		<field name="expenditure_type" class="java.lang.Integer"/>
+		<field name="type_name" class="java.lang.String"/>
+		<field name="tot_exp" class="java.math.BigDecimal"/>
+	</subDataset>
+	<parameter name="W_StartDate" class="java.lang.String"/>
+	<parameter name="W_EndDate" class="java.lang.String"/>
+	<parameter name="W_StoreId" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select sum(tot.tot_sale) as tot_sale , sum(tot.tot_purchase) as tot_purchase,sum(tot.tot_exp) tot_exp,sum(tot.tot_sale_refund) tot_sale_refund
+,(sum(tot.tot_sale)-(sum(tot.tot_purchase)+sum(tot.tot_exp)+sum(tot.tot_sale_refund))) tot_tot
+,st.is_refund
+from
+(
+    select sum(x.amount) as tot_sale , 0 as tot_purchase,0 tot_exp, 0 tot_sale_refund
+    from
+    (
+            select
+                  pmt.amount
+
+            from bp_t_fo_orders_payment pmt
+            left join fo_t_orders o on o.id=pmt.order_id
+            left join bp_t_bill t on t.Order_id=o.id
+            left join sl_m_restaurant_store_c sc on sc.id=pmt.store_id
+            where o.store_id=$P{W_StoreId}
+            and o.cancel='N'
+            and pmt.payment_mode != 'null'
+            and
+            (
+                      STR_TO_DATE(o.order_time, '%d/%m/%Y %H:%i:%s') between
+                      ADDTIME( STR_TO_DATE($P{W_StartDate}, '%Y-%m-%d %H:%i:%s') , CONCAT(ifnull(SUBSTR(sc.open_time,1,2),'00'), ':',ifnull(SUBSTR(trim(sc.open_time),4,2),'00')) )
+                      and ADDTIME( STR_TO_DATE($P{W_EndDate}, '%Y-%m-%d %H:%i:%s') , CONCAT(cast(working_hours+ifnull(SUBSTR(sc.open_time,1,2),'00') as char),':',ifnull(SUBSTR(trim(sc.open_time),4,2),'00')) )
+                      and ifnull(sc.working_hours,0)<>0
+             )
+            group by
+                  pmt.order_id,o.table_no
+                  ,o.order_date
+                  ,t.total_discount
+                  ,t.customer_discount
+                  ,t.vat_amt
+                  ,t.service_tax_amt
+                  ,t.service_charge_amt
+                  ,o.order_time
+
+    ) x
+
+    union all
+
+    select 0 tot_sale , 0 as tot_purchase,0 tot_exp,sum(w.net_amt) as tot_sale_refund
+    from
+    (select id,net_amt from im_t_sales_return
+    where store_id=$P{W_StoreId} and delete_flag='N' and approved='Y' and date between $P{W_StartDate} and $P{W_EndDate}
+    )w
+
+    union all
+
+     select 0 tot_sale,sum(a.amt_stock) as tot_purchase,0 tot_exp , 0 tot_sale_refund
+     from
+    (
+        select sum(y.total_price) as amt_stock from
+        (
+            select id,total_price
+            from im_t_raw_stock_in
+            where delete_flag='N' and store_id=$P{W_StoreId} and date between $P{W_StartDate} and $P{W_EndDate}
+        ) y
+
+        union all
+
+        select sum(z.net_amt) as amt_stock from
+        (
+            select id,net_amt
+            from ac_t_daily_expenditure
+            where expenditure_type=1 and delete_flag='N' and store_id=$P{W_StoreId} and created_date between $P{W_StartDate} and $P{W_EndDate}
+        ) z
+
+
+    )a
+
+    union all
+
+    select 0 tot_sale,0 tot_purchase,sum(y.net_amt) as tot_exp, 0 tot_sale_refund
+    from
+    (
+            select exp.id,exp.expenditure_type,expt.type_name,exp.voucher_id,exp.particulars,exp.net_amt
+            from ac_t_daily_expenditure exp
+            left join ac_m_expenditure_type expt on exp.expenditure_type=expt.id
+            where expenditure_type not in(0,1)  and delete_flag='N' and exp.store_id=$P{W_StoreId}
+            and created_date between $P{W_StartDate} and $P{W_EndDate}
+    )y
+
+)tot
+inner join sl_m_restaurant_store_c st on id=$P{W_StoreId}]]>
+	</queryString>
+	<field name="tot_sale" class="java.math.BigDecimal"/>
+	<field name="tot_purchase" class="java.math.BigDecimal"/>
+	<field name="tot_exp" class="java.math.BigDecimal"/>
+	<field name="tot_sale_refund" class="java.math.BigDecimal"/>
+	<field name="tot_tot" class="java.math.BigDecimal"/>
+	<field name="is_refund" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="75" splitType="Stretch">
+			<componentElement>
+				<reportElement x="153" y="0" width="277" height="70" uuid="c48f442b-2f21-436b-a495-b77e5284e3b2"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="c3302507-cb5f-41ce-bede-d69a4ade87e3">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="70" width="277">
+						<textField>
+							<reportElement x="37" y="1" width="236" height="20" uuid="9c7095c3-dd0b-4824-9186-3a20e06fd937"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement positionType="Float" x="37" y="22" width="236" height="14" uuid="c8a3122a-3535-4319-9747-1856a205120f"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="77" y="37" width="196" height="14" uuid="14d1f37d-6234-4709-b46c-70d68d667b2e"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="37" y="36" width="35" height="14" uuid="1d09f8fb-a4e3-40a5-a742-fcca424dbe57"/>
+							<textElement>
+								<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="37" y="49" width="35" height="14" uuid="ad612155-761a-4f1e-9b81-cdd2db8edfd6"/>
+							<textElement>
+								<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="77" y="49" width="196" height="14" uuid="e768da0e-7af8-491c-bce9-788e21049fb4"/>
+							<textElement>
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{email_id}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="440" y="28" width="40" height="14" uuid="be569159-d0b2-469c-917e-517ef089a709"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="480" y="28" width="71" height="15" uuid="ef4f2ec2-1379-435b-a78e-47812b220d5a"/>
+				<textFieldExpression><![CDATA[$P{W_EndDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="440" y="10" width="40" height="14" uuid="044eb5c0-83a7-4a5e-93ec-b0eddbda1e26"/>
+				<textElement>
+					<font fontName="SansSerif" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[From:]]></text>
+			</staticText>
+			<textField isBlankWhenNull="true">
+				<reportElement x="480" y="10" width="71" height="15" uuid="f49e5ce7-a1f7-4679-ba3e-fe5bbfadd316"/>
+				<textFieldExpression><![CDATA[$P{W_StartDate}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="41">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="7" width="555" height="15" forecolor="#000000" backcolor="#CCCCCC" uuid="3bab1b33-3eaa-40e2-b7d7-21b6d169e70c"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[PROFIT & LOSS STATEMENT]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="288" y="22" width="89" height="16" uuid="d82b1a17-2567-4705-809a-b76e6c28e7ae"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="d1e6264a-5e4d-4693-b905-bb639589928f">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="16" width="89">
+						<textField isBlankWhenNull="true">
+							<reportElement x="0" y="1" width="79" height="15" uuid="247dbfa9-09d7-4d7f-984a-8d0a20747ee8"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font fontName="SansSerif" size="10" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="238" y="24" width="49" height="15" uuid="75d9a6a2-c185-4088-8651-e8b91ee7656f"/>
+				<textElement>
+					<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Currency:]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="149" splitType="Stretch">
+			<staticText>
+				<reportElement positionType="Float" x="154" y="10" width="100" height="15" uuid="1ea61bd4-6016-447c-89b5-f8c9faac6770"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Sales]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="302" y="10" width="100" height="15" uuid="ad317565-d716-4bba-8af6-b7319167ba49"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tot_sale}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="154" y="44" width="100" height="15" uuid="538a0471-b65e-48c9-84b2-538d0e1a7d87"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Purchase]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="302" y="44" width="100" height="15" uuid="aedca2b8-c5c7-4e75-bd42-ee249e4c86f5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tot_purchase}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement positionType="Float" x="98" y="62" width="371" height="1" uuid="4bcffc62-11d6-4f25-bbb2-2d6fff3af645"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="154" y="65" width="100" height="15" uuid="a90840b2-b3de-442e-bc1e-403daf1d8cfa"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Gross Profit / Loss]]></text>
+			</staticText>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement positionType="Float" x="302" y="65" width="100" height="15" uuid="ef13bacc-52b6-4c37-ad0f-0d6827ccbfbd"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[Double.valueOf($F{tot_sale}.doubleValue()-($F{tot_sale_refund}.doubleValue()+$F{tot_purchase}.doubleValue()))]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="154" y="92" width="100" height="15" uuid="8434ced1-5728-40b3-899f-10beb14c3991"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Other Expenses :]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement positionType="Float" x="91" y="108" width="365" height="18" uuid="59d83760-cc1d-4ca1-b1ee-d993e0cd44f1"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset2" uuid="1ad3492d-2881-4040-a863-41dd290a82be">
+						<datasetParameter name="W_store_Id">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="W_start_Date">
+							<datasetParameterExpression><![CDATA[$P{W_StartDate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="W_end_Date">
+							<datasetParameterExpression><![CDATA[$P{W_EndDate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="18" width="365">
+						<textField>
+							<reportElement x="63" y="1" width="100" height="15" uuid="57fd4750-b8c3-4f42-9859-e2d962de3024"/>
+							<textElement verticalAlignment="Middle">
+								<font isBold="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{type_name}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="211" y="1" width="100" height="15" uuid="2f3784f5-89ab-485a-939b-77a5de9d1043"/>
+							<textElement textAlignment="Right" verticalAlignment="Middle">
+								<font isBold="false"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{tot_exp}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<line>
+				<reportElement positionType="Float" x="98" y="128" width="371" height="1" uuid="a7e8fd06-f560-4bbd-93ee-5041b8bddaba"/>
+			</line>
+			<staticText>
+				<reportElement positionType="Float" x="154" y="131" width="110" height="15" uuid="e8bfe655-acf3-4326-9059-b65e6309078a"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total Other Expenses]]></text>
+			</staticText>
+			<textField pattern="">
+				<reportElement positionType="Float" x="302" y="131" width="100" height="15" uuid="bb94388f-ff1f-4c1f-8b7c-9cbd88ba2069"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tot_exp}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement positionType="Float" x="154" y="27" width="100" height="15" isRemoveLineWhenBlank="true" uuid="dc3a756f-4477-45cb-8c94-327f0138b4f7">
+					<printWhenExpression><![CDATA[$F{is_refund}.equals( "Y")]]></printWhenExpression>
+				</reportElement>
+				<textElement verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<text><![CDATA[Total Sale Refund]]></text>
+			</staticText>
+			<textField>
+				<reportElement positionType="Float" x="302" y="27" width="100" height="15" isRemoveLineWhenBlank="true" uuid="c393dc18-3264-498b-9b6f-a0c895262eb7">
+					<printWhenExpression><![CDATA[$F{is_refund}.equals( "Y")]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tot_sale_refund}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="49" splitType="Stretch">
+			<line>
+				<reportElement x="98" y="1" width="371" height="1" uuid="05705fe3-af9d-4662-86eb-b6c80d3a1502"/>
+			</line>
+			<staticText>
+				<reportElement x="154" y="4" width="100" height="15" uuid="160b3b3f-e72e-4173-9107-af6c58c50323"/>
+				<textElement verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Net Profit / Loss]]></text>
+			</staticText>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="302" y="4" width="100" height="15" uuid="8c0994e4-a935-4d6b-b583-71579275a6c9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{tot_tot}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="catwisesales" pageWidth="226" pageHeight="842" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8dd586e3-3726-4f24-9894-1ec054d4b685">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="102"/>
+	<subDataset name="dataset1" uuid="ae3fb452-88ca-4c80-b216-09f138ead785">
+		<parameter name="W_Store_ID" class="java.lang.String">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no,mobile_no,email_id, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email_id" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="W_StartDate" class="java.lang.String"/>
+	<parameter name="W_StoreId" class="java.lang.String"/>
+	<parameter name="W_EndDate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT ft.order_id, fmt.name,ftype.menu_item_name, sum(CAST(ft.quantityof_item AS UNSIGNED)) as quantityof_item,
+sum(ft.net_price)as total_price_by_item,fo.order_date
+FROM fo_t_orders_item ft, fm_m_food_types ftype, fm_m_food_items fmt,fo_t_orders fo
+WHERE ft.store_id=$P{W_StoreId} AND ftype.id = fmt.item_type_id and ft.item_id= fmt.id
+and fo.id=ft.order_id
+and fo.order_date between $P{W_StartDate} and $P{W_EndDate} and fo.cancel!='Y'
+group by ft.item_id asc]]>
+	</queryString>
+	<field name="order_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="menu_item_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantityof_item" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total_price_by_item" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="order_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="subtotal" class="java.math.BigDecimal" resetType="Group" resetGroup="catgory" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_price_by_item}]]></variableExpression>
+	</variable>
+	<variable name="item_total" class="java.lang.Integer" resetType="Group" resetGroup="catgory" calculation="Sum">
+		<variableExpression><![CDATA[$F{quantityof_item}]]></variableExpression>
+	</variable>
+	<variable name="grand_total" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{total_price_by_item}]]></variableExpression>
+	</variable>
+	<variable name="grand_itemqty" class="java.lang.Integer" calculation="Sum">
+		<variableExpression><![CDATA[$F{quantityof_item}]]></variableExpression>
+	</variable>
+	<group name="catgory">
+		<groupExpression><![CDATA[$F{menu_item_name}]]></groupExpression>
+		<groupHeader>
+			<band height="15">
+				<textField isStretchWithOverflow="true">
+					<reportElement stretchType="RelativeToTallestObject" x="1" y="0" width="186" height="14" uuid="2ca70143-385f-4c47-bed7-99c7792f29f4"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{menu_item_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="23">
+				<staticText>
+					<reportElement x="1" y="2" width="34" height="21" uuid="c38e2225-e696-4be5-b198-dec0efcabad8"/>
+					<textElement verticalAlignment="Middle">
+						<font size="11" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Total:]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="137" y="3" width="45" height="20" uuid="2df4a7fb-017a-46a8-a209-42a331f86be3"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{subtotal}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="1" y="2" width="185" height="1" uuid="7c1c8048-edf7-4df3-9ea5-38877fceb1fb"/>
+					<graphicElement>
+						<pen lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<textField>
+					<reportElement x="97" y="3" width="32" height="20" uuid="39357d4e-7d3d-4eb2-9c7b-5e66c0fbd512"/>
+					<textElement textAlignment="Right" verticalAlignment="Middle">
+						<font isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{item_total}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="201" splitType="Stretch">
+			<componentElement>
+				<reportElement x="1" y="13" width="185" height="52" uuid="7f617578-2cde-4060-9ed1-693deedf2be3"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="3a633d2e-2d0f-484f-96d4-3ab8fecde349">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="52" width="185">
+						<textField>
+							<reportElement x="7" y="1" width="178" height="20" uuid="5873f2f6-dbbf-4fe3-b067-7cdd66a4b858"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement positionType="Float" x="7" y="22" width="178" height="14" uuid="a103634c-fb93-401e-9c50-e9698e000fa1"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="47" y="37" width="79" height="14" uuid="71410196-11ce-4392-9a57-e494a0d5f79e"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="7" y="36" width="35" height="14" uuid="21831368-b3b6-4f1e-a3a8-436f6f344358"/>
+							<textElement>
+								<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="9" y="87" width="41" height="14" uuid="52f1a2ec-2927-4060-be81-fe2de5687e50"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[From:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="136" width="185" height="15" forecolor="#000000" backcolor="#CCCCCC" uuid="718fd8b8-5165-4476-abdb-c977e417194f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[   Category Wise Sales Report ]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="102" y="150" width="73" height="16" uuid="ade6f5aa-c4e0-46dc-b200-bc9705b5d20f"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="8c883c52-ed6c-42c5-a47b-d839a42d91ed">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="16" width="73">
+						<textField isBlankWhenNull="true">
+							<reportElement x="4" y="0" width="62" height="15" uuid="45a5fe20-e483-4c2d-a558-fe6eb1ec1ee9"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="62" y="152" width="39" height="15" uuid="0349d67e-c9ac-4da6-83a5-00cd90967852"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Currency:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="9" y="101" width="41" height="14" uuid="0a55ba86-79de-4db5-bbe3-ffebc5a2e676"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="50" y="87" width="65" height="14" uuid="d1c19a1f-45f2-4d52-bb51-02c22abeaefa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{W_StartDate}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="50" y="101" width="65" height="14" uuid="e664ae11-2419-45dd-a732-916c814aa99d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{W_EndDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="180" width="89" height="21" uuid="8f467172-3642-459a-902c-f0c8ffac6d28"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="92" y="180" width="39" height="21" uuid="019a7972-6cc8-40f5-9ea8-bf74d48ed084"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="134" y="180" width="52" height="21" uuid="3f8bb8bc-28cc-4ceb-b323-f49652cb7ce5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="12" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="180" width="186" height="1" uuid="19fa3292-a77f-4aeb-a68f-88d63cc914d7"/>
+			</line>
+			<line>
+				<reportElement x="0" y="200" width="186" height="1" uuid="2af69507-e147-4d20-82a8-edca10236c54"/>
+			</line>
+		</band>
+	</title>
+	<detail>
+		<band height="17" splitType="Stretch">
+			<textField>
+				<reportElement x="96" y="0" width="32" height="16" uuid="342cbf42-b9b2-4756-9520-d0774250dd9c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{quantityof_item}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="0" width="41" height="16" uuid="16f8ce12-3ad1-4dca-b0b0-a775baedfcda"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{total_price_by_item}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement stretchType="RelativeToTallestObject" x="0" y="0" width="90" height="16" uuid="f56aa983-b7e5-4397-a5b9-ad3341146190"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="35" splitType="Stretch">
+			<textField pattern="###0.00;(###0.00)">
+				<reportElement x="136" y="3" width="46" height="21" uuid="7112becf-1bc5-4e61-96cb-e05610a97593"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{grand_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="97" y="3" width="34" height="21" uuid="308b9c57-1ff2-4aaa-ab48-4e0c74134415"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{grand_itemqty}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="1" y="3" width="73" height="21" uuid="2285c91e-c5eb-4dd9-9ece-0de0c809e15d"/>
+				<textElement verticalAlignment="Middle">
+					<font size="11" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Grand Total:]]></text>
+			</staticText>
+			<line>
+				<reportElement x="1" y="2" width="186" height="1" uuid="38f20fee-3683-42a9-9c10-b2da7e6c532a"/>
+			</line>
+			<line>
+				<reportElement x="1" y="25" width="185" height="1" uuid="9257233b-6e09-4090-96db-f9e22cd27207"/>
+			</line>
+		</band>
+	</summary>
+</jasperReport>

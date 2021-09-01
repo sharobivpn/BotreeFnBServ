@@ -1,0 +1,281 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<h:outputStylesheet name="css/style_#{sessionScope.cssId}.css" />
+
+
+	<!-- <style>
+.rich-menu-item-hover {
+	background-color: #6d2004;
+	background-image: url();
+}
+</style> -->
+
+</h:head>
+<ui:composition>
+
+	<h:form id="form1">
+
+		<rich:toolbar height="42px" width="1000px;"
+			style="background-image: url();background-color: #B7C45B"
+			onitemmousemove="this.style.backgroundColor='#FF6D00';"
+			onitemmouseout="this.style.backgroundColor='#B7C45B'">
+			<rich:toolbarGroup location="center">
+				<rich:dropDownMenu mode="server" id="usr"
+					style="width:135px;border-color: transparent;"
+					onmousemove="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+					onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'"
+					popupWidth="170">
+					<f:facet name="label">
+						<h:panelGroup>
+							<h:outputText value="#{msg['user.management']}"
+								style="font-size:14px; font-family: Arial;color: #6c522f" />
+						</h:panelGroup>
+					</f:facet>
+					<rich:menuItem submitMode="server"
+						action="#{userController.dispUser}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['Users']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+					<!-- //Tablet User// -->
+					<rich:menuItem submitMode="server"
+						action="#{userController.dispTabletUser}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['Tablet.Users']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+				</rich:dropDownMenu>
+				<rich:dropDownMenu mode="server"
+					style="width:140px;border-color: transparent;"
+					onmousemove="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+					onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'"
+					popupWidth="170">
+					<f:facet name="label">
+						<h:panelGroup>
+							<h:outputText value="#{msg['store.profile']}"
+								style="font-size:14px; font-family: Arial;color: #6c522f" />
+						</h:panelGroup>
+					</f:facet>
+					<rich:menuItem submitMode="server"
+						action="#{storeAddressController.showStoreMaster}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['Stores']}" style="color: #6c522f;"></h:outputText>
+						<f:param name="action" value="delete" />
+					</rich:menuItem>
+
+				</rich:dropDownMenu>
+				<rich:dropDownMenu mode="server"
+					style="width:140px;border-color: transparent;"
+					onmousemove="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+					onmouseout="this.style.backgroundColor='#B7C45B'" popupWidth="120">
+					<f:facet name="label">
+						<h:panelGroup style="width:120px;">
+							<h:outputText value="#{msg['order.management']}"
+								style="font-size:14px; font-family: Arial;color: #6c522f" />
+						</h:panelGroup>
+					</f:facet>
+					<rich:menuItem submitMode="server"
+						action="#{orderController.orderCreation}"
+						style="background-image: url();background-color: #B7C45B;width:120px;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['Create.Order']}"
+							style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+					<rich:menuItem submitMode="server"
+						action="#{orderController.dispOrder}"
+						style="background-image: url();background-color: #B7C45B;width:120px;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['Today.Order']}"
+							style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+					<rich:menuItem submitMode="server"
+						action="#{orderController.dispDeliveredOrder}"
+						style="background-image: url();background-color: #B7C45B;width:120px;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['All.Paid.Orders']}"
+							style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>>
+					
+				</rich:dropDownMenu>
+				<rich:dropDownMenu mode="server"
+					style="width:140px;border-color: transparent;"
+					onmousemove="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+					onmouseout="this.style.backgroundColor='#B7C45B'" popupWidth="150">
+					<f:facet name="label">
+						<h:panelGroup style="width:150px;">
+							<h:outputText value="#{msg['menu.management']}"
+								style="font-size:14px; font-family: Arial;color: #6c522f" />
+						</h:panelGroup>
+					</f:facet>
+
+
+					<rich:menuItem submitMode="server"
+						action="#{menuController.dispCategories}"
+						style="background-image: url();background-color: #B7C45B;width:150px;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['Categories']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+					<rich:menuItem submitMode="server"
+						action="#{menuController.dispSubCategories}"
+						style="background-image: url();background-color: #B7C45B;width:150px;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['subCategories']}"
+							style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+					<rich:menuItem submitMode="server"
+						action="#{menuController.dispMenuItems}"
+						style="background-image: url();background-color: #B7C45B;width:150px;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['Menu.Items']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+
+					<rich:menuItem submitMode="server"
+						action="#{specialController.dispSpecials}"
+						style="background-image: url();background-color: #B7C45B;width:150px;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['Specials']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+
+				</rich:dropDownMenu>
+				<rich:dropDownMenu mode="server"
+					style="width:75px;border-color: transparent;"
+					onmousemove="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+					onmouseout="this.style.backgroundColor='#B7C45B'" popupWidth="160">
+					<f:facet name="label">
+						<h:panelGroup>
+							<h:outputText value="#{msg['feedback']}"
+								style="font-size:14px; font-family: Arial;color: #6c522f" />
+						</h:panelGroup>
+					</f:facet>
+					<rich:menuItem submitMode="server"
+						action="#{feedbackController.dispFeedback}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['View.Feedbacks']}"
+							style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+				</rich:dropDownMenu>
+
+				<rich:dropDownMenu mode="server"
+					style="width:72px;border-color: transparent;"
+					onmousemove="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+					onmouseout="this.style.backgroundColor='#B7C45B'" popupWidth="160">
+					<f:facet name="label">
+						<h:panelGroup>
+							<h:outputText value="#{msg['reports']}"
+								style="font-size:14px; font-family: Arial;color: #6c522f" />
+						</h:panelGroup>
+					</f:facet>
+
+
+
+					<rich:menuGroup label="Sales" id="salesId" style="background-image: url();background-color: #B7C45B;color: #6c522f !important;" onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'" onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+
+
+						<rich:menuItem submitMode="server" action="#{orderController.dispSalesReport}" style="background-image: url();background-color: #B7C45B;" onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'" onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+							<h:outputText value="#{msg['sales']}" style="color: #6c522f;"></h:outputText>
+						</rich:menuItem>
+
+						<rich:menuItem submitMode="server" action="#{orderController.dispSalesReportDaily}" style="background-image: url();background-color: #B7C45B;" onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'" onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+							<h:outputText value="#{msg['todays.sales']}" style="color: #6c522f;"></h:outputText>
+						</rich:menuItem>
+						<rich:menuItem submitMode="server" action="#{orderController.dispOrderReportDaily}" style="background-image: url();background-color: #B7C45B;" onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'" onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+							<h:outputText value="#{msg['today.order.daily']}" style="color: #6c522f;"></h:outputText>
+						</rich:menuItem>
+						
+						
+
+						<rich:menuItem submitMode="server" action="#{orderController.itemOrderReport}" style="background-image: url();background-color: #B7C45B;" onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'" onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+							<h:outputText value="#{msg['items.reports']}" style="color: #6c522f;"></h:outputText>
+						</rich:menuItem>
+
+
+					</rich:menuGroup>
+
+					<rich:menuGroup  label="Inventory" id="inventoryId"  style="background-image: url();background-color: #B7C45B;color: #6c522f;"
+					onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						
+						
+					<rich:menuItem submitMode="server"
+						action="#{inventoryController.dispInventoryReport}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['stock.in']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+
+					<rich:menuItem submitMode="server"
+						action="#{inventoryController.dispInventoryReportForStockout}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['stock.out']}"
+							style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+					
+                </rich:menuGroup>
+                
+				</rich:dropDownMenu>
+
+				<rich:dropDownMenu mode="server" id="inventory"
+					style="width:100px;border-color: transparent;"
+					onmousemove="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+					onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'"
+					popupWidth="150">
+					<f:facet name="label">
+						<h:panelGroup>
+							<h:outputText value="#{msg['inventory.management']}"
+								style="font-size:14px; font-family: Arial;color: #6c522f" />
+						</h:panelGroup>
+					</f:facet>
+					
+					<rich:menuItem submitMode="server"
+						action="#{inventoryController.goToDispInventoryTypePage}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['inventory.type.List']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+					
+						<rich:menuItem submitMode="server"
+						action="#{inventoryController.goToDispInventoryTypeItemPage}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['inventory.type.Item.List']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+					
+					<rich:menuItem submitMode="server"
+						action="#{inventoryController.goToDispInventoryVendorPage}"
+						style="background-image: url();background-color: #B7C45B;"
+						onmouseover="this.style.backgroundColor='#FF6D00';this.style.backgroundImage='none'"
+						onmouseout="this.style.backgroundColor='#B7C45B';this.style.backgroundImage='none'">
+						<h:outputText value="#{msg['inventory.Vendor.List']}" style="color: #6c522f;"></h:outputText>
+					</rich:menuItem>
+				</rich:dropDownMenu>
+
+			</rich:toolbarGroup>
+		</rich:toolbar>
+	</h:form>
+</ui:composition>
+</html>

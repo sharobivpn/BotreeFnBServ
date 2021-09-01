@@ -1,0 +1,356 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="OredrItemDetails" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d275b90f-9b17-4de9-acde-1ea77e5d9921">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="96"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[$F{Flag}.intValue()>0]]></conditionExpression>
+			<style forecolor="#F22962"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="dataset1" uuid="8b43fdcf-bf94-41cb-bf65-a809712b4fe0">
+		<parameter name="W_Store_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no,mobile_no,email_id, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email_id" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<subDataset name="dataset2" uuid="f0c71f5a-b588-48d4-a84c-21fa170eaf73"/>
+	<parameter name="W_StoreId" class="java.lang.Integer"/>
+	<parameter name="W_OrderFrom" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_OrderTo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select
+        $P{W_OrderFrom} Start_OrderDate
+        ,$P{W_OrderTo} End_OrderDate
+        ,x.Order_Id
+        ,x.order_no
+        ,x.Name
+        ,x.Price
+        ,x.waiterName
+        ,x.store_id AS store_id
+        ,x.Flag
+From
+(      SELECT o.store_customer_id
+       ,o.order_date
+       ,o.Id AS Order_Id
+       ,o.order_no
+       ,o.waiterName
+       ,o.store_id AS store_id
+       -- ,o.Flag
+       ,case
+           when o.Flag='N' then 1
+           else 0 end Flag
+       ,i.Name
+       ,i.Price
+FROM fo_t_orders o
+INNER JOIN fo_t_orders_item p ON p.Order_id = o.Id
+INNER JOIN fm_m_food_items i ON i.Id = p.Item_Id
+INNER JOIN fo_m_order_type t ON t.Id =o.Order_type_Id
+WHERE o.store_id =$P{W_StoreId} and  o.store_id !=0 and t.ordertype_short_name ='D'
+#and o.store_customer_id != 0
+and o.cancel='N'
+AND o.order_date >= $P{W_OrderFrom}
+AND o.order_date <= $P{W_OrderTo}
+)x
+]]>
+	</queryString>
+	<field name="Start_OrderDate" class="java.lang.Object"/>
+	<field name="End_OrderDate" class="java.lang.Object"/>
+	<field name="Order_Id" class="java.lang.Integer"/>
+	<field name="order_no" class="java.lang.String"/>
+	<field name="Name" class="java.lang.String"/>
+	<field name="Price" class="java.math.BigDecimal"/>
+	<field name="waiterName" class="java.lang.String"/>
+	<field name="store_id" class="java.lang.Integer"/>
+	<field name="Flag" class="java.lang.Integer"/>
+	<variable name="Total_Price" class="java.lang.Double" calculation="Sum">
+		<variableExpression><![CDATA[$F{Price}]]></variableExpression>
+	</variable>
+	<group name="Order">
+		<groupExpression><![CDATA[$F{Order_Id}]]></groupExpression>
+		<groupHeader>
+			<band height="20">
+				<textField isBlankWhenNull="true">
+					<reportElement style="style1" x="132" y="0" width="78" height="17" uuid="dbc88003-9df0-421a-a94f-38780f64110b"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="0" y="17" width="555" height="1" uuid="6244570a-ac2e-4e1c-a62e-598c487e1f08"/>
+				</line>
+				<textField isBlankWhenNull="true">
+					<reportElement style="style1" x="422" y="1" width="128" height="17" uuid="0f6a34b9-07f8-4ca7-bc95-c3ab7112ebd8"/>
+					<textElement textAlignment="Center">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{waiterName}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="style1" x="3" y="0" width="70" height="17" uuid="3636813b-710c-4ddc-83e5-22d7e6eefa02"/>
+					<textFieldExpression><![CDATA[$F{Start_OrderDate}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement style="style1" x="76" y="0" width="59" height="17" uuid="ea7e1c53-0b6d-4ca2-aa2d-ed5b80f28d24"/>
+					<textFieldExpression><![CDATA[$F{End_OrderDate}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="28">
+				<textField pattern="###0.00;(###0.00)" isBlankWhenNull="true">
+					<reportElement style="style1" x="319" y="2" width="100" height="15" uuid="58706e1d-8042-4cd7-ae15-61c7f3d7e415"/>
+					<textElement textAlignment="Right">
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Total_Price}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement style="style1" x="271" y="2" width="39" height="15" uuid="1b03e0a5-fabd-4195-a9c9-4fa0c68ba2c2"/>
+					<textElement textAlignment="Left">
+						<font size="11" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+				<line>
+					<reportElement x="2" y="24" width="553" height="1" uuid="634879e7-d070-44ce-8098-c1f9ed7db26f"/>
+					<graphicElement>
+						<pen lineWidth="1.0" lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="77" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="450" y="4" width="100" height="14" uuid="7c1fcf1b-3f37-4728-a4ce-07a43939e959"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="407" y="4" width="42" height="14" uuid="c2a98593-afdb-4788-9448-74366208681a"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date : ]]></text>
+			</staticText>
+			<textField pattern="h.mm a">
+				<reportElement x="448" y="20" width="53" height="14" uuid="797534a3-1dae-44bb-b430-0ec85b5c8beb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="407" y="20" width="40" height="14" uuid="6b196432-9d49-48f2-869f-3f6d1cf624c8"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time :]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement isPrintRepeatedValues="false" x="135" y="1" width="270" height="70" uuid="c3bdb63c-3e53-44b3-9544-61a447e6f1c8"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="90fc6224-e2f7-47dd-aff1-a1dd23bf63fc">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="70" width="270">
+						<textField isBlankWhenNull="true">
+							<reportElement x="30" y="2" width="233" height="20" uuid="535c8728-b811-4bd4-8e89-d739f7016874"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif" size="14" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement positionType="Float" x="30" y="23" width="233" height="14" uuid="1c22deb1-3c54-4182-8456-77948a6c45ef"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="74" y="38" width="189" height="14" uuid="4e57b972-e4db-4732-b9bb-cbf4730ddefa"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="67" y="53" width="196" height="14" uuid="6041fd01-1190-4b4a-ba2f-35c7bf61f8c3"/>
+							<textElement>
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{email_id}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="30" y="38" width="44" height="14" uuid="5ff709ca-8684-4a0f-866c-8928373eb60a"/>
+							<textElement>
+								<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="30" y="53" width="35" height="14" uuid="8e59e435-6044-48a5-8dc4-ed6a17db617f"/>
+							<textElement>
+								<font fontName="SansSerif" size="10" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="2" width="555" height="15" forecolor="#000000" backcolor="#999999" uuid="d9208f4f-bf29-432b-8023-5fa1cafdc6fc"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Order Items Details]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement x="16" y="28" width="59" height="14" uuid="b4a5b9ca-5be1-4580-853e-364f12aca649"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[From]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="28" width="49" height="15" uuid="fba38fc8-a570-4959-9513-c188135b43da"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="213" y="27" width="111" height="15" uuid="99a106bf-8b69-4eca-afaf-2fffdd74d155"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="422" y="27" width="100" height="15" uuid="a4ca10c0-295b-438a-937e-68b476491836"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Waiter Name]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="357c9f75-04d8-48ce-8f71-68937e2377b2"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="48" width="555" height="1" uuid="aa0ea95d-8db6-42e3-9ca7-204746b99ad4"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="332" y="27" width="88" height="15" uuid="33137416-396f-4d2e-8597-89ab152e6b82"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Item Price]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="22" width="555" height="1" uuid="061883b8-f4b7-478e-97d1-58e239164d59"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="4" width="555" height="15" forecolor="#000000" backcolor="#CCCCCC" uuid="13595ae6-3756-4e2b-a420-211858d60625"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Order Date                                                                         Item Details                                                   ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="144" y="27" width="68" height="15" uuid="a0cc9b3b-a6b1-4b63-8ee3-3e4da4d5c63f"/>
+				<textElement textAlignment="Center">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order No]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="26" splitType="Stretch">
+			<line>
+				<reportElement x="2" y="22" width="553" height="1" uuid="470acc29-0c8c-48a7-a017-4be7b2fe89db"/>
+				<graphicElement>
+					<pen lineWidth="1.0" lineStyle="Dotted"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement style="style1" x="213" y="1" width="145" height="17" uuid="b8421a02-85a5-4394-9b68-84c9cb00fa06"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement style="style1" x="359" y="0" width="61" height="18" uuid="1015279e-8f67-471c-befd-ae998397888f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{Price}]]></textFieldExpression>
+			</textField>
+			<elementGroup/>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="384" y="0" width="80" height="20" uuid="a3006f55-0027-4461-85e8-16f751e50b90"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="464" y="0" width="40" height="20" uuid="652b0e3f-353d-4720-9f5b-a582f125c51d"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

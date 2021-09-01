@@ -1,0 +1,657 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="LedgerBalance" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5cabdd2a-9eaa-4a9f-8dd8-6777e814a786">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset1" uuid="90e950d5-467a-4dd6-8e71-6a466f89025c">
+		<parameter name="W_Store_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no phone,mobile_no,email_id email, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone" class="java.lang.String"/>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email" class="java.lang.String"/>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="W_companyID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="W_storeID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_finyrID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_groupID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_ledgerID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[0]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_startDate" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="W_endDate" class="java.util.Date"/>
+	<queryString>
+		<![CDATA[select     x.ledger_id
+          ,x.ledger_name
+          ,x.store_name
+          ,x.address
+          ,x.phone
+          ,x.email
+          ,x.currency_code
+
+          ,y.inv_no
+          ,y.inv_date
+          ,y.inv_type
+          ,y.dr_amount
+          ,y.cr_amount
+          ,y.balance_amount
+          ,y.inv_status
+          ,(y.balance_amount+y.dr_amount-y.cr_amount) final_amount
+
+from
+(
+    select a.id ledger_id
+          ,concat(a.name,' - ',g.name ) ledger_name
+          ,s.store_name
+          ,s.address
+          ,s.phone_no phone
+          ,s.email_id email
+          ,s.currency currency_code
+
+    from acc_m_account a
+    inner join acc_m_group g on a.group_id=g.id
+    inner join sl_m_restaurant_store_c s on a.store_id=s.id
+    where(
+          ( a.id=$P{W_ledgerID} and $P{W_ledgerID}<>0 )
+          or
+          ($P{W_ledgerID}=0)
+         )
+    and (
+          ( a.group_id =$P{W_groupID} and $P{W_groupID}<>0 )
+          or
+          ($P{W_groupID}=0)
+        )
+    and a.store_id = $P{W_storeID}
+    and s.id=$P{W_storeID}
+
+)x
+left outer join
+(
+     select a.inv_no
+           ,a.inv_date
+           ,a.inv_type
+           ,case
+              when a.amount>=0 then amount
+              else 0 end dr_amount
+           ,case
+              when a.amount < 0 then abs(amount)
+              else 0 end cr_amount
+           ,0 balance_amount
+           ,a.inv_status
+           ,a.ledger_id
+           ,a.display_order
+     from
+     (
+        select 'Initial Balance' inv_no
+              ,null inv_date
+              ,null inv_type
+              ,( select get_ledgerBalance_asOn(a.id,a.group_id,2,$P{W_storeID},DATE_ADD($P{W_startDate}, INTERVAL -1 DAY)) ) amount
+              ,'' inv_status
+              ,a.id ledger_id
+              ,1 display_order
+
+
+        from acc_m_account a
+        where(
+              ( a.id=$P{W_ledgerID} and $P{W_ledgerID}<>0 )
+              or
+              ($P{W_ledgerID}=0)
+             )
+        and (
+              ( a.group_id =$P{W_groupID} and $P{W_groupID}<>0 )
+              or
+              ($P{W_groupID}=0)
+            )
+        and a.company_id=$P{W_companyID}
+        and a.store_id=$P{W_storeID}
+     )a
+
+    union all
+
+    select  'Opening Balance' inv_no
+           ,a.as_on_date inv_date
+           ,'OP' inv_type
+           ,case
+               when upper(a.pst_type_code) ='DR' then a.amount
+               else 0 end dr_amount
+           ,case
+               when upper(a.pst_type_code) ='CR' then a.amount
+               else 0 end cr_amount
+           ,0 balance_amount
+           ,'' inv_status
+           ,a.account_id ledger_id
+           ,2 display_order
+
+
+    from acc_t_account_opening a
+    inner join acc_m_account l on a.account_id=l.id
+    where(
+          ( a.account_id =$P{W_ledgerID} and $P{W_ledgerID}<>0 )
+          or
+          ($P{W_ledgerID}=0)
+         )
+    and (
+          ( l.group_id =$P{W_groupID} and $P{W_groupID}<>0 )
+          or
+          ($P{W_groupID}=0)
+         )
+    and a.store_id=$P{W_storeID}
+    and a.amount <> 0
+    and a.as_on_date>=$P{W_startDate} and a.as_on_date <= $P{W_endDate}
+
+
+    union all
+
+
+    select  j.inv_no
+           ,j.inv_date
+           ,j.narration inv_type
+           ,jp.dr_amount
+           ,jp.cr_amount
+           ,0 balance_amount
+           ,'' inv_status
+           ,jp.account_id ledger_id
+           ,3 display_order
+
+    from acc_t_journal j
+    inner join acc_t_journal_post jp on j.id=jp.journal_id
+    where (
+            ( jp.account_id =$P{W_ledgerID} and $P{W_ledgerID}<>0 )
+            or
+            ($P{W_ledgerID}=0)
+          )
+    and (
+          ( jp.account_group_id =$P{W_groupID} and $P{W_groupID}<>0 )
+          or
+          ($P{W_groupID}=0)
+         )
+    and j.inv_date>=$P{W_startDate} and j.inv_date <= $P{W_endDate}
+    and j.store_id=$P{W_storeID}
+
+
+) y on x.ledger_id=y.ledger_id
+order by x.ledger_name,y.display_order,y.inv_date
+;]]>
+	</queryString>
+	<field name="ledger_id" class="java.lang.Integer"/>
+	<field name="ledger_name" class="java.lang.String"/>
+	<field name="store_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="phone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="currency_code" class="java.lang.String"/>
+	<field name="inv_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="inv_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="inv_type" class="java.lang.String"/>
+	<field name="dr_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cr_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="balance_amount" class="java.lang.Long"/>
+	<field name="inv_status" class="java.lang.String"/>
+	<field name="final_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="cus_dr" class="java.math.BigDecimal" resetType="Group" resetGroup="ledger" calculation="Sum">
+		<variableExpression><![CDATA[$F{dr_amount}]]></variableExpression>
+	</variable>
+	<variable name="total_dr" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{dr_amount}]]></variableExpression>
+	</variable>
+	<variable name="cus_cr" class="java.math.BigDecimal" resetType="Group" resetGroup="ledger" calculation="Sum">
+		<variableExpression><![CDATA[$F{cr_amount}]]></variableExpression>
+	</variable>
+	<variable name="total_cr" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{cr_amount}]]></variableExpression>
+	</variable>
+	<variable name="row_balance" class="java.math.BigDecimal" resetType="Group" resetGroup="ledger" calculation="Sum">
+		<variableExpression><![CDATA[$F{final_amount}]]></variableExpression>
+	</variable>
+	<variable name="total_balance" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{final_amount}]]></variableExpression>
+	</variable>
+	<group name="ledger">
+		<groupExpression><![CDATA[$F{ledger_id}]]></groupExpression>
+		<groupHeader>
+			<band height="11">
+				<staticText>
+					<reportElement mode="Opaque" x="1" y="0" width="555" height="11" forecolor="#000000" backcolor="#CCCCCC" uuid="3f454e7c-7667-485f-a2dc-7cf9599da0d7"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy">
+					<reportElement x="5" y="0" width="281" height="11" uuid="bd0c4aad-d1bf-48ad-be35-9696d48e430b"/>
+					<textElement>
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{ledger_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="14">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="11" forecolor="#000000" backcolor="#CCCCCC" uuid="5b475b2c-ffe9-4fa1-8c77-de026662d2c2"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="291" y="1" width="59" height="10" uuid="00ca0ea6-e4be-474e-826e-0c8861af9573"/>
+					<textElement textAlignment="Right">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cus_dr}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="356" y="1" width="68" height="10" uuid="c4d05a93-707a-4948-b443-9ce3aa1a4aec"/>
+					<textElement textAlignment="Right">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cus_cr}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+					<reportElement x="429" y="1" width="88" height="10" uuid="8224a137-d486-4997-8148-2d5a96bb3423"/>
+					<textElement textAlignment="Right">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( new Boolean($V{row_balance}.intValue() >= 0) ? $V{row_balance} : (($V{row_balance}).doubleValue())*-1 )]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="215" y="0" width="68" height="11" uuid="8de861fc-1db4-4534-83d7-ac666747d3e1"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="6" isBold="true" pdfFontName="Helvetica-Bold"/>
+					</textElement>
+					<text><![CDATA[Transaction Balance :]]></text>
+				</staticText>
+				<textField pattern="###0" isBlankWhenNull="true">
+					<reportElement x="520" y="-1" width="28" height="10" uuid="597ecdc8-401f-4eb4-85b9-d373b4bd696c"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[( new Boolean($V{row_balance}.intValue() >= 0) ? "Dr" : "Cr")]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="102" splitType="Stretch">
+			<staticText>
+				<reportElement x="441" y="5" width="40" height="14" uuid="94f11e1b-8840-4db3-a14d-6997d9764ed4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yy">
+				<reportElement x="482" y="5" width="62" height="14" uuid="2f1cc861-f7f2-4ad2-8ddc-c5b192abeb07"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="441" y="22" width="40" height="14" uuid="58ec7eba-50ec-40a1-bd11-c71d7ab0704e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Time:]]></text>
+			</staticText>
+			<textField pattern="HH.mm">
+				<reportElement x="482" y="22" width="62" height="14" uuid="4a8ca7d6-a84d-4c7e-a9c7-133caefbaac0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="159" y="0" width="270" height="81" uuid="cb0916ed-b410-45be-b89a-cff335153fde"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="aa8c3391-12f9-4a38-803e-6654f244c89d">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_storeID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="81" width="270">
+						<textField>
+							<reportElement x="37" y="1" width="233" height="20" uuid="9c34fdd8-a830-4d10-9253-fb1f8dc4c6dd"/>
+							<textElement>
+								<font size="14" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="37" y="24" width="233" height="14" uuid="0ea90d5e-e858-4fea-9bb8-f94c3d29f021"/>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="81" y="38" width="189" height="14" uuid="12e2f20d-beda-489b-8164-fecc141b35e7"/>
+							<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="81" y="51" width="189" height="14" uuid="707a9616-ffda-4f5b-bed7-9fe11494dadd"/>
+							<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="37" y="38" width="44" height="14" uuid="f76e8ca7-e958-4614-a1f3-cdfdd69803eb"/>
+							<textElement>
+								<font isBold="true"/>
+							</textElement>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="37" y="51" width="44" height="14" uuid="654c3379-107b-4928-b622-b91d6a04649c"/>
+							<textElement>
+								<font isBold="true"/>
+							</textElement>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40">
+			<line>
+				<reportElement x="0" y="27" width="555" height="1" uuid="fef4d632-11df-43c2-b763-25dc94fd4446"/>
+			</line>
+			<staticText>
+				<reportElement x="7" y="28" width="44" height="11" uuid="a6f7061d-a239-4969-9457-97ca921601a9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Date#]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="555" height="14" forecolor="#000000" backcolor="#CCCCCC" uuid="3bab1b33-3eaa-40e2-b7d7-21b6d169e70c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="159" y="2" width="116" height="12" uuid="f29630e5-38a0-45a0-9e0a-621b339c4073"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Ledger Report From]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="211" y="14" width="42" height="11" uuid="ff1b3db6-765a-4068-8548-6e4123ef499f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Currency :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="53" y="28" width="80" height="11" uuid="15397f77-d90c-453d-8228-7c49b248e20f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Invoice]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="268" y="28" width="81" height="11" uuid="64369e8f-42a5-40ef-bd58-bff3a3c823e8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Debit Amount]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="252" y="15" width="100" height="11" uuid="4cd14cab-2e95-43f7-b63b-653b82b76fe8"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{currency_code}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="39" width="555" height="1" uuid="8ecfa023-b411-4c8c-8300-86ef79ad1ba0"/>
+			</line>
+			<textField>
+				<reportElement x="421" y="14" width="90" height="12" uuid="edd4af23-addb-4d4f-b86e-048168e1e33b"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="513" y="14" width="39" height="11" uuid="58f15d1f-608c-452f-8f4b-38191e0a1dd3"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="280" y="2" width="45" height="12" uuid="b6bb3d83-d2ac-41de-9824-5362eb446f24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_startDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="340" y="2" width="51" height="12" uuid="96a0347f-9f3f-4323-b14a-1d32fb95f512"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_endDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="323" y="2" width="14" height="12" uuid="57d2dd0a-ea73-4dbd-a73b-7c73772a60a8"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[To]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="141" y="28" width="59" height="11" uuid="eb67346f-f934-49ca-98be-cb0e26d7e003"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Narration]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="356" y="28" width="73" height="11" uuid="6f25ae40-f245-406c-b51d-990f29ae3ee9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Credit Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="459" y="28" width="73" height="11" uuid="ffcc463e-5cf3-4135-b416-ea15d5db1d10"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Balance Amount]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="292" y="0" width="58" height="11" uuid="b11721f0-71c1-4209-bc31-732e97a4a1fb">
+					<printWhenExpression><![CDATA[new Boolean( $F{dr_amount}.doubleValue()<0 || $F{dr_amount}.doubleValue()>0)]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{dr_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement x="7" y="0" width="44" height="11" uuid="a029d005-fe69-4a17-9c6c-3d4dd75646b3"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inv_date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="141" y="0" width="143" height="11" uuid="a6f16a54-7e46-4a3e-b6d8-a8996bc83bb7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inv_type}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="53" y="0" width="85" height="11" uuid="95b739cf-3b80-4a1e-9ded-6b4596cac91b"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{inv_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="351" y="0" width="73" height="11" uuid="4b8c599e-bc76-4640-a06c-e3935f049043"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cr_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00" isBlankWhenNull="true">
+				<reportElement x="429" y="1" width="88" height="11" uuid="df28b581-0c1a-4494-bb06-9162259ff76e"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( new Boolean($V{row_balance}.intValue() >= 0) ? $V{row_balance} : (($V{row_balance}).doubleValue())*-1 )]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="520" y="1" width="28" height="11" uuid="ddc482c6-75eb-4030-abab-0d309b4a9f32"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( new Boolean($V{row_balance}.intValue() >= 0) ? "Dr" : "Cr")]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="15" splitType="Stretch">
+			<line>
+				<reportElement x="6" y="1" width="546" height="1" uuid="cb88fa79-ee07-47bd-8c87-587b75deb6f6"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="279" y="2" width="71" height="12" uuid="694cbb53-642b-439a-8da1-450b19b6ddc5"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_dr}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="352" y="2" width="73" height="12" uuid="f1ce65f0-d644-48f1-86f1-e4fbe75135a0"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_cr}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="429" y="2" width="87" height="12" uuid="fb9ac8af-5b2b-42fc-aeec-158015b17f7f"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( new Boolean($V{total_balance}.intValue() >= 0) ? $V{total_balance} : (($V{total_balance}).doubleValue())*-1 )]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="520" y="2" width="28" height="12" uuid="191eb5c6-df46-490b-b102-f541233e6374"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[( new Boolean($V{total_balance}.intValue() >= 0) ? "Dr" : "Cr")]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

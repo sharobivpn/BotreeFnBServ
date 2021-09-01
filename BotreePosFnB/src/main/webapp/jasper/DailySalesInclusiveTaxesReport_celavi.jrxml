@@ -1,0 +1,778 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DailySalesInclusiveTaxesReport" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="8dd586e3-3726-4f24-9894-1ec054d4b685">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="89"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="dataset1" uuid="ae3fb452-88ca-4c80-b216-09f138ead785">
+		<parameter name="W_Store_ID" class="java.lang.String">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no,mobile_no,email_id, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email_id" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="W_StartDate" class="java.lang.String"/>
+	<parameter name="W_StoreId" class="java.lang.String"/>
+	<parameter name="W_EndDate" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[select x.order_time
+             ,x.order_id
+             ,case
+                when x.discount_percentage=100 then 0
+                else x.bill_amt end bill_amt
+             ,case
+                when x.discount_percentage=100 then 0
+                else x.sub_total_amt end sub_total_amt
+            ,case
+                when x.discount_percentage=100 then 0
+                else x.service_tax_amt end service_tax_amt
+            ,case
+                when x.discount_percentage=100 then 0
+                else x.service_charge_amt end service_charge_amt
+            ,case
+                when x.discount_percentage=100 then 0
+                else x.vat_amt end vat_amt
+            ,case
+                when x.discount_percentage=100 then 0
+                else x.gross_amt end gross_amt
+            ,case
+                when x.discount_percentage=100 then 0
+                else x.customer_discount end customer_discount
+            ,case
+                when x.discount_percentage=100 then 0
+                else x.discount_percentage end discount_percentage
+            ,case
+                when x.discount_percentage=100 then 0
+                else x.round_off_amt end round_off_amt
+            ,case
+                when x.discount_percentage <> 100 then ''
+                else x.discount_reason end discount_reason
+            /*
+             ,x.bill_amt
+             ,x.service_tax_amt
+             ,x.service_charge_amt
+             ,x.vat_amt
+             ,x.gross_amt
+             ,x.customer_discount
+             ,x.discount_percentage
+             ,x.round_off_amt
+
+             ,x.discount_reason
+             */
+             ,x.cash_amount
+             ,x.card_amount
+             ,x.credit_amount
+             ,it.id
+             ,it.Menu_Item_name
+             ,sum(ft.quantityof_item*ft.rate) menu_amount
+             /*
+             ,fmt.id item_id
+             ,fmt.Name item_name
+             ,ft.rate
+             ,ft.quantityof_item item_qty
+             ,(ft.quantityof_item*ft.rate) item_amount
+             */
+from(
+       select x.order_time
+             ,x.order_id
+             ,x.bill_amt
+             ,x.sub_total_amt
+             ,x.service_tax_amt
+             ,x.service_charge_amt
+             ,x.vat_amt
+             ,x.gross_amt
+             ,x.customer_discount
+             ,x.discount_percentage
+             ,x.round_off_amt
+             ,x.discount_reason
+             ,sum(x.cash_amount) cash_amount
+             ,sum(x.card_amount) card_amount
+             ,sum(x.credit_amount) credit_amount
+             ,sum(x.cash_amount+x.card_amount+x.credit_amount) total_amount
+
+       from
+       (
+
+            SELECT
+                 case
+                    when sr.order_date is null then b.order_date
+                    else cast(sr.open_time as date) end order_date
+                ,paid_amount cash_amount
+                ,0 card_amount
+                ,0 credit_amount
+                ,a.order_id
+                ,b.order_time
+                ,bi.bill_amt
+                ,bi.sub_total_amt
+                ,bi.service_tax_amt
+                ,bi.service_charge_amt
+                ,bi.vat_amt
+                ,amount gross_amt
+                ,bi.customer_discount
+                ,bi.discount_percentage
+                ,bi.round_off_amt
+                ,bi.discount_reason
+
+            FROM bp_t_fo_orders_payment a
+            inner join fo_t_orders b on a.order_id = b.id
+            inner join bp_t_bill bi on b.id=bi.order_id
+            left join st_t_day_book_reg sr on b.store_id=sr.store_id
+            where payment_mode in ('cash')
+            and b.cancel='N'
+            and b.store_id=$P{W_StoreId}
+            and b.store_id=$P{W_StoreId}
+            and (
+                  (
+                     (b.order_date  between  $P{W_StartDate} and $P{W_EndDate}  )
+                      and
+                     (sr.order_date is null)
+                  )
+                  or
+                 (
+                     ( STR_TO_DATE(b.order_time, '%d/%m/%Y %T') between sr.open_time and ifnull(sr.close_time,now()) )
+                     and
+                     ( cast(sr.open_time as date) between  $P{W_StartDate} and $P{W_EndDate} )
+                     and
+                     (sr.order_date is not null)
+                  )
+               )
+
+            union all
+
+            SELECT
+                 case
+                    when sr.order_date is null then b.order_date
+                    else cast(sr.open_time as date) end order_date
+                 ,0 cash_amount
+                ,paid_amount card_amount
+                ,0 credit_amount
+                ,a.order_id
+                ,b.order_time
+                ,bi.bill_amt
+                ,bi.sub_total_amt
+                ,bi.service_tax_amt
+                ,bi.service_charge_amt
+                ,bi.vat_amt
+                ,amount gross_amt
+                ,bi.customer_discount
+                ,bi.discount_percentage
+                ,bi.round_off_amt
+                ,bi.discount_reason
+
+            FROM bp_t_fo_orders_payment a
+            inner join fo_t_orders b on a.order_id = b.id
+            inner join bp_t_bill bi on b.id=bi.order_id
+            left join st_t_day_book_reg sr on b.store_id=sr.store_id
+            where payment_mode in ('card')
+            and b.cancel='N'
+            and b.store_id=$P{W_StoreId}
+            and (
+                  (
+                     (b.order_date  between  $P{W_StartDate} and $P{W_EndDate}  )
+                      and
+                     (sr.order_date is null)
+                  )
+                  or
+                 (
+                     ( STR_TO_DATE(b.order_time, '%d/%m/%Y %T') between sr.open_time and ifnull(sr.close_time,now()) )
+                     and
+                     ( cast(sr.open_time as date) between  $P{W_StartDate} and $P{W_EndDate} )
+                     and
+                     (sr.order_date is not null)
+                  )
+               )
+
+
+
+            union all
+
+            SELECT
+                 case
+                    when sr.order_date is null then b.order_date
+                    else cast(sr.open_time as date) end order_date
+                ,0 cash_amount
+                ,0 card_amount
+                ,amount-paid_amount credit_amount
+                ,a.order_id
+                ,b.order_time
+                ,bi.bill_amt
+                ,bi.sub_total_amt
+                ,bi.service_tax_amt
+                ,bi.service_charge_amt
+                ,bi.vat_amt
+                ,amount gross_amt
+                ,bi.customer_discount
+                ,bi.discount_percentage
+                ,bi.round_off_amt
+                ,bi.discount_reason
+
+            FROM bp_t_fo_orders_payment a
+            inner join fo_t_orders b on a.order_id = b.id
+            inner join bp_t_bill bi on b.id=bi.order_id
+            left join st_t_day_book_reg sr on b.store_id=sr.store_id
+            where payment_mode in ('nopay')
+            and b.cancel='N'
+            and b.store_id=$P{W_StoreId}
+            and (
+                  (
+                     (b.order_date  between  $P{W_StartDate} and $P{W_EndDate}  )
+                      and
+                     (sr.order_date is null)
+                  )
+                  or
+                 (
+                     ( STR_TO_DATE(b.order_time, '%d/%m/%Y %T') between sr.open_time and ifnull(sr.close_time,now()) )
+                     and
+                     ( cast(sr.open_time as date) between  $P{W_StartDate} and $P{W_EndDate} )
+                     and
+                     (sr.order_date is not null)
+                  )
+               )
+
+
+
+      )x group by  x.order_time
+                  ,x.order_id
+                  ,x.bill_amt
+                  ,x.sub_total_amt
+                  ,x.service_tax_amt
+                  ,x.service_charge_amt
+                  ,x.vat_amt
+                  ,x.gross_amt
+                  ,x.customer_discount
+                  ,x.discount_percentage
+                  ,x.round_off_amt
+                  ,x.discount_reason
+)x  inner join fo_t_orders_item ft on x.order_id=ft.Order_Id
+    inner join fm_m_food_items fmt on ft.item_id= fmt.id
+    inner join fm_m_food_types it on fmt.Item_type_Id=it.Id
+where ft.quantityof_item > 0
+
+group by
+              x.order_time
+             ,x.order_id
+             ,x.bill_amt
+             ,x.sub_total_amt
+             ,x.service_tax_amt
+             ,x.service_charge_amt
+             ,x.vat_amt
+             ,x.gross_amt
+             ,x.customer_discount
+             ,x.discount_percentage
+             ,x.round_off_amt
+             ,x.discount_reason
+             ,x.cash_amount
+             ,x.card_amount
+             ,x.credit_amount
+             ,it.id
+             ,it.Menu_Item_name
+;]]>
+	</queryString>
+	<field name="order_time" class="java.lang.String"/>
+	<field name="order_id" class="java.lang.Integer"/>
+	<field name="bill_amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sub_total_amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="service_tax_amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="service_charge_amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vat_amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="gross_amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="customer_discount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="discount_percentage" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="round_off_amt" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="discount_reason" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="cash_amount" class="java.math.BigDecimal"/>
+	<field name="card_amount" class="java.math.BigDecimal"/>
+	<field name="credit_amount" class="java.math.BigDecimal"/>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="Menu_Item_name" class="java.lang.String"/>
+	<field name="menu_amount" class="java.lang.Double"/>
+	<variable name="tot_gross" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{gross_amt}]]></variableExpression>
+	</variable>
+	<variable name="tot_ST" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{service_tax_amt}]]></variableExpression>
+	</variable>
+	<variable name="tot_VAT" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{vat_amt}]]></variableExpression>
+	</variable>
+	<variable name="tot_SC" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{service_charge_amt}]]></variableExpression>
+	</variable>
+	<variable name="tot_CD" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{customer_discount}]]></variableExpression>
+	</variable>
+	<variable name="tot_ROFF" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{round_off_amt}]]></variableExpression>
+	</variable>
+	<variable name="tot_NET" class="java.math.BigDecimal" resetType="None" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{bill_amt}]]></variableExpression>
+	</variable>
+	<variable name="tot_cash" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{cash_amount}]]></variableExpression>
+	</variable>
+	<variable name="tot_Card" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{card_amount}]]></variableExpression>
+	</variable>
+	<variable name="tot_Credit" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{credit_amount}]]></variableExpression>
+	</variable>
+	<variable name="tot_Amount" class="java.math.BigDecimal" resetType="Group" resetGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{menu_amount}]]></variableExpression>
+	</variable>
+	<variable name="tot_tot" class="java.math.BigDecimal" incrementType="Group" incrementGroup="orderid" calculation="Sum">
+		<variableExpression><![CDATA[$F{sub_total_amt}]]></variableExpression>
+	</variable>
+	<group name="orderid">
+		<groupExpression><![CDATA[$F{order_id}]]></groupExpression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="1"/>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="120" splitType="Stretch">
+			<componentElement>
+				<reportElement x="159" y="0" width="277" height="74" uuid="7f617578-2cde-4060-9ed1-693deedf2be3"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="3a633d2e-2d0f-484f-96d4-3ab8fecde349">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="74" width="277">
+						<textField>
+							<reportElement x="37" y="1" width="236" height="20" uuid="5873f2f6-dbbf-4fe3-b067-7cdd66a4b858"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif" size="14" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField isStretchWithOverflow="true" isBlankWhenNull="true">
+							<reportElement positionType="Float" x="37" y="22" width="236" height="14" uuid="a103634c-fb93-401e-9c50-e9698e000fa1"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="77" y="37" width="196" height="14" uuid="71410196-11ce-4392-9a57-e494a0d5f79e"/>
+							<textElement textAlignment="Left">
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement positionType="Float" x="37" y="37" width="35" height="14" uuid="21831368-b3b6-4f1e-a3a8-436f6f344358"/>
+							<textElement>
+								<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement positionType="Float" x="37" y="50" width="35" height="14" uuid="f1aded9c-573f-4add-b532-b74f9061caa7"/>
+							<textElement>
+								<font fontName="SansSerif" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+							</textElement>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+						<textField isBlankWhenNull="true">
+							<reportElement positionType="Float" x="77" y="49" width="196" height="14" uuid="d287216b-9f00-4807-86ec-613a70de982d"/>
+							<textElement>
+								<font fontName="SansSerif"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{email_id}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="443" y="3" width="41" height="14" uuid="52f1a2ec-2927-4060-be81-fe2de5687e50"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[From:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="75" width="554" height="15" forecolor="#000000" backcolor="#CCCCCC" uuid="718fd8b8-5165-4476-abdb-c977e417194f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Daily Sales Inclusive Taxes Report]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="245" y="89" width="73" height="16" uuid="ade6f5aa-c4e0-46dc-b200-bc9705b5d20f"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="8c883c52-ed6c-42c5-a47b-d839a42d91ed">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreId}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="16" width="73">
+						<textField isBlankWhenNull="true">
+							<reportElement x="1" y="0" width="62" height="15" uuid="45a5fe20-e483-4c2d-a558-fe6eb1ec1ee9"/>
+							<textElement textAlignment="Left" verticalAlignment="Middle">
+								<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{currency}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<staticText>
+				<reportElement x="206" y="91" width="39" height="15" uuid="0349d67e-c9ac-4da6-83a5-00cd90967852"/>
+				<textElement>
+					<font fontName="SansSerif" size="8" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Currency:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="443" y="17" width="41" height="14" uuid="0a55ba86-79de-4db5-bbe3-ffebc5a2e676"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="484" y="3" width="65" height="14" uuid="d1c19a1f-45f2-4d52-bb51-02c22abeaefa"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{W_StartDate}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="484" y="17" width="65" height="14" uuid="e664ae11-2419-45dd-a732-916c814aa99d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$P{W_EndDate}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="119" width="555" height="1" uuid="2af69507-e147-4d20-82a8-edca10236c54"/>
+			</line>
+			<line>
+				<reportElement x="0" y="106" width="555" height="1" uuid="19fa3292-a77f-4aeb-a68f-88d63cc914d7"/>
+			</line>
+			<staticText>
+				<reportElement x="90" y="107" width="35" height="12" uuid="3faba6fe-3844-4ae3-9ed0-8418c628ab46"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="107" width="21" height="12" uuid="bf568177-a469-4709-a6e8-1d7159ffb512"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[NO.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="23" y="107" width="42" height="12" uuid="12179607-edb5-4f2c-8386-aa6a60e06ba7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[DATE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="126" y="107" width="35" height="12" uuid="f0bdacc6-284c-47cd-b83d-1b8c436a080d"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[SGST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="161" y="107" width="35" height="12" uuid="8c291e42-199b-45bf-a47b-a7626bf01919"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[CGST]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="196" y="107" width="30" height="12" uuid="36ef3a06-db62-499c-80a0-43e65e431fd7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[SC]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="224" y="107" width="30" height="12" uuid="c432b0ef-3632-4b5b-838f-c30e6067b63b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Disc]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="254" y="107" width="42" height="12" uuid="5921f796-fc87-4fb9-9de8-90687fd0fc4c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Gross]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="296" y="107" width="38" height="12" uuid="f565c326-dc5b-4bd5-a4a8-6b24256cbdf6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Cash]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="334" y="107" width="35" height="12" uuid="dc5d687e-fd62-4bbc-9515-fca14d35f814"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Card]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="369" y="107" width="26" height="12" uuid="cef8649d-f075-483f-af80-4b20ad971033"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Credit]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="395" y="107" width="47" height="12" uuid="a2bd8780-487b-4506-bdc0-172c5512e142"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Menu Cat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="448" y="107" width="38" height="12" uuid="0bcfc72c-bb3e-40dd-a666-d82672743b57"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="489" y="107" width="66" height="12" uuid="d17b0901-f600-4836-bce3-15d5dbc82f27"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Non Ch Reason]]></text>
+			</staticText>
+		</band>
+	</title>
+	<detail>
+		<band height="14" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="1" width="554" height="13" forecolor="#000000" backcolor="#DEDEDE" uuid="1d362fbf-6599-45fd-8950-103297e9d2b5"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="90" y="1" width="35" height="12" printWhenGroupChanges="orderid" uuid="bb293aea-1499-4389-a8ea-ab8748068398"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sub_total_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy HH.mm.ss">
+				<reportElement isPrintRepeatedValues="false" x="23" y="1" width="65" height="12" printWhenGroupChanges="orderid" uuid="5a2160c7-398b-40b0-bdc0-fd83e1205435"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_time}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement isPrintRepeatedValues="false" x="1" y="1" width="22" height="12" printWhenGroupChanges="orderid" uuid="78fbc3b1-40ec-4308-8b73-41bd63971b26"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="126" y="1" width="35" height="12" printWhenGroupChanges="orderid" uuid="3381dc7e-49ca-491e-b3c9-e2cb337aeb77"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{service_tax_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="161" y="1" width="35" height="12" printWhenGroupChanges="orderid" uuid="a44c4399-ccb4-4904-a63b-35e2aaec612c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vat_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="196" y="1" width="30" height="12" printWhenGroupChanges="orderid" uuid="7270f0c6-ab21-4065-9c18-6696fcbf8fb0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{service_charge_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="224" y="1" width="30" height="12" printWhenGroupChanges="orderid" uuid="2cd386c5-cad3-4a03-98e0-7eac0e37d850"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{customer_discount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="254" y="1" width="42" height="12" printWhenGroupChanges="orderid" uuid="74187946-f1d9-416c-b227-c88407ce6386"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{gross_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="296" y="1" width="38" height="12" printWhenGroupChanges="orderid" uuid="7e7806a6-67fd-4d70-bcbc-e2a7e70d649c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{cash_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="334" y="1" width="35" height="12" printWhenGroupChanges="orderid" uuid="6c5cd7bb-edf9-4a68-9bd1-381602175f17"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{card_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="369" y="1" width="26" height="12" printWhenGroupChanges="orderid" uuid="a7c5c830-10a5-4883-8ae2-448d1ce594a5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{credit_amount}]]></textFieldExpression>
+			</textField>
+			<textField pattern="">
+				<reportElement x="395" y="1" width="64" height="12" uuid="725dfdad-ae1b-4708-954b-d4a339236e8d"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Menu_Item_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement x="460" y="1" width="26" height="12" uuid="42ad569e-8b8f-42ca-89b6-93ba8153252b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{menu_amount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement isPrintRepeatedValues="false" x="489" y="1" width="66" height="12" printWhenGroupChanges="orderid" uuid="9c1dbf3b-5755-4934-9fb2-b8c335bf1830"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{discount_reason}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="24">
+			<line>
+				<reportElement x="0" y="22" width="555" height="1" uuid="56083a03-a32b-4bcc-b61d-a5ef2c575eeb"/>
+			</line>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="90" y="0" width="35" height="12" printWhenGroupChanges="orderid" uuid="baed63e6-5cc0-4a15-95a4-36fb695647a2"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_tot}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="126" y="0" width="35" height="12" printWhenGroupChanges="orderid" uuid="de9979d2-cef9-4ca5-93c2-e7feb76966a7"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_ST}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="161" y="0" width="35" height="12" printWhenGroupChanges="orderid" uuid="afa42554-9bdc-4d3a-8cda-36ecdcaedd0f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_VAT}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="196" y="0" width="30" height="12" printWhenGroupChanges="orderid" uuid="edde6e71-a95d-46be-b0e8-2eda9e2c26e9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_SC}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="224" y="0" width="30" height="12" printWhenGroupChanges="orderid" uuid="54ecb823-b0ab-463a-89ff-76bea69f420c"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_CD}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="254" y="0" width="42" height="12" printWhenGroupChanges="orderid" uuid="b9951742-bdbd-43ba-911c-a28791981c65"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_gross}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="296" y="0" width="38" height="12" printWhenGroupChanges="orderid" uuid="5d639b2c-ab76-4475-9ddd-f700180802b6"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_cash}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="334" y="0" width="35" height="12" printWhenGroupChanges="orderid" uuid="d812c8c5-8418-4467-8e84-029f51ca9ba5"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_Card}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00">
+				<reportElement isPrintRepeatedValues="false" x="369" y="0" width="26" height="12" printWhenGroupChanges="orderid" uuid="75f3d103-565a-4800-a947-d366e19c59e9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="7" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{tot_Credit}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

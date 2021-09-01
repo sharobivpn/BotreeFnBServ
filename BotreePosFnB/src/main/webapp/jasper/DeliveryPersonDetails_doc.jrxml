@@ -1,0 +1,477 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DeliveryPersonDetails" pageWidth="950" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="910" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d275b90f-9b17-4de9-acde-1ea77e5d9921">
+	<property name="ireport.zoom" value="0.75"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<style name="style1">
+		<conditionalStyle>
+			<conditionExpression><![CDATA[]]></conditionExpression>
+			<style forecolor="#F22962"/>
+		</conditionalStyle>
+	</style>
+	<subDataset name="dataset1" uuid="8b43fdcf-bf94-41cb-bf65-a809712b4fe0"/>
+	<subDataset name="dataset2" uuid="f0c71f5a-b588-48d4-a84c-21fa170eaf73"/>
+	<parameter name="W_StoreID" class="java.lang.Integer"/>
+	<parameter name="W_OrderFrom" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_OrderTo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_DelboyID" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select y.*
+        ,s.store_name
+        ,s.address
+        ,s.phone_no
+        ,s.mobile_no
+        ,s.email_id
+ from sl_m_restaurant_store_c s
+left join
+(
+    Select
+       x.order_date
+       ,x.store_id
+       ,x.Order_Id
+       ,x.order_no
+       ,x.delivery_person_name
+       ,x.amt
+       ,x.open_time
+       ,x.close_time
+       ,x.deducted_amt
+       ,x.pay_to_doc_amt
+,x.customer_name
+    From
+    (
+            SELECT o.order_date
+                   ,o.store_id
+                   ,o.Id AS Order_Id
+	                 ,o.order_no AS order_no
+                   ,o.delivery_person_name
+                   ,pmt.amount amt
+                   ,sc.open_time
+                   ,sc.close_time
+                   ,(pmt.amount*0.2) deducted_amt
+                   ,(pmt.amount-(pmt.amount*0.2)) pay_to_doc_amt
+,o.customer_name
+
+            FROM fo_t_orders o
+            INNER JOIN fo_t_orders_item p ON p.Order_id = o.Id
+            INNER JOIN fm_m_food_items i ON i.Id = p.Item_Id
+            INNER JOIN fo_m_order_type t ON t.Id =o.Order_type_Id
+            left join sl_m_restaurant_store_c sc on sc.id=o.store_id
+            left join bp_t_fo_orders_payment pmt on pmt.order_id=o.id
+            left join delivery_boy db on db.name=o.delivery_person_name
+            WHERE o.store_id =$P{W_StoreID}
+
+            -- and  o.store_id !=0
+            -- and t.ordertype_short_name ='D'
+            -- and o.store_customer_id != 0
+            and o.cancel='N'
+	  AND pmt.payment_mode is null
+            and o.delivery_person_name is not null
+            and upper(o.delivery_person_name) <>'NULL'
+            and length (o.delivery_person_name)>0
+            AND o.order_date >= $P{W_OrderFrom}
+            AND o.order_date <= $P{W_OrderTo}
+            and (
+          STR_TO_DATE(o.order_time, '%d/%m/%Y %H:%i:%s')>= ADDTIME( STR_TO_DATE($P{W_OrderFrom}, '%Y-%m-%d %H:%i:%s') , CONCAT(ifnull(SUBSTR(sc.open_time,1,2),'00'), ':',ifnull(SUBSTR(trim(sc.open_time),4,2),'00')) )
+          and STR_TO_DATE(o.order_time, '%d/%m/%Y %H:%i:%s') <= ADDTIME( STR_TO_DATE($P{W_OrderTo}, '%Y-%m-%d %H:%i:%s') , CONCAT(cast(working_hours+ifnull(SUBSTR(sc.open_time,1,2),'00') as char),':',ifnull(SUBSTR(trim(sc.open_time),4,2),'00')) )
+          and ifnull(sc.working_hours,0)<>0
+        )
+and (
+            (db.iddelivery_boy=$P{W_DelboyID} and ifnull($P{W_DelboyID},0) <> 0   )
+
+            or
+            ( ifnull($P{W_DelboyID},0)=0  )
+
+          )
+
+            group by o.order_date
+                   ,o.store_id
+                   ,o.Id
+                   ,o.delivery_person_name
+                   ,sc.open_time
+                   ,sc.close_time
+                   ,pmt.amount
+    )x
+)y on s.id=y.store_id
+where s.id=$P{W_StoreID}
+Order By y.delivery_person_name
+;]]>
+	</queryString>
+	<field name="order_date" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="store_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Order_Id" class="java.lang.Integer"/>
+	<field name="order_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="delivery_person_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amt" class="java.math.BigDecimal"/>
+	<field name="open_time" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="close_time" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deducted_amt" class="java.math.BigDecimal"/>
+	<field name="pay_to_doc_amt" class="java.math.BigDecimal"/>
+	<field name="customer_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="store_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="phone_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="mobile_no" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="email_id" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="grop_total" class="java.math.BigDecimal" resetType="Group" resetGroup="DeliverPerson" calculation="Sum">
+		<variableExpression><![CDATA[$F{amt}]]></variableExpression>
+	</variable>
+	<variable name="total_price" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{amt}]]></variableExpression>
+	</variable>
+	<variable name="grop_total1" class="java.math.BigDecimal" resetType="Group" resetGroup="DeliverPerson" calculation="Sum">
+		<variableExpression><![CDATA[$F{deducted_amt}]]></variableExpression>
+	</variable>
+	<variable name="grop_total2" class="java.math.BigDecimal" resetType="Group" resetGroup="DeliverPerson" calculation="Sum">
+		<variableExpression><![CDATA[$F{pay_to_doc_amt}]]></variableExpression>
+	</variable>
+	<variable name="total_price1" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{deducted_amt}]]></variableExpression>
+	</variable>
+	<variable name="total_price2" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{pay_to_doc_amt}]]></variableExpression>
+	</variable>
+	<group name="DeliverPerson">
+		<groupExpression><![CDATA[$F{delivery_person_name}]]></groupExpression>
+		<groupHeader>
+			<band height="19">
+				<line>
+					<reportElement x="0" y="17" width="910" height="1" uuid="6244570a-ac2e-4e1c-a62e-598c487e1f08"/>
+				</line>
+				<textField>
+					<reportElement x="2" y="2" width="159" height="14" uuid="c4a75043-f7da-4862-a0b8-efc90f44a030"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{delivery_person_name}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="163" y="2" width="194" height="14" uuid="91eaed47-5a4a-4b9f-9813-cba5468f6626"/>
+					<textElement>
+						<font isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{customer_name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="20">
+				<line>
+					<reportElement x="2" y="2" width="908" height="1" uuid="634879e7-d070-44ce-8098-c1f9ed7db26f"/>
+					<graphicElement>
+						<pen lineWidth="1.0" lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="557" y="3" width="88" height="16" uuid="cd2f883d-9048-4f3e-96ef-1e83592e8841"/>
+					<textElement textAlignment="Left">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{grop_total}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="660" y="4" width="88" height="16" uuid="7e22c15d-0820-43fb-a50e-25c25545fe3b"/>
+					<textElement textAlignment="Left">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{grop_total1}]]></textFieldExpression>
+				</textField>
+				<textField pattern="###0.00;-###0.00">
+					<reportElement x="777" y="2" width="88" height="16" uuid="e8c7fd5b-a60f-4891-8638-efcf424c1a89"/>
+					<textElement textAlignment="Left">
+						<font size="8" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{grop_total2}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="72" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="297" y="4" width="229" height="20" backcolor="#CCCCCC" uuid="5a8ce54a-a24d-498c-848a-9d3ab6c807e4"/>
+				<textElement>
+					<font size="14"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="297" y="24" width="282" height="15" uuid="1b9951a9-39e4-435c-8b2d-1b90a775170e"/>
+				<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="347" y="39" width="100" height="15" uuid="b2f57785-f445-401f-b750-617d7348907d"/>
+				<textFieldExpression><![CDATA[$F{mobile_no}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="347" y="54" width="183" height="15" uuid="748bf405-7a90-447b-97c8-e1cc749ff4be"/>
+				<textFieldExpression><![CDATA[$F{email_id}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="583" y="39" width="100" height="15" uuid="7c1fcf1b-3f37-4728-a4ce-07a43939e959"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="543" y="39" width="39" height="15" uuid="c2a98593-afdb-4788-9448-74366208681a"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date : ]]></text>
+			</staticText>
+			<textField pattern="h.mm a">
+				<reportElement x="583" y="54" width="53" height="15" uuid="797534a3-1dae-44bb-b430-0ec85b5c8beb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="542" y="54" width="40" height="15" uuid="6b196432-9d49-48f2-869f-3f6d1cf624c8"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="39" width="50" height="15" uuid="50908977-be61-4076-b20c-f2945f02ee8d"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Phone   : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="297" y="54" width="50" height="15" uuid="16a2f85c-0418-427a-8cf6-52615d947584"/>
+				<textElement>
+					<font size="10" isBold="false"/>
+				</textElement>
+				<text><![CDATA[E-mail   : ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="10" width="40" height="15" uuid="a721d72a-7ad1-4b01-b2d2-107b6a749f0e"/>
+				<textElement>
+					<font size="7" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Open Time]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="26" width="40" height="15" uuid="4108fa46-f9e9-4970-b026-7d212e0e762b"/>
+				<textElement>
+					<font size="7" isBold="false"/>
+				</textElement>
+				<text><![CDATA[Close Time]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="43" y="10" width="67" height="15" uuid="ce1cba69-a6ff-413c-b9a8-6ac6b96e8de9"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{open_time}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="43" y="26" width="67" height="15" uuid="00b576d5-2537-444a-8674-4f1dc8358cb2"/>
+				<textElement>
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{close_time}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="2" width="910" height="15" forecolor="#000000" backcolor="#999999" uuid="d9208f4f-bf29-432b-8023-5fa1cafdc6fc"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="296" y="3" width="143" height="13" uuid="7897e6e0-44ed-4649-b477-cd6c18957f00"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[DOCTOR'S REGISTER]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="440" y="3" width="73" height="13" uuid="245a9366-51fc-4f92-8343-0a1e0a67dd29"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_OrderFrom}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="515" y="3" width="19" height="13" uuid="10c6808b-85b9-4794-abe0-a5afd1219acc"/>
+				<textElement textAlignment="Right">
+					<font size="10" isBold="true"/>
+				</textElement>
+				<text><![CDATA[TO]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="535" y="3" width="73" height="13" uuid="53b38907-d5e7-4537-a8f0-01d3efaaaf0e"/>
+				<textElement textAlignment="Center">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_OrderTo}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="23" splitType="Stretch">
+			<line>
+				<reportElement x="0" y="0" width="910" height="1" uuid="357c9f75-04d8-48ce-8f71-68937e2377b2"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="21" width="910" height="1" uuid="aa0ea95d-8db6-42e3-9ca7-204746b99ad4"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="557" y="5" width="88" height="15" uuid="33137416-396f-4d2e-8597-89ab152e6b82"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Visit Fee]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="3" width="910" height="1" uuid="061883b8-f4b7-478e-97d1-58e239164d59"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="363" y="5" width="68" height="15" uuid="a0cc9b3b-a6b1-4b63-8ee3-3e4da4d5c63f"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order No]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="467" y="5" width="68" height="15" uuid="bd3df917-e020-4360-b3a2-a5c890910934"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Visit Date:]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="2" y="5" width="137" height="15" uuid="4eca4cc1-3941-4f1f-85e5-d5ec4a91edb6"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Doctor Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="161" y="6" width="150" height="15" uuid="0127a9fa-bf17-4528-9bfa-e74129cb2830"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patient Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="660" y="6" width="102" height="15" uuid="da4c66b8-72a6-4c28-9194-95fa8bcf50b0"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Deducted Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="777" y="6" width="106" height="15" uuid="ced941b9-a2d2-4294-9d9c-65b700552425"/>
+				<textElement textAlignment="Left">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Payout To Doctor]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="16" splitType="Stretch">
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement style="style1" x="557" y="0" width="88" height="15" uuid="1015279e-8f67-471c-befd-ae998397888f"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{amt}]]></textFieldExpression>
+			</textField>
+			<elementGroup/>
+			<textField isBlankWhenNull="true">
+				<reportElement style="style1" x="363" y="0" width="78" height="15" uuid="dbc88003-9df0-421a-a94f-38780f64110b"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_no}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+				<reportElement style="style1" x="467" y="0" width="78" height="15" uuid="ec96e972-d6fe-4c62-acc2-4aa675c4bb02"/>
+				<textElement textAlignment="Left">
+					<font isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{order_date}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement style="style1" x="660" y="0" width="88" height="15" uuid="da42eca7-bc5a-42d1-8f18-cea64a350593"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{deducted_amt}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00" isBlankWhenNull="true">
+				<reportElement style="style1" x="777" y="1" width="88" height="15" uuid="9aca3973-a1ee-4cac-a0ec-305a1436a092"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{pay_to_doc_amt}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="18" splitType="Stretch">
+			<textField>
+				<reportElement x="557" y="1" width="89" height="16" uuid="ed2af3be-8b7c-41a9-8b09-661e0a9c8c07"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_price}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="659" y="2" width="89" height="16" uuid="44a2ffec-4c86-4c79-a9fe-db95dfcdce5b"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_price1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="777" y="2" width="89" height="16" uuid="d1cb7d89-7118-4e13-a83f-ebd046ee12c8"/>
+				<textElement textAlignment="Left">
+					<font isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_price2}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

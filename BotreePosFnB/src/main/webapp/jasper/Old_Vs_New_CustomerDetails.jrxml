@@ -1,0 +1,325 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Old_Vs_New_CustomerDetails" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d275b90f-9b17-4de9-acde-1ea77e5d9921">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="Crosstab Data Text" hAlign="Center"/>
+	<subDataset name="dataset1" uuid="8b43fdcf-bf94-41cb-bf65-a809712b4fe0"/>
+	<subDataset name="dataset2" uuid="f0c71f5a-b588-48d4-a84c-21fa170eaf73"/>
+	<subDataset name="dataset3" uuid="572057c9-2539-49a0-a631-861eaadd7174">
+		<parameter name="W_Store_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no,mobile_no,email_id, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email_id" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="W_StoreID" class="java.lang.Integer"/>
+	<parameter name="W_OrderFrom" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_OrderTo" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select y.*
+        ,s.store_name
+        ,s.address
+        ,s.phone_no
+        ,s.mobile_no
+        ,s.email_id
+ from sl_m_restaurant_store_c s
+left join
+(Select
+        $P{W_OrderFrom} Start_OrderDate
+        ,$P{W_OrderTo} End_OrderDate
+        ,SUM(x.amount) Total_Amount
+        ,SUM(x.OLD_Customer_Count) OLD_Customer_Count
+        ,SUM(x.New_Customer_Count) NEW_Customer_Count
+        ,SUM(x.OLD_Customer_Amount) OLD_Customer_Amount
+        ,SUM(x.NEW_Customer_Amount) NEW_Customer_Amount
+        ,x.store_id AS store_id
+From
+(SELECT o.store_customer_id
+       ,o.order_date
+       ,c.id
+       ,c.created_date
+       ,p.amount
+       ,o.store_id AS store_id
+       ,CASE
+            WHEN c.id is null THEN 'OLD'
+            ELSE 'NEW'
+            END customer_type
+        ,CASE
+            WHEN c.id is null THEN 1
+            ELSE 0
+            END OLD_Customer_Count
+        ,CASE
+            WHEN c.id is NOT NULL THEN 1
+            ELSE 0
+            END NEW_Customer_Count
+        ,CASE WHEN c.id IS NULL THEN p.amount
+        ELSE 0
+        END OLD_Customer_Amount
+        ,CASE WHEN c.id IS NOT NULL THEN p.amount
+        ELSE 0
+        END NEW_Customer_Amount
+
+FROM fo_t_orders o
+INNER JOIN bp_t_fo_orders_payment p ON p.order_id = o.id
+
+LEFT JOIN ci_m_store_customer c ON o.store_customer_id =c.id AND c.created_date >=$P{W_OrderFrom} and c.created_date <= $P{W_OrderTo}
+
+WHERE o.store_id =$P{W_StoreID} and  o.store_id !=0
+AND o.cancel='N'
+AND p.payment_mode is null
+and o.store_customer_id != 0
+AND o.order_date >=$P{W_OrderFrom}
+AND o.order_date <= $P{W_OrderTo}
+)x
+)y on s.id=y.store_id
+where s.id=$P{W_StoreID};]]>
+	</queryString>
+	<field name="Start_OrderDate" class="java.lang.Object"/>
+	<field name="End_OrderDate" class="java.lang.Object"/>
+	<field name="Total_Amount" class="java.math.BigDecimal"/>
+	<field name="OLD_Customer_Count" class="java.math.BigDecimal"/>
+	<field name="NEW_Customer_Count" class="java.math.BigDecimal"/>
+	<field name="OLD_Customer_Amount" class="java.math.BigDecimal"/>
+	<field name="NEW_Customer_Amount" class="java.math.BigDecimal"/>
+	<field name="store_id" class="java.lang.Integer"/>
+	<field name="store_name" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="phone_no" class="java.lang.String"/>
+	<field name="mobile_no" class="java.lang.String"/>
+	<field name="email_id" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="137" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="458" y="39" width="100" height="20" uuid="7c1fcf1b-3f37-4728-a4ce-07a43939e959"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="415" y="39" width="42" height="20" uuid="c2a98593-afdb-4788-9448-74366208681a"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date : ]]></text>
+			</staticText>
+			<textField pattern="h.mm a">
+				<reportElement x="454" y="51" width="53" height="20" uuid="797534a3-1dae-44bb-b430-0ec85b5c8beb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="414" y="51" width="40" height="20" uuid="6b196432-9d49-48f2-869f-3f6d1cf624c8"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time :]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="129" y="16" width="285" height="79" uuid="42f90938-09fe-41f5-8533-2805a1d8999a"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd">
+					<datasetRun subDataset="dataset3" uuid="b69b8139-2ef8-4676-bc8f-25870a63707e">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="79" width="285">
+						<textField>
+							<reportElement x="37" y="1" width="236" height="20" uuid="27134f45-10f8-4189-b491-a8f3d54152fe"/>
+							<textElement>
+								<font size="14" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="77" y="22" width="196" height="14" uuid="1736a729-4a30-4016-8a5e-ff632210088b"/>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="77" y="37" width="196" height="14" uuid="c7e7f9ee-bbd8-44d5-bd8a-fb1d5047e3b8"/>
+							<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="77" y="50" width="196" height="14" uuid="ef662d7c-2545-4716-8652-313f0411c64f"/>
+							<textFieldExpression><![CDATA[$F{email_id}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="37" y="22" width="35" height="14" uuid="edcf877c-2032-4578-97a8-f4d494d5cc2e"/>
+							<text><![CDATA[Address:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="37" y="37" width="35" height="14" uuid="ffa72f97-3a8a-45cc-990f-75bb8ebc25ea"/>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="37" y="50" width="35" height="14" uuid="438dd009-4e94-4241-9597-4f0c7433b3bd"/>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="18" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="2" width="555" height="15" forecolor="#000000" backcolor="#999999" uuid="d9208f4f-bf29-432b-8023-5fa1cafdc6fc"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Old Vs New Customer Details]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="52" splitType="Stretch">
+			<staticText>
+				<reportElement x="16" y="28" width="59" height="14" uuid="b4a5b9ca-5be1-4580-853e-364f12aca649"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[From]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="28" width="49" height="15" uuid="fba38fc8-a570-4959-9513-c188135b43da"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[To]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="155" y="27" width="94" height="15" uuid="99a106bf-8b69-4eca-afaf-2fffdd74d155"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Old Customer]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="356" y="27" width="100" height="15" uuid="a4ca10c0-295b-438a-937e-68b476491836"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Old Customer Count]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="357c9f75-04d8-48ce-8f71-68937e2377b2"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="48" width="555" height="1" uuid="aa0ea95d-8db6-42e3-9ca7-204746b99ad4"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement x="448" y="27" width="100" height="14" uuid="6c646815-17d8-452b-bb97-eaa8d973f829"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[New Customer Count]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="257" y="27" width="88" height="15" uuid="33137416-396f-4d2e-8597-89ab152e6b82"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[New Customer]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="22" width="555" height="1" uuid="061883b8-f4b7-478e-97d1-58e239164d59"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="4" width="555" height="15" forecolor="#000000" backcolor="#CCCCCC" uuid="13595ae6-3756-4e2b-a420-211858d60625"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Order Date                                    Amount                                                   Count]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="31" splitType="Stretch">
+			<line>
+				<reportElement x="2" y="26" width="553" height="1" uuid="470acc29-0c8c-48a7-a017-4be7b2fe89db"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="5" y="3" width="70" height="17" uuid="3636813b-710c-4ddc-83e5-22d7e6eefa02"/>
+				<textFieldExpression><![CDATA[$F{Start_OrderDate}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="80" y="3" width="59" height="17" uuid="ea7e1c53-0b6d-4ca2-aa2d-ed5b80f28d24"/>
+				<textFieldExpression><![CDATA[$F{End_OrderDate}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="139" y="3" width="100" height="17" uuid="b8421a02-85a5-4394-9b68-84c9cb00fa06"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{OLD_Customer_Amount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="237" y="4" width="100" height="18" uuid="1015279e-8f67-471c-befd-ae998397888f"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{NEW_Customer_Amount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="340" y="3" width="100" height="18" uuid="e303d2ba-d043-47c9-b7e4-f5956eb35591"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{OLD_Customer_Count}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="433" y="4" width="100" height="20" uuid="c25b87df-4752-49eb-b940-d338a3841f19"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{NEW_Customer_Count}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="384" y="0" width="80" height="20" uuid="a3006f55-0027-4461-85e8-16f751e50b90"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="464" y="0" width="40" height="20" uuid="652b0e3f-353d-4720-9f5b-a582f125c51d"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

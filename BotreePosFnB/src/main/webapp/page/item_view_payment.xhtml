@@ -1,0 +1,450 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+
+
+
+
+
+<h:head>
+	<style>
+.noRowBorders {
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	color: #000000 !important;
+}
+
+.rowBordersTabHeader {
+	border-bottom: 1px dotted #000000;
+	border-top-width: 0px;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	color: #000000 !important;
+}
+
+.tableBorder {
+	border-bottom: 0px solid #000000;
+	border-spacing: 0;
+	border-left: 0px;
+	border-right: 0px;
+	border-top: 0px;
+}
+
+.alighRight {
+	text-align: right;
+	width: 100px;
+	float: right;
+}
+</style>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+	<h:outputStylesheet name="css/style_#{sessionScope.cssId}.css" />
+	<script type="text/javascript" src="js/clockp.js"></script>
+	<script type="text/javascript" src="js/clockh.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/ddaccordion.js"></script>
+	<script type="text/javascript">
+		ddaccordion.init({
+			headerclass : "submenuheader", //Shared CSS class name of headers group
+			contentclass : "submenu", //Shared CSS class name of contents group
+			revealtype : "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+			mouseoverdelay : 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+			collapseprev : true, //Collapse previous content (so only one open at any time)? true/false 
+			defaultexpanded : [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+			onemustopen : false, //Specify whether at least one header should be open always (so never all headers closed)
+			animatedefault : false, //Should contents open by default be animated into view?
+			persiststate : true, //persist state of opened contents within browser session?
+			toggleclass : [ "", "" ], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+			togglehtml : [ "suffix",
+					"_$tag______________________________________________",
+					"_$tag_______________________________________________" ], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+			animatespeed : "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+			oninit : function(headers, expandedindices) { //custom code to run when headers have initalized
+				//do nothing
+			},
+			onopenclose : function(header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+				//do nothing
+			}
+		})
+	</script>
+
+	<script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+
+	<script language="javascript" type="text/javascript"
+		src="js/niceforms.js"></script>
+
+	<script type="text/javascript">
+	function setChangeAmt() {
+		
+		alert("hello")
+		var tndrAmt=document.getElementById('dataForm:tndrAmt').value;
+		
+		var itndramt = parseFloat(tndrAmt);
+		
+		var amtToPay=document.getElementById('dataForm:amtToPay').value;
+		
+		var iamttopay = parseFloat(amtToPay);
+		document.getElementById('dataForm:hiddenFldTndr').value=itndramt;
+		alert("tender.."+document.getElementById('dataForm:hiddenFldTndr').value)
+		
+		if(itndramt>iamttopay)
+			{
+				
+				var ichange=itndramt-iamttopay;
+				
+				document.getElementById('dataForm:chngAmt').value=ichange;
+			}
+		
+	}
+	</script>
+
+
+	<link rel="stylesheet" type="text/css" media="all"
+		href="js/niceforms-default.css" />
+
+	<style type="text/css" media="print">
+.nonPrintable {
+	display: none;
+} /*class for the element we don’t want to print*/
+</style>
+
+</h:head>
+<h:body styleClass="app_body_backgrnd">
+	<f:metadata>
+		<f:viewParam name="orderId" value="#{orderController.order}"
+			converter="#{orderConverter}" />
+	</f:metadata>
+	<f:view locale="#{language.localeCode}">
+		<div class="nonPrintable">
+			<!-- <rich:panel> -->
+			<div id="main_container" class="nonPrintable">
+
+				<div class="header">
+					<ui:include src="/page/common/header.xhtml" />
+					<div class="right_header">
+						<h:form>
+							<h:outputText value="#{msg['welcome']}" />
+							<b>#{userController.loggdUser.userId}</b>
+							<h:commandButton value="#{msg['Logout']}"
+								action="#{userController.logout}" styleClass="logoutBtn"></h:commandButton>
+						</h:form>
+					</div>
+
+				</div>
+
+				<div class="nonPrintable">
+					<ui:include
+						src="/page/common/mainMenue_#{sessionScope.cssId}.xhtml" />
+					<!-- <div class="menu"> -->
+
+					<rich:panel id="userpane" headerClass="tabHeaderBackgrnd">
+
+						<h:form id="formitem">
+							<h:panelGrid id="panel" columns="1"
+								style="width:100%; margin: auto" styleClass="panelGridPos">
+
+								<b><h:outputText value="#{msg['Item.Details']}"
+										style="float: left;color: maroon;font-size: 16px;font-family: Arial-Bold;font-weight: bold;" /></b>
+
+								<rich:dataTable value="#{orderController.order.orderitem}"
+									var="ordr" id="table" style="width:982px;" selectionMode="none"
+									frozenColumns="0" cellpadding="0" cellspacing="0" border="0"
+									headerClass="tabHeaderBackgrnd">
+									<!-- <rich:dataTable value="#{ordr.orderitem}" var="odritm"> -->
+									<f:facet name="header">
+										<rich:columnGroup>
+											<rich:column
+												style="text-align:left;background-image: url();background-color: #f9d7cb;"
+												styleClass="noRowBorders">
+												<h:outputText value="#{msg['Ordered.Items']}"
+													styleClass="tabHeaderTextItemView" />
+											</rich:column>
+											<rich:column
+												style="text-align:right;background-image: url();background-color: #f9d7cb;"
+												styleClass="noRowBorders">
+												<h:outputText value="#{msg['Item.Quantity']}"
+													styleClass="tabHeaderTextItemView" />
+											</rich:column>
+											<rich:column
+												style="text-align:right;background-image: url();background-color: #f9d7cb;"
+												styleClass="noRowBorders">
+												<h:outputText value="#{msg['Item.Rate']}"
+													styleClass="tabHeaderTextItemView" />
+											</rich:column>
+											<rich:column
+												style="text-align:right;background-image: url();background-color: #f9d7cb;"
+												styleClass="noRowBorders">
+												<h:outputText value="#{msg['Total.Price']}"
+													styleClass="tabHeaderTextItemView" />
+											</rich:column>
+											<rich:column
+												style="text-align:center;background-image: url();background-color: #f9d7cb;"
+												styleClass="noRowBorders">
+												<h:outputText value="#{msg['Order.Time']}"
+													styleClass="tabHeaderTextItemView" />
+											</rich:column>
+											<rich:column
+												style="text-align:left;background-image: url();background-color: #f9d7cb;"
+												styleClass="noRowBorders">
+												<h:outputText value="#{msg['special.note']}"
+													styleClass="tabHeaderTextItemView" />
+											</rich:column>
+											<rich:column
+												style="text-align:center;background-image: url();background-color: #f9d7cb;"
+												styleClass="noRowBorders">
+												<h:outputText value="#{msg['Delivery.Option']}"
+													styleClass="tabHeaderTextItemView" />
+											</rich:column>
+										</rich:columnGroup>
+									</f:facet>
+									<rich:column style="text-align:left;" styleClass="noRowBorders">
+										<h:outputText value="#{ordr.item.name}" />
+									</rich:column>
+									<rich:column style="text-align:right;"
+										styleClass="noRowBorders">
+										<h:outputText value="#{ordr.quantityOfItem}" />
+									</rich:column>
+									<rich:column style="text-align:right;"
+										styleClass="noRowBorders">
+										<h:outputText value="#{ordr.item.price}">
+											<f:convertNumber pattern="00.00" />
+										</h:outputText>
+									</rich:column>
+									<rich:column style="text-align:right;"
+										styleClass="noRowBorders">
+										<h:outputText value="#{ordr.totalPriceByItem}">
+											<f:convertNumber pattern="00.00" />
+										</h:outputText>
+									</rich:column>
+									<rich:column style="text-align:center;"
+										styleClass="noRowBorders">
+										<h:outputText value="#{ordr.orderTime}" />
+									</rich:column>
+									<rich:column style="text-align:left;" styleClass="noRowBorders">
+										<h:outputText value="#{ordr.specialNote}">
+										</h:outputText>
+									</rich:column>
+									<rich:column style="text-align:center;"
+										styleClass="noRowBorders">
+										<h:outputText value="#{ordr.orderTypeName}">
+										</h:outputText>
+									</rich:column>
+
+									<!-- </rich:dataTable> -->
+								</rich:dataTable>
+
+
+							</h:panelGrid>
+							<div class="divContBtnBelowTab">
+								<h:link outcome="/page/disp_order.xhtml"
+									value="#{msg['Back.To.View.Orders']}" style="color:#6d2004;" />
+							</div>
+							<!-- </h:form> -->
+
+							<!-- <div id="totalBill"> -->
+							<h:panelGrid id="panelBill" columns="2"
+								style="width:327px; margin: auto;">
+								<h:outputText value="#{msg['Total.Amount']}: " />
+								<h:outputText
+									value="#{orderController.order.orderBill.billAmount}"
+									styleClass="alighRight">
+									<f:convertNumber pattern="00.00" />
+								</h:outputText>
+								<h:outputText value="#{msg['Total.Service.Tax']} (@0.0%):" />
+								<h:outputText
+									value="#{orderController.order.orderBill.serviceTaxAmt}"
+									styleClass="alighRight">
+									<f:convertNumber pattern="00.00" />
+								</h:outputText>
+								<h:outputText value="#{msg['Total.Vat']} (@0.0%): " />
+								<h:outputText value="#{orderController.order.orderBill.vatAmt}"
+									styleClass="alighRight">
+									<f:convertNumber pattern="00.00" />
+								</h:outputText>
+								<h:outputText value="#{msg['Promotional.Discount']}: " />
+								<h:outputText
+									value="#{orderController.order.orderBill.totalDiscount}"
+									styleClass="alighRight">
+									<f:convertNumber pattern="00.00" />
+								</h:outputText>
+								<h:outputText value="#{msg['Gross.Amount']} :"
+									style="font-weight: bold" />
+								<h:outputText
+									value="#{orderController.order.orderBill.grossAmt}"
+									styleClass="alighRight">
+									<f:convertNumber pattern="00.00" />
+								</h:outputText>
+							</h:panelGrid>
+							<!-- </div> -->
+							<br />
+							<br />
+
+							<div align="center">
+								<h:commandButton value="#{msg['Pay.Cash']}"
+									styleClass="buttonBelowTab" action="#{orderController.pay}">
+									<f:param name="orderid" value="#{orderController.order.id}" />
+
+									<rich:componentControl target="pp" operation="show">
+										<a4j:param noEscape="true" value="event" />
+										<rich:hashParam>
+											<f:param name="width" value="400" />
+											<f:param name="height" value="330" />
+											<f:param name="minWidth" value="400" />
+											<f:param name="minHeight" value="330" />
+											<a4j:param noEscape="true" name="left"
+												value="(jQuery(window).width()/2)-250" />
+											<a4j:param noEscape="true" name="top"
+												value="(jQuery(window).height()/2)-280" />
+										</rich:hashParam>
+									</rich:componentControl>
+
+								</h:commandButton>
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<h:commandButton value="#{msg['Pay.Credit']}"
+									styleClass="buttonBelowTab" action="#{orderController.pay}">
+									<f:param name="orderid" value="#{orderController.order.id}" />
+
+								</h:commandButton>
+							</div>
+						</h:form>
+					</rich:panel>
+
+
+
+					<!-- </div> -->
+
+				</div>
+
+				<!--end of main content-->
+
+				<div class="nonPrintable">
+					<div class="footer">
+
+						<div class="left_footer">Powered By Sharobi Technologies
+							India Pvt. Ltd.</div>
+						<!--<div class="right_footer"><a href="http://indeziner.com"><img src="js/images/indeziner_logo.gif" alt="" title="" border="0" /></a></div>-->
+
+					</div>
+				</div>
+			</div>
+			<!-- </rich:panel> -->
+		</div>
+
+		<!-- Div to Print -->
+		<div style="float: left;">
+			<rich:popupPanel id="pp" modal="true" resizeable="true">
+				<f:facet name="controls">
+					<h:outputLink value="#"
+						onclick="#{rich:component('pp')}.hide(); return false;"
+						styleClass="nonPrintable">
+                X
+            </h:outputLink>
+				</f:facet>
+
+				<h:form id="dataForm">
+					<div
+						style="font-size: 14px; padding-left: 130px; background-image: url(); background-color: #C0C0C0 !important;">#{msg['Order.No']}.
+						: #{orderController.order.id}</div>
+					<h:panelGrid id="datagrid" columns="2" cellspacing="10"
+						style="background-image: url(); background-color: #707070 !important;">
+
+
+						<h:outputText value="#{msg['Total.Amount']}:"
+							styleClass="outputTextStyle" style="color:black;" />
+						<h:inputText id="totlAmt"
+							value="#{orderController.order.orderBill.grossAmt}"
+							required="true" styleClass="inputTextStyle" readonly="true">
+
+						</h:inputText>
+
+						<h:outputText value="#{msg['Paid.Amount']}:"
+							styleClass="outputTextStyle" style="color:black;" />
+						<h:inputText id="paidAmt"
+							value="#{orderController.order.orderPayment.paidAmount}"
+							styleClass="inputTextStyle" readonly="true">
+
+						</h:inputText>
+
+						<h:outputText value="#{msg['Amount.To.Pay']}:"
+							styleClass="outputTextStyle" style="color:black;" />
+						<h:inputText id="amtToPay"
+							value="#{orderController.order.orderPayment.amountToPay}"
+							styleClass="inputTextStyle" readonly="true">
+
+						</h:inputText>
+						<h:outputText value="#{msg['Tender.Amount']}:"
+							styleClass="outputTextStyle" style="color:black;" />
+						<h:inputText id="tndrAmt" required="true"
+							value="#{orderController.order.orderPayment.tenderAmount}"
+							styleClass="inputTextStyle" onblur="setChangeAmt()">
+
+						</h:inputText>
+
+
+						<h:outputText value="#{msg['Change.Amount']}:"
+							styleClass="outputTextStyle" style="color:black;" />
+						<h:inputText id="chngAmt"
+							value="#{orderController.order.orderPayment.changeAmt}"
+							styleClass="inputTextStyle" readonly="true">
+
+						</h:inputText>
+
+					</h:panelGrid>
+					<h:inputHidden id="hiddenFldTndr"
+						value="#{orderController.tenderAmt}"></h:inputHidden>
+					<br />
+					<br />
+
+					<div align="center">
+						<h:commandButton value="#{msg['Cancel']}"
+							styleClass="buttonBelowTab" action="#{orderController.payCash}"
+							style="background-image: url();background-color: #E62323 !important;font-size: 16px;font-weight:bold;">
+							<f:param name="orderid" value="#{orderController.order.id}" />
+
+						</h:commandButton>
+						&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<h:commandButton value="#{msg['Pay']}" styleClass="buttonBelowTab"
+							action="#{orderController.payCash}"
+							style="background-image: url();background-color: #009900 !important;font-size: 16px;font-weight:bold;">
+							<f:param name="orderid" value="#{orderController.order.id}" />
+							<f:param name="grossamt"
+								value="#{orderController.order.orderBill.grossAmt}" />
+							<f:param name="paidamt"
+								value="#{orderController.order.orderPayment.paidAmount}" />
+							<f:param name="amttopay"
+								value="#{orderController.order.orderPayment.amountToPay}" />
+							<f:param name="tndramt" value="#{orderController.tenderAmt}" />
+							<f:param name="chngamt"
+								value="#{orderController.order.orderPayment.changeAmt}" />
+
+
+						</h:commandButton>
+					</div>
+
+
+
+				</h:form>
+
+			</rich:popupPanel>
+
+		</div>
+		<!-- Div to Print -->
+
+
+	</f:view>
+</h:body>
+
+
+</html>

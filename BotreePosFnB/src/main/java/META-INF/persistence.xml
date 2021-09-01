@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0">
+	<persistence-unit name="Restaurant1" transaction-type="RESOURCE_LOCAL">
+		<provider>org.hibernate.ejb.HibernatePersistence</provider>
+		<!-- <non-jta-data-source>java:/MySqlDS</non-jta-data-source> -->
+		<non-jta-data-source>java:comp/env/jdbc/ResApp</non-jta-data-source>
+		<!--
+		<class>com.sharobi.restaurantapp.model.Bill</class>
+		<class>com.sharobi.restaurantapp.model.Coupon</class>
+		<class>com.sharobi.restaurantapp.model.Customer</class>
+		<class>com.sharobi.restaurantapp.model.DaySpecial</class>
+		<class>com.sharobi.restaurantapp.model.Feedback</class>
+		<class>com.sharobi.restaurantapp.model.MenuItem</class>
+		<class>com.sharobi.restaurantapp.model.ItemTime</class>
+		<class>com.sharobi.restaurantapp.model.MenuCategory</class>
+		<class>com.sharobi.restaurantapp.model.Offer</class>
+		<class>com.sharobi.restaurantapp.model.OfferCalculationType</class>
+		<class>com.sharobi.restaurantapp.model.OfferItem</class>
+		<class>com.sharobi.restaurantapp.model.OfferType</class>
+		<class>com.sharobi.restaurantapp.model.OrderItem</class>
+		<class>com.sharobi.restaurantapp.model.OrderMaster</class>
+		<class>com.sharobi.restaurantapp.model.OrderSearch</class>
+		<class>com.sharobi.restaurantapp.model.OrderTable</class>
+		<class>com.sharobi.restaurantapp.model.OrderType</class>
+		<class>com.sharobi.restaurantapp.model.PaymentType</class>
+		<class>com.sharobi.restaurantapp.model.PictureGallery</class>
+		<class>com.sharobi.restaurantapp.model.RewardPoint</class>
+		<class>com.sharobi.restaurantapp.model.RestaurantMaster</class>
+		<class>com.sharobi.restaurantapp.model.StatusMessage</class>
+		<class>com.sharobi.restaurantapp.model.StoreFeatures</class>
+		<class>com.sharobi.restaurantapp.model.StoreFeaturesChild</class>
+		<class>com.sharobi.restaurantapp.model.StoreLocator</class>
+		<class>com.sharobi.restaurantapp.model.StoreMaster</class>
+		<class>com.sharobi.restaurantapp.model.Tax</class>
+		<class>com.sharobi.restaurantapp.model.User</class>
+		<class>com.sharobi.restaurantapp.model.UserTransaction</class>
+		-->
+
+		<!-- <jar-file>file:/Restaurant 01/Workspace/Restaurant/build/classes</jar-file> -->
+
+		<properties>
+
+			<property name="hibernate.connection.datasource" value="java:comp/env/jdbc/ResApp" />
+			<!-- <property name="hibernate.id.new_generator_mappings" value="true" 
+				/> -->
+
+			<property name="hibernate.archive.autodetection" value="class" />
+			<!-- <property name="hibernate.show_sql" value="true" /> -->
+			<property name="hibernate.format_sql" value="true" />
+
+			<!-- <property name="hibernate.hbm2ddl.auto" value="validate" /> -->
+			<property name="hibernate.dialect" value="org.hibernate.dialect.MySQLDialect" />
+			<!-- <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/> -->
+
+			<property name="connection.autocommit" value="false" />						
+				
+			<!-- cache configuration -->
+			<!-- <property name="hibernate.ejb.classcache.org.hibernate.ejb.test.Item" 
+				value="read-write"/> <property name="hibernate.ejb.collectioncache.org.hibernate.ejb.test.Item.distributors" 
+				value="read-write, RegionName"/> -->
+		</properties>
+	</persistence-unit>
+</persistence>

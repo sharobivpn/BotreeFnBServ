@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ProfitNLoss" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5cabdd2a-9eaa-4a9f-8dd8-6777e814a786">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="dataset1" uuid="0217f3a2-0100-4076-a345-ac9303132e69">
+		<parameter name="W_Store_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no phone,mobile_no,email_id email, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone" class="java.lang.String"/>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email" class="java.lang.String"/>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="W_companyID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="W_storeID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_finyrID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_asOnDate" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[select x.type_id
+                  ,x.type_name
+                  ,x.account_id
+                  ,x.account_name
+                  ,x.group_id
+                  ,x.group_name
+                  ,x.RevenueBalance
+                  ,x.ExpensesBalance
+                  -- ,x.TaxBalance
+                  ,x.l_text
+                  ,x.l_order
+
+                  ,z.TaxBalance
+                  ,(x.RevenueBalance-x.ExpensesBalance) BalanceAmount
+
+                  ,s.store_name
+                  ,s.address
+                  ,s.phone_no phone
+                  ,s.email_id email
+                  ,s.currency currency_code
+
+from
+(
+            select t.id type_id
+                  ,t.type_name
+                  ,a.id account_id
+                  ,concat(a.name,' - ',g.name) account_name
+                  ,g.id group_id
+                  ,g.name  group_name
+                  ,( select get_ledgerTransBalance_asOn( a.id,a.group_id,2,$P{W_storeID},$P{W_asOnDate} ) )*(-1) RevenueBalance
+                  ,0 ExpensesBalance
+                  ,0 TaxBalance
+                  ,'Income' l_text
+                  ,1 l_order
+            from acc_m_account a
+            inner join acc_m_group g on a.group_id=g.id
+            inner join para_account_type t on g.account_type_id=t.id
+            where t.type_code='INC' and g.code<>'STP'
+            and a.store_id=$P{W_storeID}
+
+            union all
+
+            select t.id type_id
+                      ,t.type_name
+                      ,a.id account_id
+                      ,concat(a.name,' - ',g.name) account_name
+                      ,g.id group_id
+                      ,g.name  group_name
+                      ,( select get_stockValue_asOn( 0,$P{W_storeID},0,$P{W_asOnDate} ) ) RevenueBalance
+                      ,0 ExpensesBalance
+                      ,0 TaxBalance
+                      ,'Income' l_text
+                      ,1 l_order
+
+             from acc_m_account a
+             inner join acc_m_group g on a.group_id=g.id
+             inner join para_account_type t on g.account_type_id=t.id
+             where  g.code = 'STP'
+             and a.store_id=$P{W_storeID}
+
+            union all
+
+            select t.id type_id
+                  ,t.type_name
+                  ,a.id account_id
+                  ,concat(a.name,' - ',g.name) account_name
+                  ,g.id group_id
+                  ,g.name  group_name
+                  ,0 RevenueBalance
+                  ,( select get_ledgerTransBalance_asOn( a.id,a.group_id,2,$P{W_storeID},$P{W_asOnDate} ) ) ExpensesBalance
+                  ,0 TaxBalance
+                  ,'Expenses' l_text
+                  ,2 l_order
+            from acc_m_account a
+            inner join acc_m_group g on a.group_id=g.id
+            inner join para_account_type t on g.account_type_id=t.id
+            where t.type_code='EXP' and g.code <>'INV'
+            and a.store_id=$P{W_storeID}
+
+
+)x
+    inner join sl_m_restaurant_store_c s on id=$P{W_storeID}
+    cross join
+    (
+
+        select  ( select get_ledgerTransBalance_asOn( a.id,a.group_id,2,$P{W_storeID},$P{W_asOnDate} ) )*(-1) TaxBalance
+
+            from acc_m_account a
+            inner join acc_m_group g on a.group_id=g.id
+            inner join para_account_type t on g.account_type_id=t.id
+            where g.code='DT'
+            and a.store_id=$P{W_storeID}
+
+    )z]]>
+	</queryString>
+	<field name="type_id" class="java.lang.Long">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="type_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="account_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="account_name" class="java.lang.String"/>
+	<field name="group_id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="group_name" class="java.lang.String"/>
+	<field name="RevenueBalance" class="java.math.BigDecimal"/>
+	<field name="ExpensesBalance" class="java.math.BigDecimal"/>
+	<field name="l_text" class="java.lang.String"/>
+	<field name="l_order" class="java.lang.Long"/>
+	<field name="TaxBalance" class="java.math.BigDecimal"/>
+	<field name="BalanceAmount" class="java.math.BigDecimal"/>
+	<field name="store_name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="address" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="phone" class="java.lang.String"/>
+	<field name="email" class="java.lang.String"/>
+	<field name="currency_code" class="java.lang.String"/>
+	<variable name="cus_income" class="java.math.BigDecimal" resetType="Group" resetGroup="l_text" calculation="Sum">
+		<variableExpression><![CDATA[$F{RevenueBalance}]]></variableExpression>
+	</variable>
+	<variable name="total_income" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{RevenueBalance}]]></variableExpression>
+	</variable>
+	<variable name="cus_expenses" class="java.math.BigDecimal" resetType="Group" resetGroup="l_text" calculation="Sum">
+		<variableExpression><![CDATA[$F{ExpensesBalance}]]></variableExpression>
+	</variable>
+	<variable name="total_expenses" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{ExpensesBalance}]]></variableExpression>
+	</variable>
+	<variable name="TotalBalance" class="java.math.BigDecimal" calculation="Sum">
+		<variableExpression><![CDATA[$F{BalanceAmount}]]></variableExpression>
+	</variable>
+	<group name="l_text">
+		<groupExpression><![CDATA[$F{l_order}]]></groupExpression>
+		<groupHeader>
+			<band height="14">
+				<staticText>
+					<reportElement mode="Opaque" x="1" y="0" width="555" height="11" forecolor="#000000" backcolor="#CCCCCC" uuid="3f454e7c-7667-485f-a2dc-7cf9599da0d7"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField pattern="dd/MM/yyyy" isBlankWhenNull="true">
+					<reportElement x="9" y="0" width="228" height="11" uuid="a029d005-fe69-4a17-9c6c-3d4dd75646b3"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font size="7" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{l_text}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="14">
+				<staticText>
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="11" forecolor="#000000" backcolor="#CCCCCC" uuid="5b475b2c-ffe9-4fa1-8c77-de026662d2c2"/>
+					<textElement textAlignment="Left" verticalAlignment="Middle">
+						<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="240" y="1" width="71" height="10" uuid="00ca0ea6-e4be-474e-826e-0c8861af9573">
+						<printWhenExpression><![CDATA[($V{cus_income}).doubleValue()!=0]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cus_income}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="349" y="1" width="85" height="10" uuid="c4d05a93-707a-4948-b443-9ce3aa1a4aec">
+						<printWhenExpression><![CDATA[($V{cus_expenses}).doubleValue()!=0]]></printWhenExpression>
+					</reportElement>
+					<textElement textAlignment="Right">
+						<font size="6" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{cus_expenses}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="101" splitType="Stretch">
+			<staticText>
+				<reportElement x="441" y="5" width="40" height="14" uuid="94f11e1b-8840-4db3-a14d-6997d9764ed4"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Date:]]></text>
+			</staticText>
+			<textField pattern="dd/MM/yy">
+				<reportElement x="482" y="5" width="62" height="14" uuid="2f1cc861-f7f2-4ad2-8ddc-c5b192abeb07"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="441" y="22" width="40" height="14" uuid="58ec7eba-50ec-40a1-bd11-c71d7ab0704e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Time:]]></text>
+			</staticText>
+			<textField pattern="HH.mm">
+				<reportElement x="482" y="22" width="62" height="14" uuid="4a8ca7d6-a84d-4c7e-a9c7-133caefbaac0"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="134" y="5" width="300" height="81" uuid="fdec821e-6c25-4580-a46b-316f934cafd9"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="178c23d5-400f-4bb4-bda1-9873f8bb65e5">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_storeID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="81" width="300">
+						<textField>
+							<reportElement x="37" y="1" width="233" height="20" uuid="c21b1df7-7a58-4dd0-84e8-f31a4796d45b"/>
+							<textElement>
+								<font size="14" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="37" y="24" width="233" height="14" uuid="f175639a-9c69-4940-8e5b-779d5f9219bf"/>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="81" y="38" width="189" height="14" uuid="d67691ea-b4a7-40a4-9cab-714e9eb6fdf2"/>
+							<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="81" y="51" width="189" height="14" uuid="d9256857-80ea-41d8-a815-6499adb84737"/>
+							<textFieldExpression><![CDATA[$F{email}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="37" y="38" width="44" height="14" uuid="721b76d1-4383-4650-bc17-9f35da12a8f0"/>
+							<textElement>
+								<font isBold="true"/>
+							</textElement>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="37" y="51" width="44" height="14" uuid="59f2831d-c5da-4ea0-b470-05d740ec4a58"/>
+							<textElement>
+								<font isBold="true"/>
+							</textElement>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="40">
+			<line>
+				<reportElement x="0" y="27" width="555" height="1" uuid="fef4d632-11df-43c2-b763-25dc94fd4446"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="1" y="0" width="555" height="14" forecolor="#000000" backcolor="#CCCCCC" uuid="3bab1b33-3eaa-40e2-b7d7-21b6d169e70c"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="185" y="2" width="116" height="12" uuid="f29630e5-38a0-45a0-9e0a-621b339c4073"/>
+				<textElement textAlignment="Right">
+					<font fontName="SansSerif" size="8" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Income & Expenses As On]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="211" y="14" width="42" height="11" uuid="ff1b3db6-765a-4068-8548-6e4123ef499f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Currency :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="240" y="28" width="70" height="11" uuid="64369e8f-42a5-40ef-bd58-bff3a3c823e8"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Income]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="252" y="15" width="100" height="11" uuid="4cd14cab-2e95-43f7-b63b-653b82b76fe8"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{currency_code}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="39" width="555" height="1" uuid="8ecfa023-b411-4c8c-8300-86ef79ad1ba0"/>
+			</line>
+			<textField>
+				<reportElement x="421" y="14" width="90" height="12" uuid="edd4af23-addb-4d4f-b86e-048168e1e33b"/>
+				<textElement textAlignment="Right">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="513" y="14" width="39" height="11" uuid="58f15d1f-608c-452f-8f4b-38191e0a1dd3"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="306" y="2" width="45" height="12" uuid="b6bb3d83-d2ac-41de-9824-5362eb446f24"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{W_asOnDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="28" width="228" height="11" uuid="eb67346f-f934-49ca-98be-cb0e26d7e003"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Ledger]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="362" y="28" width="73" height="11" uuid="6f25ae40-f245-406c-b51d-990f29ae3ee9"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Expenses]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="458" y="28" width="73" height="11" uuid="4d7d3c31-500f-4063-911a-2723909e4f0b"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Balance]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="11" splitType="Stretch">
+			<textField pattern="###0" isBlankWhenNull="true">
+				<reportElement x="9" y="0" width="228" height="11" uuid="a6f16a54-7e46-4a3e-b6d8-a8996bc83bb7"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{account_name}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="240" y="0" width="71" height="11" uuid="a854c5db-88ad-443c-baca-4328c84dd638">
+					<printWhenExpression><![CDATA[($F{RevenueBalance}).doubleValue()!=0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{RevenueBalance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="349" y="0" width="85" height="11" uuid="c89b1521-5fcd-443b-8025-b5a3ff4bc1ea">
+					<printWhenExpression><![CDATA[($F{ExpensesBalance}).doubleValue()!=0]]></printWhenExpression>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font size="7"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ExpensesBalance}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<summary>
+		<band height="49" splitType="Stretch">
+			<line>
+				<reportElement x="6" y="1" width="546" height="1" uuid="cb88fa79-ee07-47bd-8c87-587b75deb6f6"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="240" y="2" width="71" height="12" uuid="694cbb53-642b-439a-8da1-450b19b6ddc5"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_income}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="349" y="2" width="86" height="12" uuid="f1ce65f0-d644-48f1-86f1-e4fbe75135a0"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{total_expenses}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="3" width="228" height="11" uuid="4b4e64d3-f374-474b-b627-ff076448dc32"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Income Before Tax]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="458" y="3" width="73" height="12" uuid="04ba3c4e-39f0-4d67-99a0-16bc60259fb3"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$V{TotalBalance}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="15" width="228" height="11" uuid="1c5c46ee-2374-4f19-8123-f1f1719de861"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Income Tax]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="458" y="15" width="73" height="12" uuid="1ac02f41-f2fb-4435-a12c-41238cfc2148"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TaxBalance}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="9" y="27" width="228" height="11" uuid="9b6c7d0a-71b3-44f6-a43e-c80c6eb17c3f"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="SansSerif" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Income ]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="458" y="27" width="73" height="12" uuid="21d2e08b-e8f0-4a24-9463-d8d8ba9ddbf8"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[(($V{TotalBalance}).doubleValue())-(($F{TaxBalance}).doubleValue())]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

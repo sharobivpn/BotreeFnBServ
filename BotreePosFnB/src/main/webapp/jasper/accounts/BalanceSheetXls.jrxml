@@ -1,0 +1,555 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="BalanceSheetXls" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="5cabdd2a-9eaa-4a9f-8dd8-6777e814a786">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.rows" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.remove.empty.space.between.columns" value="true"/>
+	<property name="net.sf.jasperreports.export.xls.white.page.background" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.detect.cell.type" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.ignore.graphics" value="false"/>
+	<property name="net.sf.jasperreports.export.xls.sheet.names.all" value="Data/Footnotes"/>
+	<property name="net.sf.jasperreports.exports.xls.font.size.fix.enabled" value="true"/>
+	<style name="table">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 1_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2">
+		<box>
+			<pen lineWidth="1.0" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TH" mode="Opaque" backcolor="#F0F8FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_CH" mode="Opaque" backcolor="#BFE1FF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<style name="table 2_TD" mode="Opaque" backcolor="#FFFFFF">
+		<box>
+			<pen lineWidth="0.5" lineColor="#000000"/>
+		</box>
+	</style>
+	<subDataset name="DatasetAssets" uuid="ac1b82ac-095f-4f48-9cc1-9add7f606401">
+		<parameter name="W_companyID" class="java.lang.Integer">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<parameter name="W_storeID" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="W_finyrID" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="W_asOnDate" class="java.util.Date">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<queryString>
+			<![CDATA[select
+               x.type_id
+              ,x.type_name
+              ,x.account_id
+              ,x.account_name
+              ,x.group_id
+              ,x.group_name
+              ,x.currentBalance row_current_balance
+              ,abs(x.currentBalance) current_balance
+              ,case
+                  when x.currentBalance >=0 then 'Dr'
+                  else 'Cr' end balance_type
+        from
+        (
+            select t.id type_id
+                  ,t.type_name
+                  ,a.id account_id
+                  ,concat(a.name,' - ',g.name) account_name
+                  ,g.id group_id
+                  ,g.name  group_name
+                  ,( select get_ledgerBalance_asOn( a.id,a.group_id,2,$P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) ) currentBalance
+
+            from acc_m_account a
+            inner join acc_m_group g on a.group_id=g.id
+            inner join para_account_type t on g.account_type_id=t.id
+            where t.type_code='FIX' and g.code not in( 'INV','STA')
+            and a.company_id=$P{W_companyID}
+            and a.store_id=$P{W_storeID}
+
+            union all
+
+
+            select t.id type_id
+                      ,t.type_name
+                      ,a.id account_id
+                      ,concat(a.name,' - ',g.name) account_name
+                      ,g.id group_id
+                      ,g.name  group_name
+                      ,( select get_stockValue_asOn( $P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) ) currentBalance
+
+             from acc_m_account a
+             inner join acc_m_group g on a.group_id=g.id
+             inner join para_account_type t on g.account_type_id=t.id
+             where  g.code = 'STA'
+             and a.company_id=$P{W_companyID}
+             and a.store_id=$P{W_storeID}
+
+
+        )x
+
+ ;]]>
+		</queryString>
+		<field name="type_id" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="type_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="account_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="account_name" class="java.lang.String"/>
+		<field name="group_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="group_name" class="java.lang.String"/>
+		<field name="row_current_balance" class="java.math.BigDecimal"/>
+		<field name="current_balance" class="java.math.BigDecimal"/>
+		<field name="balance_type" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="DatasetLiabilities" uuid="e91beb46-77e7-4e27-adfb-3d3d8ffae6a5">
+		<parameter name="W_companyID" class="java.lang.Integer">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<parameter name="W_storeID" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="W_finyrID" class="java.lang.Integer">
+			<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+		</parameter>
+		<parameter name="W_asOnDate" class="java.util.Date">
+			<parameterDescription><![CDATA[]]></parameterDescription>
+		</parameter>
+		<queryString>
+			<![CDATA[select
+               x.type_id
+              ,x.type_name
+              ,x.account_id
+              ,x.account_name
+              ,x.group_id
+              ,x.group_name
+              ,x.currentBalance row_current_balance
+              ,abs(x.currentBalance) current_balance
+              ,case
+                  when x.currentBalance >=0 then 'Dr'
+                  else 'Cr' end balance_type
+        from
+        (
+            select t.id type_id
+                  ,t.type_name
+                  ,a.id account_id
+                  ,concat(a.name,' - ',g.name) account_name
+                  ,g.id group_id
+                  ,g.name  group_name
+                  ,( select get_ledgerBalance_asOn( a.id,a.group_id,2,$P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) ) currentBalance
+
+            from acc_m_account a
+            inner join acc_m_group g on a.group_id=g.id
+            inner join para_account_type t on g.account_type_id=t.id
+            where t.type_code='LIB'
+            and a.company_id=$P{W_companyID}
+            and a.store_id=$P{W_storeID}
+
+            union all
+
+            select  x.type_id
+                   ,x.type_name
+                   ,x.account_id
+                   ,x.account_name
+                   ,x.group_id
+                   ,x.group_name
+                   ,(x.currentBalance+y.currentBalance) currentBalance
+            from
+            (
+                select t.id type_id
+                          ,t.type_name
+                          ,a.id account_id
+                          ,concat(a.name,' - ',g.name) account_name
+                          ,g.id group_id
+                          ,g.name  group_name
+                          ,( select get_stockValue_asOn( $P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) )*(-1) currentBalance
+
+                 from acc_m_account a
+                 inner join acc_m_group g on a.group_id=g.id
+                 inner join para_account_type t on g.account_type_id=t.id
+                 where  g.code = 'INV'
+                 and a.company_id=$P{W_companyID}
+                 and a.store_id=$P{W_storeID}
+             )x
+             cross join
+            (
+                  select sum(b.currentBalance) currentBalance
+                  from
+                  (
+                      select ( select get_ledgerBalance_asOn( a.id,a.group_id,2,$P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) ) currentBalance
+
+                      from acc_m_account a
+                      inner join acc_m_group g on a.group_id=g.id
+                      inner join para_account_type t on g.account_type_id=t.id
+                      where (
+                               ( t.type_code in ('EXP','INC') )
+                               or
+                               ( g.code = 'INV')
+                            )
+                      and a.company_id=$P{W_companyID}
+                      and a.store_id=$P{W_storeID}
+                   )b
+            )y
+
+        )x
+
+ ;]]>
+		</queryString>
+		<field name="type_id" class="java.lang.Long">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="type_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="account_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="account_name" class="java.lang.String"/>
+		<field name="group_id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="group_name" class="java.lang.String"/>
+		<field name="row_current_balance" class="java.math.BigDecimal"/>
+		<field name="current_balance" class="java.math.BigDecimal"/>
+		<field name="balance_type" class="java.lang.String"/>
+	</subDataset>
+	<subDataset name="dataset1" uuid="f4b6c27c-c4a5-4360-8845-bed47ca8fa65"/>
+	<parameter name="W_companyID" class="java.lang.Integer">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<parameter name="W_storeID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_finyrID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="W_asOnDate" class="java.util.Date">
+		<parameterDescription><![CDATA[]]></parameterDescription>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+              s.name store_name
+              ,s.address
+              ,s.phone
+              ,s.email
+              ,cu.currency_code
+              ,ifnull(abs(A.AstBalance),0)  AstBalance
+              ,case
+                  when ifnull(A.AstBalance,0) >=0 then 'Dr'
+                  else 'Cr' end ast_balance_type
+
+              ,ifnull(abs(L.LiaBalance),0)  LiaBalance
+              ,case
+                  when ifnull(L.LiaBalance,0) >=0 then 'Dr'
+                  else 'Cr' end lia_balance_type
+
+  from  gen_m_store s
+  left join in_m_currency cu on s.currency_id=cu.id
+  left outer join
+  (
+      select x.store_id,sum(x.currentBalance) AstBalance
+      from
+      (
+            select ( select get_ledgerBalance_asOn( a.id,a.group_id,2,$P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) ) currentBalance
+                   ,a.store_id
+            from acc_m_account a
+            inner join acc_m_group g on a.group_id=g.id
+            inner join para_account_type t on g.account_type_id=t.id
+            where t.type_code='FIX' and g.code not in( 'INV','STA')
+            and a.company_id=$P{W_companyID}
+            and a.store_id=$P{W_storeID}
+
+            union all
+
+
+            select ( select get_stockValue_asOn( $P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) ) currentBalance
+                   ,a.store_id
+             from acc_m_account a
+             inner join acc_m_group g on a.group_id=g.id
+             inner join para_account_type t on g.account_type_id=t.id
+             where  g.code = 'STA'
+             and a.company_id=$P{W_companyID}
+             and a.store_id=$P{W_storeID}
+
+        )x group by x.store_id
+  ) A on s.id=A.store_id
+  left outer join
+  (
+      select x.store_id,sum(x.currentBalance) LiaBalance
+      from
+      (
+            select ( select get_ledgerBalance_asOn( a.id,a.group_id,2,$P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) ) currentBalance
+                   ,a.store_id
+            from acc_m_account a
+            inner join acc_m_group g on a.group_id=g.id
+            inner join para_account_type t on g.account_type_id=t.id
+            where t.type_code='LIB'
+            and a.company_id=$P{W_companyID}
+            and a.store_id=$P{W_storeID}
+
+            union all
+
+            select
+                    (x.currentBalance+y.currentBalance) currentBalance
+                   ,x.store_id
+            from
+            (
+                select t.id type_id
+                          ,t.type_name
+                          ,a.id account_id
+                          ,concat(a.name,' - ',g.name) account_name
+                          ,g.id group_id
+                          ,g.name  group_name
+                          ,( select get_stockValue_asOn( $P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) )*(-1) currentBalance
+                          ,a.store_id
+                 from acc_m_account a
+                 inner join acc_m_group g on a.group_id=g.id
+                 inner join para_account_type t on g.account_type_id=t.id
+                 where  g.code = 'INV'
+                 and a.company_id=$P{W_companyID}
+                 and a.store_id=$P{W_storeID}
+             )x
+             cross join
+            (
+                  select sum(b.currentBalance) currentBalance
+                  from
+                  (
+                      select ( select get_ledgerBalance_asOn( a.id,a.group_id,2,$P{W_companyID},$P{W_storeID},$P{W_finyrID},$P{W_asOnDate} ) ) currentBalance
+
+                      from acc_m_account a
+                      inner join acc_m_group g on a.group_id=g.id
+                      inner join para_account_type t on g.account_type_id=t.id
+                      where (
+                               ( t.type_code in ('EXP','INC') )
+                               or
+                               ( g.code = 'INV')
+                            )
+                      and a.company_id=$P{W_companyID}
+                      and a.store_id=$P{W_storeID}
+                   )b
+            )y
+        )x group by x.store_id
+  ) L on s.id=L.store_id
+
+  where s.id=$P{W_storeID}
+  ;]]>
+	</queryString>
+	<field name="store_name" class="java.lang.String"/>
+	<field name="address" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="email" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="currency_code" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="AstBalance" class="java.math.BigDecimal"/>
+	<field name="ast_balance_type" class="java.lang.String"/>
+	<field name="LiaBalance" class="java.math.BigDecimal"/>
+	<field name="lia_balance_type" class="java.lang.String"/>
+	<group name="group">
+		<groupExpression><![CDATA[]]></groupExpression>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="11">
+			<staticText>
+				<reportElement x="6" y="0" width="164" height="11" uuid="eb67346f-f934-49ca-98be-cb0e26d7e003"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Verdana" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Assets]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="0" width="164" height="11" uuid="6f25ae40-f245-406c-b51d-990f29ae3ee9"/>
+				<textElement textAlignment="Left" verticalAlignment="Middle">
+					<font fontName="Verdana" size="7" isBold="true" pdfFontName="Helvetica-Bold"/>
+				</textElement>
+				<text><![CDATA[Liabilities and Owners Equity]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<componentElement>
+				<reportElement x="6" y="2" width="269" height="11" uuid="fce6a8bb-d62a-4d48-9bbc-1e0c7252da5b"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="DatasetAssets" uuid="c1b670c4-6191-4a8a-8919-4a34f0c298d0">
+						<datasetParameter name="W_companyID">
+							<datasetParameterExpression><![CDATA[$P{W_companyID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="W_storeID">
+							<datasetParameterExpression><![CDATA[$P{W_storeID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="W_finyrID">
+							<datasetParameterExpression><![CDATA[$P{W_finyrID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="W_asOnDate">
+							<datasetParameterExpression><![CDATA[$P{W_asOnDate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="11" width="269">
+						<textField>
+							<reportElement x="0" y="0" width="164" height="11" uuid="db801ec5-3555-4671-bdd8-e65a3dd451a6"/>
+							<textElement>
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{account_name}]]></textFieldExpression>
+						</textField>
+						<textField pattern="###0.00;-###0.00">
+							<reportElement x="166" y="0" width="68" height="11" uuid="23c09205-3df1-4f75-973e-bdf41beadbff"/>
+							<textElement textAlignment="Right">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{current_balance}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="236" y="0" width="30" height="11" uuid="2eaaec6d-4e2e-4982-aa29-2458e3ac4220"/>
+							<textElement>
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{balance_type}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+			<componentElement>
+				<reportElement x="284" y="2" width="271" height="11" uuid="89458a53-f5ed-4921-9843-e9d29d78b72e"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="DatasetLiabilities" uuid="4f50efc1-7931-4c53-97ac-71f416a7da2a">
+						<datasetParameter name="W_companyID">
+							<datasetParameterExpression><![CDATA[$P{W_companyID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="W_storeID">
+							<datasetParameterExpression><![CDATA[$P{W_storeID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="W_finyrID">
+							<datasetParameterExpression><![CDATA[$P{W_finyrID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<datasetParameter name="W_asOnDate">
+							<datasetParameterExpression><![CDATA[$P{W_asOnDate}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="11" width="271">
+						<textField>
+							<reportElement x="0" y="0" width="164" height="11" uuid="f3d8c561-9d58-4352-8a17-b0523bff3307"/>
+							<textElement>
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{account_name}]]></textFieldExpression>
+						</textField>
+						<textField pattern="###0.00;-###0.00">
+							<reportElement x="167" y="0" width="68" height="11" uuid="33a97e3d-f703-4981-9c7b-e3dba6b85636"/>
+							<textElement textAlignment="Right">
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{current_balance}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="235" y="0" width="30" height="11" uuid="d4cd49fa-5c43-4c47-9758-0cee8b85fa4c"/>
+							<textElement>
+								<font size="8"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{balance_type}]]></textFieldExpression>
+						</textField>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</detail>
+	<summary>
+		<band height="53" splitType="Stretch">
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="172" y="3" width="68" height="13" uuid="a8ae777e-2511-4152-bec6-dd3bff786ae2"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{AstBalance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="242" y="3" width="30" height="13" uuid="513538d1-97e3-4908-998a-dd14d7635a19"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{ast_balance_type}]]></textFieldExpression>
+			</textField>
+			<textField pattern="###0.00;-###0.00">
+				<reportElement x="451" y="3" width="68" height="13" uuid="e98ea636-b40f-437d-9777-c629a0427eff"/>
+				<textElement textAlignment="Right">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{LiaBalance}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="519" y="3" width="30" height="13" uuid="5e8c7b87-a834-458d-92eb-189a2c48b391"/>
+				<textElement>
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lia_balance_type}]]></textFieldExpression>
+			</textField>
+		</band>
+	</summary>
+</jasperReport>

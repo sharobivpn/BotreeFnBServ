@@ -1,0 +1,773 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+<h:outputStylesheet>
+        .optionList {
+        height: 22px;
+        }
+ 
+        .vertical-menu-cell {
+        padding: 0px 4px 0px 4px;
+        }
+    </h:outputStylesheet>
+<h:head>
+	<style>
+.noRowBorders {
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	color: #000000 !important;
+	border-left-width: 0px;
+	border-right-width: 0px;
+}
+</style>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>IN ADMIN PANEL | Powered by Sharobitech</title>
+	<link rel="stylesheet" type="text/css" href="js/style.css" />
+	<script type="text/javascript" src="js/clockp.js"></script>
+	<script type="text/javascript" src="js/clockh.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/ddaccordion.js"></script>
+	<script type="text/javascript">
+		ddaccordion.init({
+			headerclass : "submenuheader", //Shared CSS class name of headers group
+			contentclass : "submenu", //Shared CSS class name of contents group
+			revealtype : "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+			mouseoverdelay : 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+			collapseprev : true, //Collapse previous content (so only one open at any time)? true/false 
+			defaultexpanded : [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+			onemustopen : false, //Specify whether at least one header should be open always (so never all headers closed)
+			animatedefault : false, //Should contents open by default be animated into view?
+			persiststate : true, //persist state of opened contents within browser session?
+			toggleclass : [ "", "" ], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+			togglehtml : [ "suffix",
+					"_$tag______________________________________________",
+					"_$tag_______________________________________________" ], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+			animatespeed : "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+			oninit : function(headers, expandedindices) { //custom code to run when headers have initalized
+				//do nothing
+			},
+			onopenclose : function(header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+				//do nothing
+			}
+		})
+	</script>
+
+	<script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+
+
+	<script language="javascript" type="text/javascript"
+		src="js/niceforms.js"></script>
+	<link rel="stylesheet" type="text/css" media="all"
+		href="js/niceforms-default.css" />
+
+</h:head>
+<h:body styleClass="st_header_login">
+	<f:metadata>
+		<f:viewParam id="id" name="id" value="#{storeMaster.id}" />
+		<f:viewParam id="storeName" name="storeName"
+			value="#{storeMaster.storeName}" />
+		<f:viewParam id="address" name="address"
+			value="#{storeMaster.address}" />
+		<f:viewParam id="chainName" name="chainName"
+			value="#{storeMaster.chainName}" />
+		<f:viewParam id="nameSearch" name="nameSearch"
+			value="#{storeMaster.nameSearch}" />
+		<f:viewParam id="detailsSearch" name="detailsSearch"
+			value="#{storeMaster.detailsSearch}" />
+		<f:viewParam id="latitude" name="latitude"
+			value="#{storeMaster.latitude}" />
+		<f:viewParam id="longitude" name="longitude"
+			value="#{storeMaster.longitude}" />
+		<f:viewParam id="city" name="city" value="#{storeMaster.city}" />
+		<f:viewParam id="state" name="state" value="#{storeMaster.state}" />
+		<f:viewParam id="country" name="country"
+			value="#{storeMaster.country}" />
+		<f:viewParam id="currency" name="currency"
+			value="#{storeMaster.currency}" />
+		<f:viewParam id="phoneNo" name="phoneNo"
+			value="#{storeMaster.phoneNo}" />
+		<f:viewParam id="mobileNo" name="mobileNo"
+			value="#{storeMaster.mobileNo}" />
+		<f:viewParam id="emailId" name="emailId"
+			value="#{storeMaster.emailId}" />
+		<f:viewParam id="category" name="category"
+			value="#{storeMaster.category}" />
+		<f:viewParam id="url" name="url" value="#{storeMaster.url}" />
+		<f:viewParam id="ip" name="ip" value="#{storeMaster.ip}" />
+		<f:viewParam id="operatingSystem" name="operatingSystem"
+			value="#{storeMaster.operatingSystem}" />
+		<f:viewParam id="ram" name="ram" value="#{storeMaster.ram}" />
+
+		<f:viewParam id="quality" name="quality"
+			value="#{storeMaster.quality}" />
+		<f:viewParam id="openTime" name="openTime"
+			value="#{storeMaster.openTime}" />
+		<f:viewParam id="closeTime" name="closeTime"
+			value="#{storeMaster.closeTime}" />
+		<f:viewParam id="deliveryTime" name="deliveryTime"
+			value="#{storeMaster.deliveryTime}" />
+		<f:viewParam id="minOrderAmt" name="minOrderAmt"
+			value="#{storeMaster.minOrderAmt}" />
+		<f:viewParam id="freeDelivery" name="freeDelivery"
+			value="#{storeMaster.freeDelivery}" />
+		<f:viewParam id="license" name="license"
+			value="#{storeMaster.license}" />
+		<f:viewParam id="promotionDesc" name="promotionDesc"
+			value="#{storeMaster.promotionDesc}" />
+		<f:viewParam id="promotionValue" name="promotionValue"
+			value="#{storeMaster.promotionValue}" />
+		<f:viewParam id="promotionFlag" name="promotionFlag"
+			value="#{storeMaster.promotionFlag}" />
+		<f:viewParam id="status" name="status" value="#{storeMaster.status}" />
+		<f:viewParam id="activeFlag" name="activeFlag"
+			value="#{storeMaster.activeFlag}" />
+		<f:viewParam id="openTimeWeekend" name="openTimeWeekend"
+			value="#{storeMaster.openTimeWeekend}" />
+		<f:viewParam id="closeTimeWeekend" name="closeTimeWeekend"
+			value="#{storeMaster.closeTimeWeekend}" />
+		<f:viewParam id="openTimeHoliday" name="openTimeHoliday"
+			value="#{storeMaster.openTimeHoliday}" />
+		<f:viewParam id="closeTimeHoliday" name="closeTimeHoliday"
+			value="#{storeMaster.closeTimeHoliday}" />
+
+		<f:viewParam id="tableFlag" name="tableFlag"
+			value="#{storeMaster.tableFlag}" />
+
+		<f:viewParam id="parcelFlag" name="parcelFlag"
+			value="#{storeMaster.parcelFlag}" />
+		<f:viewParam id="mpayment" name="mpayment"
+			value="#{storeMaster.mpayment}" />
+
+		<f:viewParam id="kitchenPrintPreview" name="kitchenPrintPreview"
+			value="#{storeMaster.kitchenPrintPreview}" />
+
+		<f:viewParam id="posmanualPrint" name="posmanualPrint"
+			value="#{storeMaster.posmanualPrint}" />
+		<f:viewParam id="billPrint" name="billPrint"
+			value="#{storeMaster.billPrint}" />
+
+		<f:viewParam id="cashPayment" name="cashPayment"
+			value="#{storeMaster.cashPayment}" />
+
+		<f:viewParam id="creditPayment" name="creditPayment"
+			value="#{storeMaster.creditPayment}" />
+
+		<f:viewParam id="stockStatus" name="stockStatus"
+			value="#{storeMaster.stockStatus}" />
+
+		<f:viewParam id="fromDes" name="fromDes"
+			value="#{storeMaster.fromDes}" />
+
+		<f:viewParam id="toDes" name="toDes" value="#{storeMaster.toDes}" />
+		<f:viewParam id="kotResTitleFont" name="kotResTitleFont"
+			value="#{storeMaster.kotResTitleFont}" />
+		<f:viewParam id="kotTextFont" name="kotTextFont"
+			value="#{storeMaster.kotTextFont}" />
+		<f:viewParam id="kotDateTimeFont" name="kotDateTimeFont"
+			value="#{storeMaster.kotDateTimeFont}" />
+		<f:viewParam id="kotTableFont" name="kotTableFont"
+			value="#{storeMaster.kotTableFont}" />
+		<f:viewParam id="kotNoOfPersonFont" name="kotNoOfPersonFont"
+			value="#{storeMaster.kotNoOfPersonFont}" />
+		<f:viewParam id="kotItemTitleFont" name="kotItemTitleFont"
+			value="#{storeMaster.kotItemTitleFont}" />
+		<f:viewParam id="kotItemFont" name="kotItemFont"
+			value="#{storeMaster.kotItemFont}" />
+		<f:viewParam id="vatRegNo" name="vatRegNo"
+			value="#{storeMaster.vatRegNo}" />
+		<f:viewParam id="serviceTaxNo" name="serviceTaxNo"
+			value="#{storeMaster.serviceTaxNo}" />
+		<f:viewParam id="parcelServiceTax" name="parcelServiceTax"
+			value="#{storeMaster.parcelServiceTax}" />
+
+		<f:viewParam id="poPrintServer" name="poPrintServer"
+			value="#{storeMaster.poPrintServer}" />
+
+		<f:viewParam id="parcelVat" name="parcelVat"
+			value="#{storeMaster.parcelVat}" />
+
+		<f:viewParam id="roundOffTotalAmtStatus" name="roundOffTotalAmtStatus"
+			value="#{storeMaster.roundOffTotalAmtStatus}" />
+
+		<f:viewParam id="kitchenPrintBt" name="kitchenPrintBt"
+			value="#{storeMaster.kitchenPrintBt}" />
+
+		<f:viewParam id="billPrintBt" name="billPrintBt"
+			value="#{storeMaster.billPrintBt}" />
+
+		<f:viewParam id="kotCount" name="kotCount"
+			value="#{storeMaster.kotCount}" />
+
+		<f:viewParam id="discountPercentage" name="discountPercentage"
+			value="#{storeMaster.discountPercentage}" />
+
+		<f:viewParam id="vatTaxText" name="vatTaxText"
+			value="#{storeMaster.vatTaxText}" />
+
+		<f:viewParam id="serviceTaxText" name="serviceTaxText"
+			value="#{storeMaster.serviceTaxText}" />
+
+		<f:viewParam id="vatAmt" name="vatAmt" value="#{storeMaster.vatAmt}" />
+
+		<f:viewParam id="serviceTaxAmt" name="serviceTaxAmt"
+			value="#{storeMaster.serviceTaxAmt}" />
+
+		<f:viewParam id="kotPrintType" name="kotPrintType"
+			value="#{storeMaster.kotPrintType}" />
+
+		<f:viewParam id="billTextFont" name="billTextFont"
+			value="#{storeMaster.billTextFont}" />
+
+		<f:viewParam id="billHeaderFont" name="billHeaderFont"
+			value="#{storeMaster.billHeaderFont}" />
+
+		<f:viewParam id="printPaidBill" name="printPaidBill"
+			value="#{storeMaster.printPaidBill}" />
+
+		<f:viewParam id="parcelAddress" name="parcelAddress"
+			value="#{storeMaster.parcelAddress}" />
+
+		<f:viewParam id="multiOrderTable" name="multiOrderTable"
+			value="#{storeMaster.multiOrderTable}" />
+
+		<f:viewParam id="creditSale" name="creditSale"
+			value="#{storeMaster.creditSale}" />
+
+		<f:viewParam id="customerDisplay" name="customerDisplay"
+			value="#{storeMaster.customerDisplay}" />
+
+		<f:viewParam id="parcelText" name="parcelText"
+			value="#{storeMaster.parcelText}" />
+
+		<f:viewParam id="kotDefaultPrinter" name="kotDefaultPrinter"
+			value="#{storeMaster.kotDefaultPrinter}" />
+
+		<f:viewParam id="directCategory" name="directCategory"
+			value="#{storeMaster.directCategory}" />
+
+		<f:viewParam id="cookingUnit" name="cookingUnit"
+			value="#{storeMaster.cookingUnit}" />
+
+		<f:viewParam id="smartIm" name="smartIm"
+			value="#{storeMaster.smartIm}" />
+
+
+
+		<f:viewParam id="kitchenPrint" name="kitchenPrint"
+			value="#{storeMaster.kitchenPrint}" />
+	</f:metadata>
+
+
+	<div id="main_container">
+
+		<div class="header">
+			<div class="logo">
+				<a href="#"><img src="js/images/logo.gif" alt="" title=""
+					border="0" /></a>
+			</div>
+			<div style="float: left; margin-top: 50px; margin-left: 150px;">
+
+				<h2 style="font-size: 24px; font-weight: bold; font-family: Tahoma;"></h2>
+			</div>
+			<div class="right_header">
+				<h:form>
+					Welcome, admin <h:commandLink value="Logout"
+						action="#{stUserController.logout}"></h:commandLink>
+				</h:form>
+			</div>
+
+		</div>
+
+
+		<div class="main_content" align="center">
+
+
+			<h:form id="form1">
+
+				<rich:toolbar height="35px" style="color: #610B0B;">
+					<!-- <h:panelGrid styleClass="vertical-menu-cell"
+						columnClasses="optionList" columns="1" cellspacing="0"
+						cellpadding="0"> -->
+
+					<rich:dropDownMenu mode="server">
+						<f:facet name="label">
+							<h:panelGroup>
+								<h:outputText value="Restaurant Management" />
+							</h:panelGroup>
+						</f:facet>
+						<rich:menuItem label="Restaurants" submitMode="server"
+							action="#{storeAddressController.showRestaurantForST}">
+							<f:param name="action" value="delete" />
+						</rich:menuItem>
+						<rich:menuItem label="Branches" submitMode="server"
+							action="#{storeAddressController.showStoreMasterForST}">
+							<f:param name="action" value="delete" />
+						</rich:menuItem>
+					</rich:dropDownMenu>
+					<rich:dropDownMenu mode="server">
+						<f:facet name="label">
+							<h:panelGroup>
+								<h:outputText value="#{msg['user.management']}" />
+							</h:panelGroup>
+						</f:facet>
+						<rich:menuItem label="#{msg['st.create.user']}"
+							submitMode="server" action="#{userController.stCreateUser}" />
+					</rich:dropDownMenu>
+
+					<!-- </h:panelGrid> -->
+				</rich:toolbar>
+			</h:form>
+
+
+			<!-- <div class="menu"> -->
+
+
+			<h:form id="form2">
+				<rich:panel id="userpane">
+					<rich:extendedDataTable value="#{storeAddressController.storeList}"
+						var="storeLst" id="table" style="height:300px; width:877px;"
+						selectionMode="none" frozenColumns="3">
+
+						<rich:column width="50px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Store Id" />
+							</f:facet>
+							<h:outputText value="#{storeLst.id}" />
+						</rich:column>
+						<rich:column width="150px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Restaurant Name" />
+							</f:facet>
+							<h:outputText value="#{storeLst.restaurant.name}" />
+						</rich:column>
+						<rich:column width="150px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Branch Name" />
+							</f:facet>
+							<h:outputText value="#{storeLst.storeName}" />
+						</rich:column>
+						<rich:column width="150px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="License Info." />
+							</f:facet>
+							<h:outputText value="#{storeLst.license}" />
+						</rich:column>
+						<rich:column width="400px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Address" />
+							</f:facet>
+							<h:outputText value="#{storeLst.address}" />
+						</rich:column>
+						<rich:column width="170px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Chain Name" />
+							</f:facet>
+							<h:outputText value="#{storeLst.chainName}" />
+						</rich:column>
+						<rich:column width="170px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Name Search" />
+							</f:facet>
+							<h:outputText value="#{storeLst.nameSearch}" />
+						</rich:column>
+						<rich:column width="170px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Details Search" />
+							</f:facet>
+							<h:outputText value="#{storeLst.detailsSearch}" />
+						</rich:column>
+						<rich:column width="150px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Latitude" />
+							</f:facet>
+							<h:outputText value="#{storeLst.latitude}" />
+						</rich:column>
+						<rich:column width="150px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="Longitude" />
+							</f:facet>
+							<h:outputText value="#{storeLst.longitude}" />
+						</rich:column>
+						<rich:column width="100px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="City" />
+							</f:facet>
+							<h:outputText value="#{storeLst.city}" />
+						</rich:column>
+						<rich:column width="100px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="State" />
+							</f:facet>
+							<h:outputText value="#{storeLst.state}" />
+						</rich:column>
+						<rich:column width="100px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Country" />
+							</f:facet>
+							<h:outputText value="#{storeLst.country}" />
+						</rich:column>
+						<rich:column width="60px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Currency" />
+							</f:facet>
+							<h:outputText value="#{storeLst.currency}" />
+						</rich:column>
+						<rich:column width="100px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Phone No" />
+							</f:facet>
+							<h:outputText value="#{storeLst.phoneNo}" />
+						</rich:column>
+						<rich:column width="100px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Mobile No" />
+							</f:facet>
+							<h:outputText value="#{storeLst.mobileNo}" />
+						</rich:column>
+						<rich:column width="170px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="E-Mail ID" />
+							</f:facet>
+							<h:outputText value="#{storeLst.emailId}" />
+						</rich:column>
+						<rich:column width="80px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Category" />
+							</f:facet>
+							<h:outputText value="#{storeLst.category}" />
+						</rich:column>
+						<rich:column width="150px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="URL" />
+							</f:facet>
+							<h:outputText value="#{storeLst.url}" />
+						</rich:column>
+						<rich:column width="120px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="IP Address" />
+							</f:facet>
+							<h:outputText value="#{storeLst.ip}" />
+						</rich:column>
+						<rich:column width="90px" style="text-align:left;">
+							<f:facet name="header">
+								<h:outputText value="System OS" />
+							</f:facet>
+							<h:outputText value="#{storeLst.operatingSystem}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="RAM" />
+							</f:facet>
+							<h:outputText value="#{storeLst.ram}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Activation Status" />
+							</f:facet>
+							<h:outputText value="#{storeLst.activeFlag}" />
+						</rich:column>
+
+						<!-- Fields after quality -->
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Quality" />
+							</f:facet>
+							<h:outputText value="#{storeLst.quality}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Open Time" />
+							</f:facet>
+							<h:outputText value="#{storeLst.openTime}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Close Time" />
+							</f:facet>
+							<h:outputText value="#{storeLst.closeTime}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Delivery Time" />
+							</f:facet>
+							<h:outputText value="#{storeLst.deliveryTime}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Min Order Amount" />
+							</f:facet>
+							<h:outputText value="#{storeLst.minOrderAmt}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Free Delivery" />
+							</f:facet>
+							<h:outputText value="#{storeLst.freeDelivery}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="License" />
+							</f:facet>
+							<h:outputText value="#{storeLst.license}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Promotion Desc" />
+							</f:facet>
+							<h:outputText value="#{storeLst.promotionDesc}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Promotion Value" />
+							</f:facet>
+							<h:outputText value="#{storeLst.promotionValue}" />
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Promotion Flag" />
+							</f:facet>
+							<h:outputText value="#{storeLst.promotionFlag}" />
+						</rich:column>
+
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Status" />
+							</f:facet>
+							<h:outputText value="#{storeLst.status}" />
+						</rich:column>
+
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="ActiveFlag" />
+							</f:facet>
+							<h:outputText value="#{storeLst.activeFlag}" />
+						</rich:column>
+
+
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="openTimeWeekend" />
+							</f:facet>
+							<h:outputText value="#{storeLst.openTimeWeekend}" />
+						</rich:column>
+
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="closeTimeWeekend" />
+							</f:facet>
+							<h:outputText value="#{storeLst.closeTimeWeekend}" />
+						</rich:column>
+
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="openTimeHoliday" />
+							</f:facet>
+							<h:outputText value="#{storeLst.openTimeHoliday}" />
+						</rich:column>
+
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="closeTimeHoliday" />
+							</f:facet>
+							<h:outputText value="#{storeLst.closeTimeHoliday}" />
+						</rich:column>
+						
+						<!-- add module link -->
+						
+						<rich:column width="60px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Modules" />
+							</f:facet>
+							<h:commandLink value="Edit Modules"
+								action="#{moduleController.editMoudles}">
+								<f:param name="id" value="#{storeLst.id}" />
+								
+							</h:commandLink>
+						</rich:column>
+
+						<!-- add edit link -->
+						<rich:column width="60px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Edit" />
+							</f:facet>
+							<h:commandLink value="Edit"
+								action="#{storeAddressController.editStoreMasterForST}">
+								<f:param name="id" value="#{storeLst.id}" />
+								<f:param name="storeName" value="#{storeLst.storeName}" />
+								<f:param name="address" value="#{storeLst.address}" />
+								<f:param name="chainName" value="#{storeLst.chainName}" />
+								<f:param name="nameSearch" value="#{storeLst.nameSearch}" />
+								<f:param name="detailsSearch" value="#{storeLst.detailsSearch}" />
+								<f:param name="latitude" value="#{storeLst.latitude}" />
+								<f:param name="longitude" value="#{storeLst.longitude}" />
+								<f:param name="city" value="#{storeLst.city}" />
+								<f:param name="state" value="#{storeLst.state}" />
+								<f:param name="country" value="#{storeLst.country}" />
+								<f:param name="currency" value="#{storeLst.currency}" />
+								<f:param name="phoneNo" value="#{storeLst.phoneNo}" />
+								<f:param name="mobileNo" value="#{storeLst.mobileNo}" />
+								<f:param name="emailId" value="#{storeLst.emailId}" />
+								<f:param name="category" value="#{storeLst.category}" />
+								<f:param name="url" value="#{storeLst.url}" />
+								<f:param name="ip" value="#{storeLst.ip}" />
+								<f:param name="operatingSystem"
+									value="#{storeLst.operatingSystem}" />
+								<f:param name="ram" value="#{storeLst.ram}" />
+								<f:param name="quality" value="#{storeLst.quality}" />
+								<f:param name="openTime" value="#{storeLst.openTime}" />
+								<f:param name="closeTime" value="#{storeLst.closeTime}" />
+								<f:param name="deliveryTime" value="#{storeLst.deliveryTime}" />
+								<f:param name="minOrderAmt" value="#{storeLst.minOrderAmt}" />
+								<f:param name="freeDelivery" value="#{storeLst.freeDelivery}" />
+								<f:param name="license" value="#{storeLst.license}" />
+								<f:param name="promotionDesc" value="#{storeLst.promotionDesc}" />
+								<f:param name="promotionValue"
+									value="#{storeLst.promotionValue}" />
+								<f:param name="promotionFlag" value="#{storeLst.promotionFlag}" />
+								<f:param name="status" value="#{storeLst.status}" />
+								<f:param name="activeFlag" value="#{storeLst.activeFlag}" />
+								<f:param name="openTimeWeekend"
+									value="#{storeLst.openTimeWeekend}" />
+								<f:param name="tableFlag" value="#{storeLst.tableFlag}" />
+								<f:param name="parcelFlag" value="#{storeLst.parcelFlag}" />
+								<f:param name="mpayment" value="#{storeLst.mpayment}" />
+								<f:param name="kitchenPrintPreview"
+									value="#{storeLst.kitchenPrintPreview}" />
+								<f:param name="posmanualPrint"
+									value="#{storeLst.posmanualPrint}" />
+								<f:param name="billPrint" value="#{storeLst.billPrint}" />
+								<f:param name="cashPayment" value="#{storeLst.cashPayment}" />
+								<f:param name="creditPayment" value="#{storeLst.creditPayment}" />
+								<f:param name="stockStatus" value="#{storeLst.stockStatus}" />
+								<f:param name="fromDes" value="#{storeLst.fromDes}" />
+								<f:param name="toDes" value="#{storeLst.toDes}" />
+								<f:param name="kotResTitleFont"
+									value="#{storeLst.kotResTitleFont}" />
+								<f:param name="kotTextFont" value="#{storeLst.kotTextFont}" />
+								<f:param name="kotDateTimeFont"
+									value="#{storeLst.kotDateTimeFont}" />
+								<f:param name="kotTableFont" value="#{storeLst.kotTableFont}" />
+								<f:param name="kotNoOfPersonFont"
+									value="#{storeLst.kotNoOfPersonFont}" />
+								<f:param name="kotItemTitleFont"
+									value="#{storeLst.kotItemTitleFont}" />
+								<f:param name="kotItemFont" value="#{storeLst.kotItemFont}" />
+								<f:param name="vatRegNo" value="#{storeLst.vatRegNo}" />
+								<f:param name="serviceTaxNo" value="#{storeLst.serviceTaxNo}" />
+								<f:param name="poPrintServer" value="#{storeLst.poPrintServer}" />
+								<f:param name="parcelServiceTax"
+									value="#{storeLst.parcelServiceTax}" />
+								<f:param name="parcelVat" value="#{storeLst.parcelVat}" />
+								<f:param name="roundOffTotalAmtStatus"
+									value="#{storeLst.roundOffTotalAmtStatus}" />
+								<f:param name="kitchenPrintBt"
+									value="#{storeLst.kitchenPrintBt}" />
+								<f:param name="billPrintBt" value="#{storeLst.billPrintBt}" />
+								<f:param name="kotCount" value="#{storeLst.kotCount}" />
+								<f:param name="discountPercentage"
+									value="#{storeLst.discountPercentage}" />
+
+								<f:param name="vatTaxText" value="#{storeLst.vatTaxText}" />
+								<f:param name="serviceTaxText"
+									value="#{storeLst.serviceTaxText}" />
+								<f:param name="vatAmt" value="#{storeLst.vatAmt}" />
+								<f:param name="serviceTaxAmt" value="#{storeLst.serviceTaxAmt}" />
+								<f:param name="kotPrintType" value="#{storeLst.kotPrintType}" />
+								<f:param name="billTextFont" value="#{storeLst.billTextFont}" />
+								<f:param name="billHeaderFont"
+									value="#{storeLst.billHeaderFont}" />
+								<f:param name="printPaidBill" value="#{storeLst.printPaidBill}" />
+								<f:param name="parcelAddress" value="#{storeLst.parcelAddress}" />
+								<f:param name="multiOrderTable"
+									value="#{storeLst.multiOrderTable}" />
+								<f:param name="creditSale" value="#{storeLst.creditSale}" />
+								<f:param name="customerDisplay"
+									value="#{storeLst.customerDisplay}" />
+								<f:param name="parcelText" value="#{storeLst.parcelText}" />
+								<f:param name="kotDefaultPrinter"
+									value="#{storeLst.kotDefaultPrinter}" />
+
+								<f:param name="directCategory"
+									value="#{storeLst.directCategory}" />
+
+								<f:param name="cookingUnit" value="#{storeLst.cookingUnit}" />
+								<f:param name="smartIm" value="#{storeLst.smartIm}" />
+
+								<f:param name="kitchenPrint" value="#{storeLst.kitchenPrint}" />
+							</h:commandLink>
+						</rich:column>
+						<rich:column width="60px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Delete" />
+							</f:facet>
+							<h:commandLink value="Delete"
+								onclick="if (! confirm('Do you want to delete ?')) return false"
+								action="#{storeAddressController.deleteStore}">
+								<f:param name="id" value="#{storeLst.id}" />
+							</h:commandLink>
+						</rich:column>
+						<rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Activate" />
+							</f:facet>
+							<h:commandLink value="Activate"
+								onclick="if (! confirm('Do you want to activate the selected store ?')) return false"
+								action="#{storeAddressController.setStoreAsActive}">
+								<f:param name="id" value="#{storeLst.id}" />
+							</h:commandLink>
+						</rich:column>
+						<rich:column width="110px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="De-Activate" />
+							</f:facet>
+							<h:commandLink value="De-Activate"
+								onclick="if (! confirm('Do you want to deactivate the selected store ?')) return false"
+								action="#{storeAddressController.setStoreAsInActive}">
+								<f:param name="id" value="#{storeLst.id}" />
+							</h:commandLink>
+						</rich:column>
+
+					</rich:extendedDataTable>
+
+				</rich:panel>
+
+			</h:form>
+			<!-- </div> -->
+			<br></br>
+			<h:form>
+				<h:commandButton value="Add New Store"
+					action="#{storeAddressController.addStoreMaster}"></h:commandButton>
+			</h:form>
+
+		</div>
+		<!--end of main content-->
+
+
+		<div class="footer">
+
+			<div class="left_footer">Powered By Sharobi Technologies India
+				Pvt. Ltd.</div>
+			<!--<div class="right_footer"><a href="http://indeziner.com"><img src="js/images/indeziner_logo.gif" alt="" title="" border="0" /></a></div>-->
+
+		</div>
+	</div>
+
+
+
+</h:body>
+
+
+</html>

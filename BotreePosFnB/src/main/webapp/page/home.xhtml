@@ -1,0 +1,26 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:head>
+</h:head>
+<h:body>
+	<rich:panel>
+		<h:form>
+			<rich:toolbar itemSeparator="line">
+				<h:commandLink value="Location List" action="location_list_page" />
+				<h:link value="Asset Type" outcome="asset_type.do" />
+				<h:commandLink value="Asset" action="asset.do" />
+				<h:commandLink value="Inspection Point" action="inspection_point.do" />
+				<h:commandLink value="Inspection Result" action="inspection_result.do" />
+				<h:commandLink value="" />
+			</rich:toolbar>
+		</h:form>
+	</rich:panel>
+</h:body>
+</html>

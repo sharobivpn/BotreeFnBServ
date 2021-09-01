@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<class-diagram version="1.1.6" icons="true" automaticImage="PNG" always-add-relationships="true" generalizations="true" 
+  realizations="true" associations="true" dependencies="true" nesting-relationships="true">  
+  <class id="1" language="java" name="com.sharobi.restaurantapp.model.rm.EstimateType" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/rm/EstimateType.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="275" width="163" x="12" y="-1868"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="2" language="java" name="com.sharobi.restaurantapp.model.InventoryType" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryType.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="266" width="149" x="2" y="-510"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="3" language="java" name="com.sharobi.restaurantapp.model.InventoryItems" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryItems.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="461" width="157" x="1" y="-193"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="4" language="java" name="com.sharobi.restaurantapp.model.InventoryVendor" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryVendor.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="388" width="154" x="585" y="-1236"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="5" language="java" name="com.sharobi.Restaurant.rahulbean.StockInRemarks" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/Restaurant/rahulbean/StockInRemarks.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="294" width="153" x="15" y="-1563"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="6" language="java" name="com.sharobi.Restaurant.rahulbean.StockOutPurpose" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/Restaurant/rahulbean/StockOutPurpose.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="292" width="153" x="19" y="-1244"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="7" language="java" name="com.sharobi.restaurantapp.model.rm.EstimateDailyProd" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/rm/EstimateDailyProd.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="601" width="163" x="583" y="-1865"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="8" language="java" name="com.sharobi.restaurantapp.model.rm.EstimateDailyProdItem" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/rm/EstimateDailyProdItem.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="383" width="163" x="380" y="-1862"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="9" language="java" name="com.sharobi.Restaurant.rahulbean.FgClose" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/Restaurant/rahulbean/FgClose.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="339" width="153" x="207" y="-1866"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="10" language="java" name="com.sharobi.Restaurant.rahulbean.FgCloseChild" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/Restaurant/rahulbean/FgCloseChild.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="510" width="153" x="213" y="-1479"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="11" language="java" name="com.sharobi.Restaurant.rahulbean.FgSaleOut" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/Restaurant/rahulbean/FgSaleOut.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="294" width="153" x="383" y="-1027"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="12" language="java" name="com.sharobi.Restaurant.rahulbean.FgSaleOutItemsChild" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/Restaurant/rahulbean/FgSaleOutItemsChild.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="405" width="153" x="384" y="-1469"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="13" language="java" name="com.sharobi.restaurantapp.model.inv.FgStockIn" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/inv/FgStockIn.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="369" width="165" x="755" y="-1860"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="14" language="java" name="com.sharobi.restaurantapp.model.inv.FgStockInItemsChild" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/inv/FgStockInItemsChild.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="343" width="165" x="755" y="-1423"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="15" language="java" name="com.sharobi.Restaurant.rahulbean.RawClose" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/Restaurant/rahulbean/RawClose.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="329" width="153" x="179" y="-513"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="16" language="java" name="com.sharobi.Restaurant.rahulbean.RawCloseChild" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/Restaurant/rahulbean/RawCloseChild.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="500" width="153" x="189" y="-144"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="17" language="java" name="com.sharobi.restaurantapp.model.InventoryPurchaseOrder" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryPurchaseOrder.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="461" width="164" x="361" y="-516"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="18" language="java" name="com.sharobi.restaurantapp.model.InventoryPurchaseOrderItem" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryPurchaseOrderItem.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="414" width="189" x="350" y="-3"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="19" language="java" name="com.sharobi.restaurantapp.model.InventoryStockIn" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryStockIn.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="462" width="149" x="545" y="-518"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="20" language="java" name="com.sharobi.restaurantapp.model.InventoryStockInItem" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryStockInItem.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="445" width="149" x="544" y="-4"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="21" language="java" name="com.sharobi.restaurantapp.model.InventoryStockOut" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryStockOut.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="379" width="149" x="722" y="-519"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="22" language="java" name="com.sharobi.restaurantapp.model.InventoryStockOutItem" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/InventoryStockOutItem.java" binary="false" 
+    corner="BOTTOM_RIGHT">    
+    <position height="383" width="154" x="714" y="-34"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <class id="23" language="java" name="com.sharobi.restaurantapp.model.rm.Ingredient" project="Restaurant" 
+    file="/Restaurant/src/com/sharobi/restaurantapp/model/rm/Ingredient.java" binary="false" corner="BOTTOM_RIGHT">    
+    <position height="455" width="163" x="5" y="319"/>    
+    <display autosize="false" stereotype="true" package="true" initial-value="false" signature="true" accessors="true" 
+      visibility="true">      
+      <attributes public="true" package="true" protected="true" private="true" static="true"/>      
+      <operations public="true" package="true" protected="true" private="true" static="true"/>    
+    </display>  
+  </class>  
+  <association id="24">    
+    <end type="SOURCE" refId="9" navigable="false">      
+      <attribute id="25" name="fgCloseChilds"/>      
+      <multiplicity id="26" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="10" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="27">    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="28" name="inventoryStockOut">        
+        <position height="18" width="97" x="799" y="-109"/>      
+      </attribute>      
+      <multiplicity id="29" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="21" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="30">    
+    <end type="SOURCE" refId="16" navigable="false">      
+      <attribute id="31" name="inventoryItems">        
+        <position height="18" width="78" x="136" y="84"/>      
+      </attribute>      
+      <multiplicity id="32" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="33">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="34" name="inventoryStockIn">        
+        <position height="18" width="88" x="645" y="-27"/>      
+      </attribute>      
+      <multiplicity id="35" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="19" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="36">    
+    <end type="SOURCE" refId="21" navigable="false">      
+      <attribute id="37" name="inventoryStockOutItems">        
+        <position height="18" width="122" x="678" y="-93"/>      
+      </attribute>      
+      <multiplicity id="38" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="22" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="39">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="40" name="inventoryItems">        
+        <position height="18" width="78" x="134" y="-39"/>      
+      </attribute>      
+      <multiplicity id="41" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="42">    
+    <end type="SOURCE" refId="18" navigable="false">      
+      <attribute id="43" name="inventoryPurchaseOrder">        
+        <position height="18" width="127" x="472" y="-41"/>      
+      </attribute>      
+      <multiplicity id="44" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="17" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="45">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="46" name="estimateType"/>      
+      <multiplicity id="47" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="1" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="48">    
+    <end type="SOURCE" refId="15" navigable="false">      
+      <attribute id="49" name="rawCloseChilds">        
+        <position height="18" width="84" x="170" y="-174"/>      
+      </attribute>      
+      <multiplicity id="50" minimum="0" maximum="2147483647">        
+        <position height="16" width="21" x="319" y="-171"/>      
+      </multiplicity>    
+    </end>    
+    <end type="TARGET" refId="16" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="51">    
+    <end type="SOURCE" refId="19" navigable="false">      
+      <attribute id="52" name="inventoryStockInItems">        
+        <position height="18" width="113" x="499" y="-20"/>      
+      </attribute>      
+      <multiplicity id="53" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="20" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="54">    
+    <end type="SOURCE" refId="3" navigable="false">      
+      <attribute id="55" name="inventoryType">        
+        <position height="18" width="76" x="113" y="-241"/>      
+      </attribute>      
+      <multiplicity id="56" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="2" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="57">    
+    <end type="SOURCE" refId="11" navigable="false">      
+      <attribute id="58" name="fgSaleOutItemsChilds">        
+        <position height="18" width="110" x="416" y="-1047"/>      
+      </attribute>      
+      <multiplicity id="59" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="12" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="60">    
+    <end type="SOURCE" refId="13" navigable="false">      
+      <attribute id="61" name="fgStockInItemsChilds">        
+        <position height="18" width="107" x="738" y="-1443"/>      
+      </attribute>      
+      <multiplicity id="62" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="14" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="63">    
+    <end type="SOURCE" refId="22" navigable="false">      
+      <attribute id="64" name="inventoryItems"/>      
+      <multiplicity id="65" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="66">    
+    <end type="SOURCE" refId="20" navigable="false">      
+      <attribute id="67" name="inventoryItems"/>      
+      <multiplicity id="68" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="69">    
+    <end type="SOURCE" refId="23" navigable="false">      
+      <attribute id="70" name="inventoryItem"/>      
+      <multiplicity id="71" minimum="0" maximum="1"/>    
+    </end>    
+    <end type="TARGET" refId="3" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="72">    
+    <end type="SOURCE" refId="7" navigable="false">      
+      <attribute id="73" name="estimateDailyProdItems"/>      
+      <multiplicity id="74" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="8" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <association id="75">    
+    <end type="SOURCE" refId="17" navigable="false">      
+      <attribute id="76" name="inventoryPurchaseOrderItems">        
+        <position height="18" width="152" x="293" y="-35"/>      
+      </attribute>      
+      <multiplicity id="77" minimum="0" maximum="2147483647"/>    
+    </end>    
+    <end type="TARGET" refId="18" navigable="true"/>    
+    <display labels="true" multiplicity="true"/>  
+  </association>  
+  <classifier-display autosize="true" stereotype="true" package="true" initial-value="false" signature="true" 
+    accessors="true" visibility="true">    
+    <attributes public="true" package="true" protected="true" private="true" static="true"/>    
+    <operations public="true" package="true" protected="true" private="true" static="true"/>  
+  </classifier-display>  
+  <association-display labels="true" multiplicity="true"/>
+</class-diagram>

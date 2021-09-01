@@ -1,0 +1,277 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+
+
+
+<!-- <h:outputStylesheet>
+        .optionList {
+        height: 22px;
+        }
+ 
+        .vertical-menu-cell {
+        padding: 0px 4px 0px 4px;
+        }
+    </h:outputStylesheet> -->
+
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>IN ADMIN PANEL | Powered by Sharobitech</title>
+	<h:outputStylesheet name="css/style_#{sessionScope.cssId}.css" />
+	<script type="text/javascript" src="js/clockp.js"></script>
+	<script type="text/javascript" src="js/clockh.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/ddaccordion.js"></script>
+	<script type="text/javascript">
+		ddaccordion.init({
+			headerclass : "submenuheader", //Shared CSS class name of headers group
+			contentclass : "submenu", //Shared CSS class name of contents group
+			revealtype : "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+			mouseoverdelay : 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+			collapseprev : true, //Collapse previous content (so only one open at any time)? true/false 
+			defaultexpanded : [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+			onemustopen : false, //Specify whether at least one header should be open always (so never all headers closed)
+			animatedefault : false, //Should contents open by default be animated into view?
+			persiststate : true, //persist state of opened contents within browser session?
+			toggleclass : [ "", "" ], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+			togglehtml : [ "suffix",
+					"<img src='js/images/plus.gif' class='statusicon' />",
+					"<img src='js/images/minus.gif' class='statusicon' />" ], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+			animatespeed : "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+			oninit : function(headers, expandedindices) { //custom code to run when headers have initalized
+				//do nothing
+			},
+			onopenclose : function(header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+				//do nothing
+			}
+		})
+	</script>
+
+	<script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+
+	<script type="text/javascript">
+  var timeout = setTimeout("location.reload(true);",60000);
+  function resetTimeout() {
+    clearTimeout(timeout);
+    timeout = setTimeout("location.reload(true);",60000);
+  }
+</script>
+
+	<script type="text/javascript">
+		function isCheckBoxCliked() {
+			var orderform = document.getElementById('orderform');
+			var inputTags = orderform.getElementsByTagName('input');
+			var checkboxCount = 0;
+			var isAnyChkbxChkd=false;
+			var length1=inputTags.length;
+			for (var i = 0; i &lt; length1; i++) {
+			
+				if (inputTags[i].type == 'checkbox') {		
+      		
+      			 if (inputTags[i].checked){
+     			    isAnyChkbxChkd=true;
+     				break;
+     			}
+      			   
+     			}
+				
+			}
+			
+			if(isAnyChkbxChkd){
+				return true;
+			}
+			else{
+				alert("#{msg['Please.Select.At.Least.One.Order']}")
+			}
+			
+		}
+	</script>
+
+	<script language="javascript" type="text/javascript"
+		src="js/niceforms.js"></script>
+	<link rel="stylesheet" type="text/css" media="all"
+		href="js/niceforms-default.css" />
+
+	<style>
+.extdt-header-sort-img {
+	visibility: hidden;
+}
+</style>
+
+</h:head>
+<h:body styleClass="app_body_backgrnd">
+	<f:view locale="#{language.localeCode}">
+
+		<div id="main_container">
+
+			<div class="header">
+				<ui:include src="/page/common/header.xhtml" />
+				<div class="right_header">
+					<h:form>
+						<h:outputText value="#{msg['welcome']}" />
+						<b>#{sessionScope.loggeduser.userId}</b>
+						<h:commandButton value="#{msg['Logout']}"
+							action="#{userController.logout}" styleClass="logoutBtn"></h:commandButton>
+					</h:form>
+				</div>
+			</div>
+
+			<div class="main_content" align="center">
+
+				<!-- <div class="menu"> -->
+
+				<ui:include src="/page/common/mainMenue_#{sessionScope.cssId}.xhtml" />
+				<h:form id="orderform1">
+					<rich:panel id="orderpanel" headerClass="tabHeaderBackgrnd"
+						styleClass="panelPos">
+						<div class="tabDesc">
+							<b><h:outputText value="#{msg['List.Of.All.Paid.Orders']}" /></b>
+						</div>
+						<rich:extendedDataTable
+							value="#{orderController.orderdeliveredList}" var="odr"
+							id="table" styleClass="tabHeightWidth"
+							headerClass="tabHeaderBackgrnd" selectionMode="none"
+							rowClasses="table-odd-row,table-even-row">
+
+							<rich:column width="100px" style="text-align:center;"
+								sortBy="#{odr.id}" headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Order.Id']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.id}" />
+							</rich:column>
+							<rich:column width="100px" headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Item.Details']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:link outcome="/page/item_view_delivered.xhtml"
+									value="#{msg['Item.Details']}" style="color:#6d2004;">
+									<f:param name="orderId" value="#{odr.orderId}" />
+								</h:link>
+							</rich:column>
+							<rich:column width="150px" sortBy="#{odr.customers.name}"
+								style="text-align:left;" headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Admin.User']}"
+										style="text-align:left" styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.customers.name}" />
+							</rich:column>
+							<rich:column width="120px" sortBy="#{odr.customers.designation}"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Designation']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.customers.designation}" />
+							</rich:column>
+							<rich:column width="150px" sortBy="#{odr.customerName}"
+								style="text-align:left;" headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Customer.Name']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.customerName}" />
+							</rich:column>
+							<rich:column width="160px" sortBy="#{odr.customerContact}"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Customer.Contact']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.customerContact}" />
+							</rich:column>
+							<rich:column width="200px" style="text-align:left;"
+								sortBy="#{odr.deliveryAddress}" headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Address']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.deliveryAddress}" />
+							</rich:column>
+							<rich:column width="120px" sortBy="#{odr.orderTime}"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Order.Time']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.orderTime}" style="text-align:left;" />
+							</rich:column>
+							<rich:column width="133px"
+								sortBy="#{odr.ordertype.orderTypeName}"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Type.Of.Order']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.ordertype.orderTypeName}" />
+							</rich:column>
+							<rich:column width="133px"
+								sortBy="#{odr.paymentType.paymentTypeName}"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Payment.Type']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.paymentType.paymentTypeName}" />
+							</rich:column>
+							<rich:column width="140px" style="text-align:center;"
+								sortBy="#{odr.flag}" headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Payment.Status']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.flag}" style="text-align:center;" />
+							</rich:column>
+							<rich:column width="130px" style="text-align:center;"
+								sortBy="#{odr.specialNote}" headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['special.note']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{odr.specialNote}"
+									style="text-align:center;" />
+							</rich:column>
+						</rich:extendedDataTable>
+
+					</rich:panel>
+				</h:form>
+
+
+
+				<!-- </div> -->
+
+			</div>
+			<!--end of main content-->
+
+
+
+			<div class="footer">
+
+				<div class="left_footer">
+					Powered By Sharobi Technologies India Pvt. Ltd.
+				</div>
+				<!--<div class="right_footer"><a href="http://indeziner.com"><img src="js/images/indeziner_logo.gif" alt="" title="" border="0" /></a></div>-->
+
+			</div>
+		</div>
+
+
+	</f:view>
+
+</h:body>
+
+
+</html>

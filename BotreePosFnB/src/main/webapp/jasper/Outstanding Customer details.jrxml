@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Outstanding Customer details" pageWidth="595" pageHeight="842" whenNoDataType="AllSectionsNoDetail" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" whenResourceMissingType="Error" uuid="d275b90f-9b17-4de9-acde-1ea77e5d9921">
+	<property name="ireport.zoom" value="1.5"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="dataset1" uuid="c1812a0e-8417-4de0-81b3-4d5dbaf04583">
+		<parameter name="W_Store_ID" class="java.lang.String"/>
+		<queryString>
+			<![CDATA[SELECT id,address,currency,phone_no,mobile_no,email_id, store_name FROM restaurant.sl_m_restaurant_store_c where id=$P{W_Store_ID};]]>
+		</queryString>
+		<field name="id" class="java.lang.Integer">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="address" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="currency" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="phone_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="mobile_no" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="email_id" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+		<field name="store_name" class="java.lang.String">
+			<fieldDescription><![CDATA[]]></fieldDescription>
+		</field>
+	</subDataset>
+	<parameter name="W_StoreID" class="java.lang.Integer"/>
+	<queryString>
+		<![CDATA[select y.*
+        ,s.store_name
+        ,s.address
+        ,s.phone_no
+        ,s.mobile_no
+        ,s.email_id
+ from sl_m_restaurant_store_c s
+left join
+ (
+select c.id
+      ,c.name
+      ,p.order_id
+      ,p.amount
+      ,o.store_id AS store_id
+      ,SUM(paid_amount) AS paid_amount
+      ,(p.amount -SUM(paid_amount) ) outstanding_amount
+from bp_t_fo_orders_payment p
+INNER JOIN fo_t_orders o ON  p.order_id = o.Id
+INNER JOIN ci_m_store_customer c ON  o.store_customer_id = c.id
+where  o.cancel='N'
+    AND (p.PAYMENT_MODE IS NOT NULL) and p.order_id IS NOT NULL
+and p.store_id =$P{W_StoreID}
+group by p.order_id,p.amount, c.id,c.name
+having (p.amount -SUM(paid_amount) ) > 0
+)y on s.id=y.store_id
+
+where s.id=$P{W_StoreID}
+;]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer"/>
+	<field name="name" class="java.lang.String"/>
+	<field name="order_id" class="java.lang.Integer"/>
+	<field name="amount" class="java.math.BigDecimal"/>
+	<field name="store_id" class="java.lang.Integer"/>
+	<field name="paid_amount" class="java.math.BigDecimal"/>
+	<field name="outstanding_amount" class="java.math.BigDecimal"/>
+	<field name="store_name" class="java.lang.String"/>
+	<field name="address" class="java.lang.String"/>
+	<field name="phone_no" class="java.lang.String"/>
+	<field name="mobile_no" class="java.lang.String"/>
+	<field name="email_id" class="java.lang.String"/>
+	<variable name="Total_Amount" class="java.lang.Float" resetType="Group" resetGroup="Customer" calculation="Sum">
+		<variableExpression><![CDATA[$F{amount}]]></variableExpression>
+	</variable>
+	<variable name="Paid_Amount" class="java.lang.Float" resetType="Group" resetGroup="Customer" calculation="Sum">
+		<variableExpression><![CDATA[$F{paid_amount}]]></variableExpression>
+	</variable>
+	<variable name="Outstanding_Amt" class="java.lang.Float" resetType="Group" resetGroup="Customer" calculation="Sum">
+		<variableExpression><![CDATA[$F{outstanding_amount}]]></variableExpression>
+	</variable>
+	<group name="Customer">
+		<groupExpression><![CDATA[$F{name}]]></groupExpression>
+		<groupHeader>
+			<band height="17">
+				<textField pattern="" isBlankWhenNull="true">
+					<reportElement mode="Opaque" x="0" y="0" width="555" height="16" backcolor="#CCCCCC" uuid="8fce5185-87c7-4b31-8494-ecfce7af0ecb"/>
+					<textElement>
+						<font size="10" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="28">
+				<line>
+					<reportElement x="0" y="2" width="555" height="1" uuid="94b1705b-5550-489e-9925-a7250602e24f"/>
+					<graphicElement>
+						<pen lineWidth="0.3" lineStyle="Dashed"/>
+					</graphicElement>
+				</line>
+				<line>
+					<reportElement x="0" y="24" width="555" height="1" uuid="c09b2f5d-59b9-4b6f-a82c-ed3338e47111"/>
+					<graphicElement>
+						<pen lineStyle="Dotted"/>
+					</graphicElement>
+				</line>
+				<staticText>
+					<reportElement mode="Opaque" x="1" y="5" width="555" height="17" forecolor="#000000" backcolor="#CCCCCC" uuid="1e316441-1c14-450b-b092-9694b44f5031"/>
+					<textElement textAlignment="Center">
+						<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+					</textElement>
+					<text><![CDATA[]]></text>
+				</staticText>
+				<textField isBlankWhenNull="true">
+					<reportElement x="167" y="6" width="79" height="16" uuid="8ec1fb18-d59f-4df0-864f-afff6cfef37f"/>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Total_Amount}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="272" y="6" width="58" height="16" uuid="144101fd-ef9d-443a-951f-a5cc2c105de5"/>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Paid_Amount}]]></textFieldExpression>
+				</textField>
+				<textField isBlankWhenNull="true">
+					<reportElement x="384" y="7" width="58" height="16" uuid="47b7dbe6-c978-43f5-9876-c70bc5e20c01"/>
+					<textElement textAlignment="Right">
+						<font size="9" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$V{Outstanding_Amt}]]></textFieldExpression>
+				</textField>
+				<staticText>
+					<reportElement x="4" y="5" width="100" height="20" uuid="dff1c2b0-c234-410d-abde-d8acdee7e087"/>
+					<text><![CDATA[Total]]></text>
+				</staticText>
+			</band>
+		</groupFooter>
+	</group>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="451" y="39" width="100" height="20" uuid="7c1fcf1b-3f37-4728-a4ce-07a43939e959"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="408" y="39" width="42" height="20" uuid="c2a98593-afdb-4788-9448-74366208681a"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date : ]]></text>
+			</staticText>
+			<textField pattern="h.mm a">
+				<reportElement x="449" y="51" width="53" height="20" uuid="797534a3-1dae-44bb-b430-0ec85b5c8beb"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="408" y="51" width="40" height="20" uuid="6b196432-9d49-48f2-869f-3f6d1cf624c8"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time :]]></text>
+			</staticText>
+			<componentElement>
+				<reportElement x="119" y="8" width="275" height="82" uuid="db64bf45-4068-43fe-a65d-8cf1c76e2e24"/>
+				<jr:list xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" printOrder="Vertical">
+					<datasetRun subDataset="dataset1" uuid="34815b7b-588c-48e9-9864-1f35d4894f3b">
+						<datasetParameter name="W_Store_ID">
+							<datasetParameterExpression><![CDATA[$P{W_StoreID}]]></datasetParameterExpression>
+						</datasetParameter>
+						<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					</datasetRun>
+					<jr:listContents height="82" width="275">
+						<textField>
+							<reportElement x="37" y="1" width="236" height="20" uuid="992c23dc-ec67-472a-9e73-25aa6050d832"/>
+							<textElement>
+								<font size="12" isBold="true"/>
+							</textElement>
+							<textFieldExpression><![CDATA[$F{store_name}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="37" y="22" width="236" height="14" uuid="62aed648-ea9b-4522-b642-a17abc3f953b"/>
+							<textFieldExpression><![CDATA[$F{address}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="77" y="37" width="196" height="14" uuid="52adc140-cef6-41d5-ad1c-a13cfef88ffe"/>
+							<textFieldExpression><![CDATA[$F{phone_no}]]></textFieldExpression>
+						</textField>
+						<textField>
+							<reportElement x="79" y="50" width="194" height="14" uuid="bcbec290-18d3-4804-b195-ebb201acad67"/>
+							<textFieldExpression><![CDATA[$F{mobile_no}]]></textFieldExpression>
+						</textField>
+						<staticText>
+							<reportElement x="37" y="37" width="35" height="14" uuid="e07266a4-8fc9-4e39-bd73-1182174e7cc9"/>
+							<text><![CDATA[Phone:]]></text>
+						</staticText>
+						<staticText>
+							<reportElement x="37" y="50" width="35" height="14" uuid="44b8978e-457d-4414-8a76-39b8d6cb993c"/>
+							<text><![CDATA[Email:]]></text>
+						</staticText>
+					</jr:listContents>
+				</jr:list>
+			</componentElement>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="19" splitType="Stretch">
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="2" width="555" height="15" forecolor="#000000" backcolor="#999999" uuid="d9208f4f-bf29-432b-8023-5fa1cafdc6fc"/>
+				<textElement textAlignment="Center">
+					<font fontName="SansSerif" size="11" isBold="true" pdfFontName="Helvetica-Bold" isPdfEmbedded="true"/>
+				</textElement>
+				<text><![CDATA[Outstanding Customer Details]]></text>
+			</staticText>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="4" y="2" width="89" height="20" uuid="b4a5b9ca-5be1-4580-853e-364f12aca649"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Customer Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="109" y="0" width="54" height="20" uuid="fba38fc8-a570-4959-9513-c188135b43da"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Order ID]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="167" y="0" width="79" height="20" uuid="99a106bf-8b69-4eca-afaf-2fffdd74d155"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="259" y="0" width="71" height="20" uuid="33137416-396f-4d2e-8597-89ab152e6b82"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Paid Amount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="345" y="0" width="100" height="20" uuid="a4ca10c0-295b-438a-937e-68b476491836"/>
+				<textElement textAlignment="Right">
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Outstanding Amt]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="555" height="1" uuid="357c9f75-04d8-48ce-8f71-68937e2377b2"/>
+				<graphicElement>
+					<pen lineWidth="2.0"/>
+				</graphicElement>
+			</line>
+			<line>
+				<reportElement x="0" y="19" width="555" height="1" uuid="aa0ea95d-8db6-42e3-9ca7-204746b99ad4"/>
+				<graphicElement>
+					<pen lineWidth="1.25" lineStyle="Solid"/>
+				</graphicElement>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<textField isBlankWhenNull="true">
+				<reportElement x="107" y="1" width="56" height="16" uuid="def0489d-c8f6-4c68-9daf-2b84ae728fb4"/>
+				<textFieldExpression><![CDATA[$F{order_id}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="167" y="2" width="79" height="16" uuid="50ad66ec-c711-46c2-8c8b-2e5531e701c9"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{amount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="272" y="1" width="58" height="16" uuid="9c1582e1-9e9b-47d3-a8e5-a33da937d8ee"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{paid_amount}]]></textFieldExpression>
+			</textField>
+			<textField isBlankWhenNull="true">
+				<reportElement x="377" y="1" width="68" height="16" uuid="72d497b3-c6a0-459a-aa55-f4c48fcd6450"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{outstanding_amount}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<pageFooter>
+		<band height="21" splitType="Stretch">
+			<textField>
+				<reportElement x="384" y="0" width="80" height="20" uuid="a3006f55-0027-4461-85e8-16f751e50b90"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement x="464" y="0" width="40" height="20" uuid="652b0e3f-353d-4720-9f5b-a582f125c51d"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="42" splitType="Stretch"/>
+	</summary>
+</jasperReport>

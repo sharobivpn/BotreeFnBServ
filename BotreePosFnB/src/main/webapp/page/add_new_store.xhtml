@@ -1,0 +1,990 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+
+<h:outputStylesheet>
+        .optionList {
+        height: 22px;
+        }
+ 
+        .vertical-menu-cell {
+        padding: 0px 4px 0px 4px;
+        }
+    </h:outputStylesheet>
+<h:head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>IN ADMIN PANEL | Powered by Sharobitech</title>
+	<link rel="stylesheet" type="text/css" href="js/style.css" />
+	<script type="text/javascript" src="js/clockp.js"></script>
+	<script type="text/javascript" src="js/clockh.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/ddaccordion.js"></script>
+	<script type="text/javascript">
+		ddaccordion.init({
+			headerclass : "submenuheader", //Shared CSS class name of headers group
+			contentclass : "submenu", //Shared CSS class name of contents group
+			revealtype : "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+			mouseoverdelay : 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+			collapseprev : true, //Collapse previous content (so only one open at any time)? true/false 
+			defaultexpanded : [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+			onemustopen : false, //Specify whether at least one header should be open always (so never all headers closed)
+			animatedefault : false, //Should contents open by default be animated into view?
+			persiststate : true, //persist state of opened contents within browser session?
+			toggleclass : [ "", "" ], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+			togglehtml : [ "suffix",
+					"_$tag______________________________________________",
+					"_$tag_______________________________________________" ], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+			animatespeed : "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+			oninit : function(headers, expandedindices) { //custom code to run when headers have initalized
+				//do nothing
+			},
+			onopenclose : function(header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+				//do nothing
+			}
+		})
+	</script>
+	<script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+	<script language="javascript" type="text/javascript"
+		src="js/niceforms.js"></script>
+	<!-- <script>
+		history.pushState({
+			page : 1
+		}, "title 1", "#nbb");
+		window.onhashchange = function(event) {
+			window.location.hash = "nbb";
+
+		};
+	</script> -->
+	<link rel="stylesheet" type="text/css" media="all"
+		href="js/niceforms-default.css" />
+</h:head>
+<h:body styleClass="st_header_login">
+	<div id="main_container">
+		<div class="header">
+			<!-- <div class="logo">
+				<a href="#"><img src="js/images/logo.gif" alt="" title=""
+					border="0" /></a>
+			</div> -->
+			<div style="float: left; margin-top: 50px; margin-left: 250px;">
+				<h2 style="font-size: 24px; font-weight: bold; font-family: Tahoma;">Sharobi
+					Restaurant App</h2>
+			</div>
+			<div class="right_header">
+				<h:form>
+					<h:outputText value="#{msg['welcome']}" /> Admin <h:commandLink
+						value="Logout" action="#{stUserController.logout}"></h:commandLink>
+				</h:form>
+			</div>
+		</div>
+		<div class="main_content" align="center">
+			<!-- <div class="menu"> -->
+
+			<h:form id="form1">
+
+				<rich:toolbar height="35px">
+					<!-- <h:panelGrid styleClass="vertical-menu-cell"
+						columnClasses="optionList" columns="1" cellspacing="0"
+						cellpadding="0"> -->
+
+					<rich:dropDownMenu mode="server">
+						<f:facet name="label">
+							<h:panelGroup>
+								<h:outputText value="Restaurant Management" />
+							</h:panelGroup>
+						</f:facet>
+						<rich:menuItem label="Restaurants" submitMode="server"
+							action="#{storeAddressController.showRestaurantForST}">
+							<f:param name="action" value="delete" />
+						</rich:menuItem>
+						<rich:menuItem label="Branches" submitMode="server"
+							action="#{storeAddressController.showStoreMasterForST}">
+							<f:param name="action" value="delete" />
+						</rich:menuItem>
+					</rich:dropDownMenu>
+					<rich:dropDownMenu mode="server">
+						<f:facet name="label">
+							<h:panelGroup>
+								<h:outputText value="#{msg['user.management']}" />
+							</h:panelGroup>
+						</f:facet>
+						<rich:menuItem label="#{msg['st.create.user']}"
+							submitMode="server" action="#{userController.stCreateUser}" />
+					</rich:dropDownMenu>
+
+					<!-- </h:panelGrid> -->
+				</rich:toolbar>
+			</h:form>
+
+
+
+			<rich:panel>
+				<h:form id="formSave" enctype="multipart/form-data">
+					<h:panelGrid id="panel" columns="3">
+						<h:outputText value="Select Restaurant: " />
+						<h:selectOneMenu id="selectFld"
+							value="#{storeAddressController.storeMaster1.restaurant.id}"
+							required="true" requiredMessage="Please select any Restaurant">
+							<f:selectItem itemLabel="Please select one" itemValue="#{null}" />
+							<f:selectItems value="#{storeAddressController.selectItems}" />
+						</h:selectOneMenu>
+						<rich:message for="selectFld" />
+
+						<h:outputText value="Name: " />
+						<h:inputText id="name"
+							value="#{storeAddressController.storeMaster1.storeName}"
+							required="true" requiredMessage="Please enter Store Name" />
+						<rich:message for="name" />
+
+						<h:outputText value="License: " />
+						<h:inputText id="license"
+							value="#{storeAddressController.storeMaster1.license}"
+							required="false"
+							requiredMessage="Please enter license information" />
+						<rich:message for="license" />
+
+						<h:outputText value="Address: " />
+						<h:inputTextarea id="address"
+							value="#{storeAddressController.storeMaster1.address}"
+							required="true" requiredMessage="Please enter Store Address" />
+						<rich:message for="address" />
+
+						<h:outputText value="Chain Name: " />
+						<h:inputText id="chainName"
+							value="#{storeAddressController.storeMaster1.chainName}"
+							required="false" requiredMessage="Please enter Chain Name" />
+						<rich:message for="chainName" />
+
+						<h:outputText value="Name Search: " />
+						<h:inputText id="namesearch"
+							value="#{storeAddressController.storeMaster1.nameSearch}"
+							required="false" requiredMessage="Please enter Name Search" />
+						<rich:message for="namesearch" />
+
+						<h:outputText value="Details Search: " />
+						<h:inputText id="detailsearch"
+							value="#{storeAddressController.storeMaster1.detailsSearch}"
+							required="false" requiredMessage="Please enter Details Search" />
+						<rich:message for="detailsearch" />
+
+						<h:outputText value="Latitude: " />
+						<h:inputText id="latitude"
+							value="#{storeAddressController.storeMaster1.latitude}"
+							required="true" requiredMessage="Please enter Latitue" />
+						<rich:message for="latitude" />
+
+						<h:outputText value="Longitude: " />
+						<h:inputText id="longitude"
+							value="#{storeAddressController.storeMaster1.longitude}"
+							required="true" requiredMessage="Please enter Longitude" />
+						<rich:message for="longitude" />
+
+						<h:outputText value="City: " />
+						<h:inputText id="city"
+							value="#{storeAddressController.storeMaster1.city}"
+							required="true" requiredMessage="Please enter city" />
+						<rich:message for="city" />
+
+						<h:outputText value="State: " />
+						<h:inputText id="state"
+							value="#{storeAddressController.storeMaster1.state}"
+							required="true" requiredMessage="Please enter State" />
+						<rich:message for="state" />
+
+						<h:outputText value="Country: " />
+						<h:inputText id="country"
+							value="#{storeAddressController.storeMaster1.country}"
+							required="true" requiredMessage="Please enter Country" />
+						<rich:message for="country" />
+
+						<h:outputText value="Currency: " />
+						<h:inputText id="currency"
+							value="#{storeAddressController.storeMaster1.currency}"
+							required="true" requiredMessage="Please enter Currency" />
+						<rich:message for="currency" />
+
+						<h:outputText value="Phone: " />
+						<h:inputText id="phone"
+							value="#{storeAddressController.storeMaster1.phoneNo}"
+							required="true" requiredMessage="Please enter phone number" />
+						<rich:message for="phone" />
+
+						<h:outputText value="Mobile: " />
+						<h:inputText id="mobile"
+							value="#{storeAddressController.storeMaster1.mobileNo}"
+							required="true" requiredMessage="Please enter mobile number" />
+						<rich:message for="mobile" />
+
+						<h:outputText value="E-Mail ID: " />
+						<h:inputText id="mailid"
+							value="#{storeAddressController.storeMaster1.emailId}"
+							required="true" requiredMessage="Please enter mobile number" />
+						<rich:message for="mailid" />
+
+						<h:outputText value="Category: " />
+						<h:inputText id="category"
+							value="#{storeAddressController.storeMaster1.category}"
+							required="false" requiredMessage="Please enter category" />
+						<rich:message for="category" />
+
+						<h:outputText value="URL: " />
+						<h:inputText id="url"
+							value="#{storeAddressController.storeMaster1.url}"
+							required="false" requiredMessage="Please enter Store URL" />
+						<rich:message for="url" />
+
+						<h:outputText value="IP: " />
+						<h:inputText id="ip"
+							value="#{storeAddressController.storeMaster1.ip}"
+							required="false" requiredMessage="Please enter Store IP" />
+						<rich:message for="ip" />
+
+						<h:outputText value="System OS: " />
+						<h:inputText id="os"
+							value="#{storeAddressController.storeMaster1.operatingSystem}"
+							required="false"
+							requiredMessage="Please enter Operating System Name" />
+						<rich:message for="os" />
+
+						<h:outputText value="System RAM: " />
+						<h:inputText id="ram"
+							value="#{storeAddressController.storeMaster1.ram}"
+							required="false" requiredMessage="Please enter System RAM" />
+						<rich:message for="ram" />
+
+
+						<h:outputText value="Quality: " />
+						<h:inputText id="quality"
+							value="#{storeAddressController.storeMaster1.quality}"
+							required="false" requiredMessage="Please enter System RAM" />
+						<rich:message for="quality" />
+						<h:outputText value="OpenTime: " />
+						<h:inputText id="openTime"
+							value="#{storeAddressController.storeMaster1.openTime}"
+							required="false" requiredMessage="Please enter Open Time" />
+						<rich:message for="openTime" />
+						<h:outputText value="Close Time: " />
+						<h:inputText id="closeTime"
+							value="#{storeAddressController.storeMaster1.closeTime}"
+							required="false" requiredMessage="Please enter Close Time" />
+						<rich:message for="closeTime" />
+						<h:outputText value="Delivery Time: " />
+						<h:inputText id="deliveryTime"
+							value="#{storeAddressController.storeMaster1.deliveryTime}"
+							required="false" requiredMessage="Please enter Delivery Time" />
+						<rich:message for="deliveryTime" />
+						<h:outputText value="Min Order Amount: " />
+						<h:inputText id="minOrderAmt"
+							value="#{storeAddressController.storeMaster1.minOrderAmt}"
+							required="false" requiredMessage="Please enter Min Order Amount" />
+						<rich:message for="minOrderAmt" />
+						<h:outputText value="Free Delivery: " />
+						<h:inputText id="freeDelivery"
+							value="#{storeAddressController.storeMaster1.freeDelivery}"
+							required="false" requiredMessage="Please enter Free Delivery" />
+						<rich:message for="freeDelivery" />
+						<h:outputText value="Promotion Desc: " />
+						<h:inputText id="promotionDesc"
+							value="#{storeAddressController.storeMaster1.promotionDesc}"
+							required="false" requiredMessage="Please enter Promotion Desc" />
+						<rich:message for="promotionDesc" />
+						<h:outputText value="Promotion Value: " />
+						<h:inputText id="promotionValue"
+							value="#{storeAddressController.storeMaster1.promotionValue}"
+							required="false" requiredMessage="Please enter Promotion Value" />
+						<rich:message for="promotionValue" />
+						<h:outputText value="Promotion Flag: " />
+						<h:inputText id="promotionFlag"
+							value="#{storeAddressController.storeMaster1.promotionFlag}"
+							required="false" requiredMessage="Please enter Promotion Flag" />
+						<rich:message for="promotionFlag" />
+
+						<h:outputText value="Status: " />
+						<h:inputText id="statusId"
+							value="#{storeAddressController.storeMaster1.status}"
+							required="false" requiredMessage="Please enter Status" />
+						<rich:message for="status" />
+						<h:outputText value="#{msg['Active.Flag']}: " />
+
+						<h:selectOneRadio id="activeFlag"
+							value="#{storeAddressController.storeMaster1.activeFlag}"
+							required="true"
+							requiredMessage="#{msg['Please.select.active.Flag']}?">
+							<f:selectItem itemValue="Yes" itemLabel="Yes" />
+							<f:selectItem itemValue="No" itemLabel="No" />
+						</h:selectOneRadio>
+						<rich:message for="activeFlag" />
+
+						<h:outputText value="OpenTime Weekend: " />
+						<h:inputText id="openTimeWeekend"
+							value="#{storeAddressController.storeMaster1.openTimeWeekend}"
+							required="false"
+							requiredMessage="Please enter Open Time for Weekend" />
+						<rich:message for="openTimeWeekend" />
+						<h:outputText value="CloseTime Weekend: " />
+						<h:inputText id="closeTimeWeekend"
+							value="#{storeAddressController.storeMaster1.closeTimeWeekend}"
+							required="false"
+							requiredMessage="Please enter Close Time for Weekend" />
+						<rich:message for="closeTimeWeekend" />
+
+						<h:outputText value="OpenTime Holiday: " />
+						<h:inputText id="openTimeHoliday"
+							value="#{storeAddressController.storeMaster1.openTimeHoliday}"
+							required="false"
+							requiredMessage="Please enter Open Time for Holiday" />
+						<rich:message for="openTimeHoliday" />
+
+						<h:outputText value="CloseTime Holiday: " />
+						<h:inputText id="closeTimeHoliday"
+							value="#{storeAddressController.storeMaster1.closeTimeHoliday}"
+							required="false"
+							requiredMessage="Please enter Close Time for Holiday" />
+						<rich:message for="closeTimeHoliday" />
+
+						<h:outputText value="#{msg['table.Flag']}: " />
+						<h:selectOneRadio id="tableFlagId"
+							value="#{storeAddressController.storeMaster1.tableFlag}"
+							required="true"
+							requiredMessage="#{msg['please.select.table.Flag']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="tableFlag" />
+
+						<h:outputText value="#{msg['parcel.Flag']}: " />
+						<h:selectOneRadio id="parcelFlag"
+							value="#{storeAddressController.storeMaster1.parcelFlag}"
+							required="true"
+							requiredMessage="#{msg['please.select.parcel.Flag']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="parcelFlag" />
+
+						<h:outputText value="#{msg['mpayment.Flag']}: " />
+						<h:selectOneRadio id="mpayment"
+							value="#{storeAddressController.storeMaster1.mpayment}"
+							required="true"
+							requiredMessage="#{msg['please.select.mpayment']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="mpayment" />
+
+						<h:outputText value="#{msg['kitchenPrintPreview.Flag']}: " />
+						<h:selectOneRadio id="kitchenPrintPreview"
+							value="#{storeAddressController.storeMaster1.kitchenPrintPreview}"
+							required="true"
+							requiredMessage="#{msg['please.select.kitchenPrintPreview']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="kitchenPrintPreview" />
+
+						<h:outputText value="#{msg['posmanualPrint.Flag']}: " />
+						<h:selectOneRadio id="posmanualPrint"
+							value="#{storeAddressController.storeMaster1.posmanualPrint}"
+							required="true"
+							requiredMessage="#{msg['please.select.posmanualPrint']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="posmanualPrint" />
+
+						<h:outputText value="#{msg['billPrint.Flag']}: " />
+						<h:selectOneRadio id="billPrint"
+							value="#{storeAddressController.storeMaster1.billPrint}"
+							required="true"
+							requiredMessage="#{msg['please.select.billPrint']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="billPrint" />
+
+						<h:outputText value="#{msg['cashPayment.Flag']}: " />
+						<h:selectOneRadio id="cashPayment"
+							value="#{storeAddressController.storeMaster1.cashPayment}"
+							required="true"
+							requiredMessage="#{msg['please.select.cashPayment']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="cashPayment" />
+
+						<h:outputText value="#{msg['creditPayment.Flag']}: " />
+						<h:selectOneRadio id="creditPayment"
+							value="#{storeAddressController.storeMaster1.creditPayment}"
+							required="true"
+							requiredMessage="#{msg['please.select.creditPayment']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="creditPayment" />
+
+						<h:outputText value="#{msg['stockStatus.Flag']}: " />
+						<h:selectOneRadio id="stockStatus"
+							value="#{storeAddressController.storeMaster1.stockStatus}"
+							required="true"
+							requiredMessage="#{msg['please.select.stockStatus']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="stockStatus" />
+
+						<h:outputText value="From Description: " />
+						<h:inputText id="fromDes"
+							value="#{storeAddressController.storeMaster1.fromDes}"
+							required="false" requiredMessage="Please enter from description" />
+						<rich:message for="fromDes" />
+
+						<h:outputText value="To Description: " />
+						<h:inputText id="toDes"
+							value="#{storeAddressController.storeMaster1.toDes}"
+							required="false" requiredMessage="Please enter to description" />
+						<rich:message for="toDes" />
+
+						<h:outputText value="Kot Res Title Font: " />
+						<h:inputText id="kotResTitleFont"
+							value="#{storeAddressController.storeMaster1.kotResTitleFont}"
+							required="false"
+							requiredMessage="Please enter kot res title font" />
+						<rich:message for="kotResTitleFont" />
+
+						<h:outputText value="Kot text font: " />
+						<h:inputText id="kotTextFont"
+							value="#{storeAddressController.storeMaster1.kotTextFont}"
+							required="false" requiredMessage="Please enter to kot text font" />
+						<rich:message for="kotTextFont" />
+
+						<h:outputText value="Kot date time font: " />
+						<h:inputText id="kotDateTimeFont"
+							value="#{storeAddressController.storeMaster1.kotDateTimeFont}"
+							required="false"
+							requiredMessage="Please enter to kot DateTime font" />
+						<rich:message for="kotDateTimeFont" />
+
+						<h:outputText value="Kot table font: " />
+						<h:inputText id="kotTableFont"
+							value="#{storeAddressController.storeMaster1.kotTableFont}"
+							required="false" requiredMessage="Please enter to kot table font" />
+						<rich:message for="kotTableFont" />
+
+
+						<h:outputText value="Kot no of person font: " />
+						<h:inputText id="kotNoOfPersonFont"
+							value="#{storeAddressController.storeMaster1.kotNoOfPersonFont}"
+							required="false"
+							requiredMessage="Please enter to kot no of person font" />
+						<rich:message for="kotNoOfPersonFont" />
+
+						<h:outputText value="Kot item title font: " />
+						<h:inputText id="kotItemTitleFont"
+							value="#{storeAddressController.storeMaster1.kotItemTitleFont}"
+							required="false"
+							requiredMessage="Please enter to kot item title font" />
+						<rich:message for="kotItemTitleFont" />
+
+						<h:outputText value="Kot item font: " />
+						<h:inputText id="kotItemFont"
+							value="#{storeAddressController.storeMaster1.kotItemFont}"
+							required="false" requiredMessage="Please enter to kot item font" />
+						<rich:message for="kotItemFont" />
+
+						<h:outputText value="Vat Reg No: " />
+						<h:inputText id="vatRegNo"
+							value="#{storeAddressController.storeMaster1.vatRegNo}"
+							required="true" requiredMessage="Please enter vat Reg No." />
+						<rich:message for="vatRegNo" />
+
+						<h:outputText value="Service Tax No: " />
+						<h:inputText id="serviceTaxNo"
+							value="#{storeAddressController.storeMaster1.serviceTaxNo}"
+							required="true" requiredMessage="Please enter Service Tax No." />
+						<rich:message for="serviceTaxNo" />
+
+						<h:outputText value="Po Print Server: " />
+						<h:selectOneRadio id="poPrintServer"
+							value="#{storeAddressController.storeMaster1.poPrintServer}"
+							required="true"
+							requiredMessage="#{msg['please.select.poPrintServer']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="poPrintServer" />
+
+						<h:outputText value="Parcel Service Tax: " />
+						<h:selectOneRadio id="parcelServiceTax"
+							value="#{storeAddressController.storeMaster1.parcelServiceTax}"
+							required="true"
+							requiredMessage="#{msg['please.select.parcelServiceTax']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="parcelServiceTax" />
+
+						<h:outputText value="Parcel Vat: " />
+						<h:selectOneRadio id="parcelVat"
+							value="#{storeAddressController.storeMaster1.parcelVat}"
+							required="true"
+							requiredMessage="#{msg['please.select.parcelVat']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="parcelVat" />
+
+						<h:outputText value="Round Off Total Amt Status: " />
+						<h:selectOneRadio id="roundOffTotalAmtStatus"
+							value="#{storeAddressController.storeMaster1.roundOffTotalAmtStatus}"
+							required="true"
+							requiredMessage="#{msg['please.select.roundOffTotalAmtStatus']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="roundOffTotalAmtStatus" />
+
+						<h:outputText value="Kitchen Print Bt: " />
+						<h:selectOneRadio id="kitchenPrintBt"
+							value="#{storeAddressController.storeMaster1.kitchenPrintBt}"
+							required="true"
+							requiredMessage="#{msg['please.select.kitchenPrintBt']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="kitchenPrintBt" />
+
+						<h:outputText value="Bill Print Bt: " />
+						<h:selectOneRadio id="billPrintBt"
+							value="#{storeAddressController.storeMaster1.billPrintBt}"
+							required="true"
+							requiredMessage="#{msg['please.select.billPrintBt']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="billPrintBt" />
+
+
+						<h:outputText value="Kot Count: " />
+						<h:inputText id="kotCount"
+							value="#{storeAddressController.storeMaster1.kotCount}"
+							required="false" requiredMessage="Please enter Kot Count" />
+						<rich:message for="kotCount" />
+
+						<h:outputText value="Discount Percentage: " />
+						<h:selectOneRadio id="discountPercentage"
+							value="#{storeAddressController.storeMaster1.discountPercentage}"
+							required="true"
+							requiredMessage="#{msg['please.select.discountPercentage']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="discountPercentage" />
+
+						<h:outputText value="Vat Tax Text: " />
+						<h:inputText id="vatTaxText"
+							value="#{storeAddressController.storeMaster1.vatTaxText}"
+							required="true" requiredMessage="Please enter Vat Tax Text." />
+						<rich:message for="vatTaxText" />
+
+						<h:outputText value="Service Tax Text: " />
+						<h:inputText id="serviceTaxText"
+							value="#{storeAddressController.storeMaster1.serviceTaxText}"
+							required="true" requiredMessage="Please enter Service Tax Text." />
+						<rich:message for="serviceTaxText" />
+
+						<h:outputText value="Vat Amt: " />
+						<h:inputText id="vatAmt"
+							value="#{storeAddressController.storeMaster1.vatAmt}"
+							required="false" requiredMessage="Please enter Vat Amt" />
+						<rich:message for="vatAmt " />
+
+						<h:outputText value="Service Tax Amt: " />
+						<h:inputText id="serviceTaxAmt"
+							value="#{storeAddressController.storeMaster1.serviceTaxAmt}"
+							required="false" requiredMessage="Please enter Service Tax Amt" />
+						<rich:message for="serviceTaxAmt " />
+
+						<h:outputText value="Kot Print Type: " />
+						<h:inputText id="kotPrintType"
+							value="#{storeAddressController.storeMaster1.kotPrintType}"
+							required="false" requiredMessage="Please enter Kot Print Type" />
+						<rich:message for="kotPrintType" />
+
+						<h:outputText value="Bill Text Font: " />
+						<h:inputText id="billTextFont"
+							value="#{storeAddressController.storeMaster1.billTextFont}"
+							required="false" requiredMessage="Please enter to Bill Text Font" />
+						<rich:message for="billTextFont" />
+
+						<h:outputText value="Bill Header Font: " />
+						<h:inputText id="billHeaderFont"
+							value="#{storeAddressController.storeMaster1.billHeaderFont}"
+							required="false"
+							requiredMessage="Please enter to Bill Header Font" />
+						<rich:message for="billTextFont" />
+
+						<h:outputText value="Print Paid Bill: " />
+						<h:inputText id="printPaidBill"
+							value="#{storeAddressController.storeMaster1.printPaidBill}"
+							required="false" requiredMessage="Please enter Print Paid Bill" />
+						<rich:message for="printPaidBill " />
+
+						<h:outputText value="Parcel Address: " />
+						<h:selectOneRadio id="parcelAddress"
+							value="#{storeAddressController.storeMaster1.parcelAddress}"
+							required="true"
+							requiredMessage="#{msg['please.select.Parcel Address']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="parcelAddress" />
+
+						<h:outputText value="Multi Order Table: " />
+						<h:selectOneRadio id="multiOrderTable"
+							value="#{storeAddressController.storeMaster1.multiOrderTable}"
+							required="true"
+							requiredMessage="#{msg['please.select.Multi Order Table']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="multiOrderTable" />
+
+						<h:outputText value="Credit Sale: " />
+						<h:selectOneRadio id="creditSale"
+							value="#{storeAddressController.storeMaster1.creditSale}"
+							required="true"
+							requiredMessage="#{msg['please.select.Credit Sale']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="creditSale" />
+
+						<h:outputText value="Customer Display: " />
+						<h:inputText id="customerDisplay"
+							value="#{storeAddressController.storeMaster1.customerDisplay}"
+							required="true" requiredMessage="Please enter Customer Display." />
+						<rich:message for="customerDisplay" />
+
+						<h:outputText value="Parcel Text: " />
+						<h:inputText id="parcelText"
+							value="#{storeAddressController.storeMaster1.parcelText}"
+							required="true" requiredMessage="Please enter Parcel Text." />
+						<rich:message for="parcelText" />
+
+
+						<h:outputText value="Kot Default Printer: " />
+						<h:selectOneRadio id="kotDefaultPrinter"
+							value="#{storeAddressController.storeMaster1.kotDefaultPrinter}"
+							required="true"
+							requiredMessage="#{msg['please.select.Kot Default Printer']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="kotDefaultPrinter" />
+
+						<h:outputText value="Direct Category: " />
+						<h:inputText id="directCategory"
+							value="#{storeAddressController.storeMaster1.directCategory}"
+							required="true" requiredMessage="Please enter Direct Category." />
+						<rich:message for="directCategory" />
+
+						<h:outputText value="Cooking Unit: " />
+						<h:inputText id="cookingUnit"
+							value="#{storeAddressController.storeMaster1.cookingUnit}"
+							required="true" requiredMessage="Please enter Cooking Unit." />
+						<rich:message for="cookingUnit" />
+
+						<h:outputText value="Smart Im: " />
+						<h:selectOneRadio id="smartIm"
+							value="#{storeAddressController.storeMaster1.smartIm}"
+							required="true"
+							requiredMessage="#{msg['please.select.Smart Im']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="smartIm" />
+
+
+
+						<h:outputText value="#{msg['Do.You.Want.Kitchen.Print']}: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="kitchPrnt"
+							value="#{storeAddressController.storeMaster1.kitchenPrint}"
+							required="true"
+							requiredMessage="#{msg['Please.select.kitchen.print']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="kitchPrnt" />
+						
+						<h:outputText value="Bill Footer Text: " />
+						<h:inputText id="billFooterText"
+							value="#{storeAddressController.storeMaster1.billFooterText}"
+							required="true" requiredMessage="Please enter bill Footer Text." />
+						<rich:message for="billFooterText" />
+						
+						<h:outputText value="Thanks Line 1: " />
+						<h:inputText id="thanksLine1"
+							value="#{storeAddressController.storeMaster1.thanksLine1}"
+							required="true" requiredMessage="Please enter thanks Line 1 text." />
+						<rich:message for="thanksLine1" />
+						
+						<h:outputText value="Thanks Line 2: " />
+						<h:inputText id="thanksLine2"
+							value="#{storeAddressController.storeMaster1.thanksLine2}"
+							required="true" requiredMessage="Please enter thanks Line 2 text." />
+						<rich:message for="thanksLine2" />
+						
+						<h:outputText value="Double Round Off: " />
+						<h:inputText id="doubleRoundOff"
+							value="#{storeAddressController.storeMaster1.doubleRoundOff}"
+							required="true" requiredMessage="Please enter Double Round Off text." />
+						<rich:message for="doubleRoundOff" />
+						
+						<h:outputText value="Invoice Text: " />
+						<h:inputText id="invoiceText"
+							value="#{storeAddressController.storeMaster1.invoiceText}"
+							required="true" requiredMessage="Please enter invoice Text text." />
+						<rich:message for="invoiceText" />
+						
+						<h:outputText value="Rate In Bill: " />
+						<h:inputText id="rateInBill"
+							value="#{storeAddressController.storeMaster1.rateInBill}"
+							required="true" requiredMessage="Please enter rate In Bill text." />
+						<rich:message for="rateInBill" />
+						
+						<h:outputText value="Bill Font Type: " />
+						<h:inputText id="billFontType"
+							value="#{storeAddressController.storeMaster1.billFontType}"
+							required="true" requiredMessage="Please enter bill Font Type text." />
+						<rich:message for="billFontType" />
+						
+						<h:outputText value="Kot Padding: " />
+						<h:inputText id="kotPadding"
+							value="#{storeAddressController.storeMaster1.kotPadding}"
+							required="true" requiredMessage="Please enter kot Padding text." />
+						<rich:message for="kotPadding" />
+						
+						<h:outputText value="Cash Drawer Code: " />
+						<h:inputText id="cashDrawerCode"
+							value="#{storeAddressController.storeMaster1.cashDrawerCode}"
+							required="true" requiredMessage="Please enter Cash Drawer Code text." />
+						<rich:message for="cashDrawerCode" />
+						
+						<h:outputText value="Table Screen: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="tableScreen"
+							value="#{storeAddressController.storeMaster1.tableScreen}"
+							required="true"
+							requiredMessage="#{msg['Please.select.table.screen']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="tableScreen" />
+						
+						<h:outputText value="Soft Key: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="softKey"
+							value="#{storeAddressController.storeMaster1.softKey}"
+							required="true"
+							requiredMessage="#{msg['Please.select.soft.Key']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="softKey" />
+						
+						<h:outputText value="Menu Collapsable: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="menuCollapsable"
+							value="#{storeAddressController.storeMaster1.menuCollapsable}"
+							required="true"
+							requiredMessage="#{msg['Please.select.menuCollapsable']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="menuCollapsable" />
+						
+						<h:outputText value="Bill Split: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="billSplit"
+							value="#{storeAddressController.storeMaster1.billSplit}"
+							required="true"
+							requiredMessage="#{msg['Please.select.bill.split']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="billSplit" />
+						
+						<h:outputText value="Is Pax: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="isPax"
+							value="#{storeAddressController.storeMaster1.isPax}"
+							required="true"
+							requiredMessage="#{msg['Please.select.is.Pax']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="isPax" />
+						
+						<h:outputText value="item With Image: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="itemWithImage"
+							value="#{storeAddressController.storeMaster1.itemWithImage}"
+							required="true"
+							requiredMessage="#{msg['Please.select.item.with.image']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="itemWithImage" />
+						
+						<h:outputText value="Table Layout: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="tableLayout"
+							value="#{storeAddressController.storeMaster1.tableLayout}"
+							required="true"
+							requiredMessage="#{msg['Please.select.table.layout']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="tableLayout" />
+						
+						<h:outputText value="Validate Raw Stock Out: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="validateRawStockOut"
+							value="#{storeAddressController.storeMaster1.validateRawStockOut}"
+							required="true"
+							requiredMessage="#{msg['Please.select.validate.raw.stockout']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="validateRawStockOut" />
+						
+						<h:outputText value="Validate Fg Sale Out: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="validateFgSaleOut"
+							value="#{storeAddressController.storeMaster1.validateFgSaleOut}"
+							required="true"
+							requiredMessage="#{msg['Please.select.validate.fg.sale.out']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="validateFgSaleOut" />
+						
+						<h:outputText value="logo X Coordinate: " />
+						<h:inputText id="logoXCoordinate"
+							value="#{storeAddressController.storeMaster1.logoXCoordinate}"
+							required="false" requiredMessage="Please enter logo X Coordinate" />
+						<rich:message for="logoXCoordinate" />
+						
+						<h:outputText value="db Path: " />
+						<h:inputText id="dbPath"
+							value="#{storeAddressController.storeMaster1.dbPath}"
+							required="false" requiredMessage="Please enter dbPath" />
+						<rich:message for="dbPath" />
+						
+						<h:outputText value="Mobile Bill Print: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="mobBillPrint"
+							value="#{storeAddressController.storeMaster1.mobBillPrint}"
+							required="true"
+							requiredMessage="#{msg['Please.select.mob.bill.print']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="mobBillPrint" />
+						
+						<h:outputText value="Print Bill Paper Size: " />
+						<h:inputText id="printBillPaperSize"
+							value="#{storeAddressController.storeMaster1.printBillPaperSize}"
+							required="false" requiredMessage="Please.select.print.bill.paper.size" />
+						<rich:message for="printBillPaperSize" />
+						
+						<h:outputText value="Card Payment Kit: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="cardPaymentKit"
+							value="#{storeAddressController.storeMaster1.cardPaymentKit}"
+							required="true"
+							requiredMessage="#{msg['Please.select.card.payment.kit']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="cardPaymentKit" />
+						
+						<h:outputText value="Service Charge Rate: " />
+						<h:inputText id="serviceChargeRate"
+							value="#{storeAddressController.storeMaster1.serviceChargeRate}"
+							required="false" requiredMessage="Please.select.service.charge.rate" />
+						<rich:message for="serviceChargeRate" />
+						
+						<h:outputText value="parcel Service Charge: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="parcelServiceCharge"
+							value="#{storeAddressController.storeMaster1.parcelServiceCharge}"
+							required="true"
+							requiredMessage="#{msg['Please.select.card.payment.kit']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="parcelServiceCharge" />
+						
+						<h:outputText value="Display Current Stock Menu: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="displayCurrentStockMenu"
+							value="#{storeAddressController.storeMaster1.displayCurrentStockMenu}"
+							required="true"
+							requiredMessage="#{msg['Please.select.card.payment.kit']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="displayCurrentStockMenu" />
+						
+						<h:outputText value="Is Barcode: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="isBarcode"
+							value="#{storeAddressController.storeMaster1.isBarcode}"
+							required="true"
+							requiredMessage="#{msg['Please.select.is.barcode']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="displayCurrentStockMenu" />
+						
+						<h:outputText value="Enterprise Table Layout: "
+							styleClass="outputTextStyle" />
+						<h:selectOneRadio id="enterpriseTblLayout"
+							value="#{storeAddressController.storeMaster1.enterpriseTblLayout}"
+							required="true"
+							requiredMessage="#{msg['Please.select.enterprise.tbl.layout']}?">
+							<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+							<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+						</h:selectOneRadio>
+						<rich:message for="enterpriseTblLayout" />
+						
+					</h:panelGrid>
+					<br />
+					<h:commandButton value="Submit"
+						action="#{storeAddressController.addNewStore}" />
+				</h:form>
+			</rich:panel>
+			<!-- </div>-->
+		</div>
+		<!--end of main content-->
+		<div class="footer">
+
+			<div class="left_footer">Powered By Sharobi Technologies India
+				Pvt. Ltd.</div>
+			<!--<div class="right_footer"><a href="http://indeziner.com"><img src="js/images/indeziner_logo.gif" alt="" title="" border="0" /></a></div>-->
+
+		</div>
+	</div>
+</h:body>
+</html>

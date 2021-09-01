@@ -1,0 +1,455 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:h="http://java.sun.com/jsf/html" xmlns:a4j="http://richfaces.org/a4j" xmlns:rich="http://richfaces.org/rich" xmlns:f="http://java.sun.com/jsf/core" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+
+<h:outputStylesheet>
+        .optionList {
+        height: 22px;
+        }
+ 
+        .vertical-menu-cell {
+        padding: 0px 4px 0px 4px;
+        }
+</h:outputStylesheet>
+<h:head styleClass="app_body_backgrnd">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>IN ADMIN PANEL | Powered by Sharobitech</title>
+	<h:outputStylesheet name="css/style_#{sessionScope.cssId}.css" />
+	<script type="text/javascript" src="js/clockp.js"></script>
+	<script type="text/javascript" src="js/clockh.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/ddaccordion.js"></script>
+	<script type="text/javascript">
+		ddaccordion.init({
+			headerclass : "submenuheader", //Shared CSS class name of headers group
+			contentclass : "submenu", //Shared CSS class name of contents group
+			revealtype : "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+			mouseoverdelay : 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+			collapseprev : true, //Collapse previous content (so only one open at any time)? true/false 
+			defaultexpanded : [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+			onemustopen : false, //Specify whether at least one header should be open always (so never all headers closed)
+			animatedefault : false, //Should contents open by default be animated into view?
+			persiststate : true, //persist state of opened contents within browser session?
+			toggleclass : [ "", "" ], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+			togglehtml : [ "suffix",
+					"_$tag______________________________________________",
+					"_$tag_______________________________________________" ], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+			animatespeed : "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+			oninit : function(headers, expandedindices) { //custom code to run when headers have initalized
+				//do nothing
+			},
+			onopenclose : function(header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+				//do nothing
+			}
+		})
+	</script>
+	<script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+	<script type="text/javascript">
+		function checkNumeric() {
+			var phNo = document.getElementById('editStoreform:phoneNo').value;
+			var pattern = /^\d{10}$/;
+
+			if (phNo.match(pattern)) {
+				//return true;
+			} else {
+
+				alert("Please enter only numeric value in Phone No.");
+				return false;
+			}
+
+			var mobNo = document.getElementById('editStoreform:mobileNo').value;
+
+			if (mobNo.match(pattern)) {
+				//return true;
+			} else {
+
+				alert("Please enter only numeric value in Mobile No.");
+				return false;
+			}
+
+			var url = document.getElementById('editStoreform:url').value;
+
+			if (url.match(pattern)) {
+				//return true;
+			} else {
+
+				alert("Please enter only numeric value in URL");
+				return false;
+			}
+			return true;
+		}
+	</script>
+	<script language="javascript" type="text/javascript" src="js/niceforms.js"></script>
+	<link rel="stylesheet" type="text/css" media="all" href="js/niceforms-default.css" />
+
+	<style type="text/css">
+</style>
+
+</h:head>
+<h:body styleClass="app_body_backgrnd">
+	<f:view locale="#{language.localeCode}">
+		<div id="main_container">
+			<div class="header">
+				<ui:include src="/page/common/header.xhtml" />
+				<div class="right_header">
+					<h:form>
+						<h:outputText value="#{msg['welcome']}" />
+						<b>#{sessionScope.loggeduser.userId}</b>
+						<h:commandButton value="#{msg['Logout']}" action="#{userController.logout}" styleClass="logoutBtn"></h:commandButton>
+					</h:form>
+				</div>
+
+			</div>
+			
+			<div class="main_content" align="center">
+				<!-- <div class="menu"> -->
+				<ui:include src="/page/common/mainMenue_#{sessionScope.cssId}.xhtml" />
+				<rich:panel>
+					<div class="tabDesc">
+						<b><h:outputText value="#{msg['Edit.Store']}" /></b>
+					</div>
+					<h:form id="editStoreform" enctype="multipart/form-data">
+						<br />
+						<h:inputHidden id="id" value="#{sessionScope.store.id}" />
+						<h:panelGrid id="panel4" columns="3" styleClass="panelGridPos panelGridBackgrnd panelGridStyle" width="982" style="padding-left:4em" columnClasses="colstyle" cellspacing="5">
+							<h:outputText value="#{msg['Store.Name']} :" styleClass="required outputTextStyle" />
+							<h:inputText id="storeName" value="#{sessionScope.store.storeName}" required="true" requiredMessage="#{msg['Please.Enter.Store.Name']}" styleClass="inputTextStyle">
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="storeName" />
+
+							<h:outputText value="#{msg['Address']} :" styleClass="required outputTextStyle" />
+							<h:inputTextarea id="address" value="#{sessionScope.store.address}" required="true" requiredMessage="#{msg['Please.Enter.Store.Address']}" styleClass="inputTextAreaStyle">
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputTextarea>
+							<rich:message for="address" />
+
+							<h:outputText value="#{msg['Chain.Name']}:" styleClass="outputTextStyle" />
+							<h:inputText id="chainName" value="#{sessionScope.store.chainName}" styleClass="inputTextStyle">
+							</h:inputText>
+							<rich:message for="chainName" />
+
+							<h:outputText value="#{msg['City']} :" styleClass="required outputTextStyle" />
+							<h:inputText id="city" value="#{sessionScope.store.city}" required="true" requiredMessage="#{msg['Please.Enter.City.Name']}" styleClass="inputTextStyle">
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="city" />
+
+							<h:outputText value="#{msg['State']} :" styleClass="required outputTextStyle" />
+							<h:inputText id="state" value="#{sessionScope.store.state}" required="true" requiredMessage="#{msg['Please.Enter.State.Name']}" styleClass="inputTextStyle">
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="state" />
+
+							<h:outputText value="#{msg['Country']} :" styleClass="required outputTextStyle" />
+							<h:inputText id="country" value="#{sessionScope.store.country}" required="true" requiredMessage="#{msg['Please.Enter.Country.Name']}" styleClass="inputTextStyle">
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="country" />
+
+							<h:outputText value="#{msg['Currency']} :" styleClass="required outputTextStyle" />
+							<h:inputText id="currency" value="#{sessionScope.store.currency}" required="true" requiredMessage="#{msg['Please.Enter.Currency']}" styleClass="inputTextStyle">
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="currency" />
+
+							<h:outputText value="#{msg['Phone.No']}.:" styleClass="required outputTextStyle" />
+							<h:inputText id="phoneNo" value="#{sessionScope.store.phoneNo}" required="true" requiredMessage="#{msg['Please.Enter.Store.Phone.No']}" validatorMessage="#{msg['Please.enter.10.digits.number.only']}" styleClass="inputTextStyle">
+								<f:validateRegex pattern="^\d{10}$" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="phoneNo" />
+
+							<h:outputText value="#{msg['Mobile.No']}.:" styleClass="required outputTextStyle" />
+							<h:inputText id="mobileNo" value="#{sessionScope.store.mobileNo}" required="true" requiredMessage="#{msg['Please.Enter.Store.Mobile.No']}" validatorMessage="#{msg['Please.enter.10.digits.number.only']}" styleClass="inputTextStyle">
+								<f:validateRegex pattern="^\d{10}$" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="mobileNo" />
+
+							<h:outputText value="#{msg['Email.Id']} :" styleClass="required outputTextStyle" />
+							<h:inputText id="emailId" value="#{sessionScope.store.emailId}" required="true" requiredMessage="#{msg['Please.Enter.Store.EMail.ID']}" validatorMessage="#{msg['Please.Enter.Valid.Store.EMail.ID']}" styleClass="inputTextStyle">
+								<f:validateRegex pattern="^[_A-Za-z0-9-\+]+(\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\.[A-Za-z0-9]+)*(\.[A-Za-z]{2,})$" />
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="emailId" />
+
+							<h:outputText value="#{msg['Category']} :" styleClass="outputTextStyle" />
+							<h:inputText id="category" value="#{sessionScope.store.category}" styleClass="inputTextStyle">
+							</h:inputText>
+							<rich:message for="category" />
+
+							<h:outputText value="#{msg['URL']} :" styleClass="outputTextStyle" />
+							<h:inputText id="url" value="#{sessionScope.store.url}" styleClass="inputTextStyle">
+							</h:inputText>
+							<rich:message for="url" />
+
+							<h:outputText value="#{msg['IP.Address']} :" styleClass="outputTextStyle" />
+							<h:inputText id="ip" value="#{sessionScope.store.ip}" styleClass="inputTextStyle">
+							</h:inputText>
+							<rich:message for="ip" />
+
+							<h:outputText value="#{msg['System.OS']} :" styleClass="outputTextStyle" />
+							<h:inputText id="operatingSystem" value="#{sessionScope.store.operatingSystem}" styleClass="inputTextStyle">
+							</h:inputText>
+							<rich:message for="operatingSystem" />
+
+							<h:outputText value="#{msg['RAM']} :" styleClass="outputTextStyle" />
+							<h:inputText id="ram" value="#{sessionScope.store.ram}" styleClass="inputTextStyle">
+							</h:inputText>
+							<rich:message for="ram" />
+
+							<h:outputText value="#{msg['Name.Search']} :" styleClass="outputTextStyle" />
+							<h:inputText id="nameSearch" value="#{sessionScope.store.nameSearch}" styleClass="inputTextStyle">
+							</h:inputText>
+							<rich:message for="nameSearch" />
+
+							<h:outputText value="#{msg['Details.Search']} :" styleClass="outputTextStyle" />
+							<h:inputText id="detailsSearch" value="#{sessionScope.store.detailsSearch}" styleClass="inputTextStyle">
+							</h:inputText>
+							<rich:message for="detailsSearch" />
+
+							<h:outputText value="#{msg['Latitude']} :" styleClass="required outputTextStyle" />
+							<h:inputText id="latitude" value="#{sessionScope.store.latitude}" required="true" requiredMessage="#{msg['Please.Enter.Store.Latitude']}" styleClass="inputTextStyle">
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="latitude" />
+
+							<h:outputText value="#{msg['Longitude']} :" styleClass="required outputTextStyle" />
+							<h:inputText id="longitude" value="#{sessionScope.store.longitude}" required="true" requiredMessage="#{msg['Please.Enter.Store.Longitude']}" styleClass="inputTextStyle">
+								<f:validateRequired />
+								<rich:validator />
+							</h:inputText>
+							<rich:message for="longitude" />
+
+							<h:outputText value="#{msg['Quality']} " styleClass="outputTextStyle" />
+							<h:inputText id="quality" value="#{sessionScope.store.quality}" styleClass="inputTextStyle" />
+							<rich:message for="quality" />
+
+							<h:outputText value="#{msg['Open.Time']}: " styleClass="outputTextStyle" />
+							<h:inputText id="openTime" value="#{sessionScope.store.openTime}" styleClass="inputTextStyle" />
+							<rich:message for="openTime" />
+
+							<h:outputText value="#{msg['Close.Time']}: " styleClass="outputTextStyle" />
+							<h:inputText id="closeTime" value="#{sessionScope.store.closeTime}" styleClass="inputTextStyle" />
+							<rich:message for="closeTime" />
+
+							<h:outputText value="#{msg['Delivery.Time']}: " styleClass="outputTextStyle" />
+							<h:inputText id="deliveryTime" value="#{sessionScope.store.deliveryTime}" styleClass="inputTextStyle" />
+							<rich:message for="deliveryTime" />
+
+							<h:outputText value="#{msg['Min.Order.Amt']}: " styleClass="outputTextStyle" />
+							<h:inputText id="minOrderAmt" value="#{sessionScope.store.minOrderAmt}" styleClass="inputTextStyle" />
+							<rich:message for="minOrderAmt" />
+
+							<h:outputText value="#{msg['Free.Delivery']}: " styleClass="outputTextStyle" />
+							<h:inputText id="freeDelivery" value="#{sessionScope.store.freeDelivery}" styleClass="inputTextStyle" />
+							<rich:message for="freeDelivery" />
+
+							<h:outputText value="#{msg['Promotion.Desc']}: " styleClass="outputTextStyle" />
+							<h:inputText id="promotionDesc" value="#{sessionScope.store.promotionDesc}" styleClass="inputTextStyle" />
+							<rich:message for="promotionDesc" />
+
+							<h:outputText value="#{msg['Promotion.Value']}: " styleClass="outputTextStyle" />
+							<h:inputText id="promotionValue" value="#{sessionScope.store.promotionValue}" styleClass="inputTextStyle" />
+							<rich:message for="promotionValue" />
+
+							<h:outputText value="#{msg['Promotion.Flag']}: " styleClass="outputTextStyle" />
+							<h:inputText id="promotionFlag" value="#{sessionScope.store.promotionFlag}" styleClass="inputTextStyle" />
+							<rich:message for="promotionFlag" />
+							
+							<h:outputText value="#{msg['Active.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="activeFlag"
+								value="#{sessionScope.store.activeFlag}" required="true"
+								requiredMessage="#{msg['Please.select.active.Flag']}?">
+								<f:selectItem itemValue="Yes" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="Yes" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="activeFlag" />
+							
+							<h:outputText value="OpenTime Weekend:" styleClass="outputTextStyle" />
+							<h:inputText id="openTimeWeekend" value="#{sessionScope.store.openTimeWeekend}" styleClass="inputTextStyle" />
+							<rich:message for="openTimeWeekend" />
+							
+							
+							<h:outputText value="CloseTime Weekend:" styleClass="outputTextStyle" />
+							<h:inputText id="closeTimeWeekend" value="#{sessionScope.store.closeTimeWeekend}" styleClass="inputTextStyle" />
+							<rich:message for="closeTimeWeekend" />
+							
+							<h:outputText value="OpenTime Holiday" styleClass="outputTextStyle" />
+							<h:inputText id="openTimeHoliday" value="#{sessionScope.store.openTimeHoliday}" styleClass="inputTextStyle" />
+							<rich:message for="openTimeHoliday" />
+							
+							
+							<h:outputText value="CloseTime Holiday" styleClass="outputTextStyle" />
+							<h:inputText id="closeTimeHoliday" value="#{sessionScope.store.closeTimeHoliday}" styleClass="inputTextStyle" />
+							<rich:message for="closeTimeHoliday" />
+							
+							<h:outputText value="#{msg['table.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="tableFlag"
+								value="#{sessionScope.store.tableFlag}" required="true"
+								requiredMessage="#{msg['please.select.table.Flag']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="tableFlag" />
+							
+							<h:outputText value="#{msg['parcel.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="parcelFlag"
+								value="#{sessionScope.store.parcelFlag}" required="true"
+								requiredMessage="#{msg['please.select.parcel.Flag']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="parcelFlag" />
+							
+							<h:outputText value="#{msg['mpayment.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="mpayment"
+								value="#{sessionScope.store.mpayment}" required="true"
+								requiredMessage="#{msg['please.select.mpayment']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="mpayment" />
+							
+							<h:outputText value="#{msg['kitchenPrintPreview.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="kitchenPrintPreview"
+								value="#{sessionScope.store.kitchenPrintPreview}" required="true"
+								requiredMessage="#{msg['please.select.kitchenPrintPreview']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="kitchenPrintPreview" />
+							
+							<h:outputText value="#{msg['posmanualPrint.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="posmanualPrint"
+								value="#{sessionScope.store.posmanualPrint}" required="true"
+								requiredMessage="#{msg['please.select.posmanualPrint']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="posmanualPrint" />
+							
+							<h:outputText value="#{msg['billPrint.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="billPrint"
+								value="#{sessionScope.store.billPrint}" required="true"
+								requiredMessage="#{msg['please.select.billPrint']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="billPrint" />
+							
+							<h:outputText value="#{msg['cashPayment.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="cashPayment"
+								value="#{sessionScope.store.cashPayment}" required="true"
+								requiredMessage="#{msg['please.select.cashPayment']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="cashPayment" />
+							
+							<h:outputText value="#{msg['creditPayment.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="creditPayment"
+								value="#{sessionScope.store.creditPayment}" required="true"
+								requiredMessage="#{msg['please.select.creditPayment']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="creditPayment" />
+							
+							<h:outputText value="#{msg['stockStatus.Flag']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="stockStatus"
+								value="#{sessionScope.store.stockStatus}" required="true"
+								requiredMessage="#{msg['please.select.stockStatus']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="stockStatus" />
+							
+							<h:outputText value="From Description:" styleClass="outputTextStyle" />
+							<h:inputText id="fromDes" value="#{sessionScope.store.fromDes}" styleClass="inputTextStyle" />
+							<rich:message for="fromDes" />
+							
+							<h:outputText value="To Description:" styleClass="outputTextStyle" />
+							<h:inputText id="toDes" value="#{sessionScope.store.toDes}" styleClass="inputTextStyle" />
+							<rich:message for="toDes" />
+							
+							<h:outputText value="Kot Res Title Font:" styleClass="outputTextStyle" />
+							<h:inputText id="kotResTitleFont" value="#{sessionScope.store.kotResTitleFont}" styleClass="inputTextStyle" />
+							<rich:message for="kotResTitleFont" />
+							
+							<h:outputText value="Kot text font:" styleClass="outputTextStyle" />
+							<h:inputText id="kotTextFont" value="#{sessionScope.store.kotTextFont}" styleClass="inputTextStyle" />
+							<rich:message for="kotTextFont" />
+							
+							<h:outputText value="Kot date time font:" styleClass="outputTextStyle" />
+							<h:inputText id="kotDateTimeFont" value="#{sessionScope.store.kotDateTimeFont}" styleClass="inputTextStyle" />
+							<rich:message for="kotDateTimeFont" />
+							
+							<h:outputText value="Kot table font:" styleClass="outputTextStyle" />
+							<h:inputText id="kotTableFont" value="#{sessionScope.store.kotTableFont}" styleClass="inputTextStyle" />
+							<rich:message for="kotTableFont" />
+							
+							<h:outputText value="Kot no of person font:" styleClass="outputTextStyle" />
+							<h:inputText id="kotNoOfPersonFont" value="#{sessionScope.store.kotNoOfPersonFont}" styleClass="inputTextStyle" />
+							<rich:message for="kotNoOfPersonFont" />
+							
+							<h:outputText value="Kot item title font:" styleClass="outputTextStyle" />
+							<h:inputText id="kotItemTitleFont" value="#{sessionScope.store.kotItemTitleFont}" styleClass="inputTextStyle" />
+							<rich:message for="kotItemTitleFont" />
+							
+							<h:outputText value="Kot item font:" styleClass="outputTextStyle" />
+							<h:inputText id="kotItemFont" value="#{sessionScope.store.kotItemFont}" styleClass="inputTextStyle" />
+							<rich:message for="kotItemFont" />
+							
+							
+							<h:outputText value="#{msg['Do.You.Want.Kitchen.Print']}: " styleClass="outputTextStyle"/>
+							<h:selectOneRadio id="kitchPrnt"
+								value="#{sessionScope.store.kitchenPrint}" required="true"
+								requiredMessage="#{msg['Please.select.kitchen.print']}?">
+								<f:selectItem itemValue="Y" itemLabel="#{msg['Yes']}" />
+								<f:selectItem itemValue="N" itemLabel="#{msg['No']}" />
+							</h:selectOneRadio>
+							<rich:message for="kitchPrnt" />
+
+							<h:outputText value="#{msg['Upload.Logo']}: " styleClass="outputTextStyle" />
+        					<h:inputFile id="file" label="file" value="#{storeAddressController.part}">
+								<!-- FileUploadValidator for file validation -->
+							</h:inputFile>
+							<h:outputLabel></h:outputLabel>
+							
+							<div class="divContBtnBelowTab">
+								<h:commandButton value="#{msg['Update']}" action="#{storeAddressController.updateStore}" styleClass="buttonBelowTab" />
+							</div>
+						</h:panelGrid>
+					</h:form>
+				</rich:panel>
+				<!-- </div> -->
+			</div>
+			<!--end of main content-->
+			<div class="footer">
+
+				<div class="left_footer">
+					Powered By Sharobi Technologies India Pvt. Ltd.
+				</div>
+				<!--<div class="right_footer"><a href="http://indeziner.com"><img src="js/images/indeziner_logo.gif" alt="" title="" border="0" /></a></div>-->
+
+			</div>
+		</div>
+	</f:view>
+</h:body>
+</html>

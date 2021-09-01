@@ -1,0 +1,614 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:a4j="http://richfaces.org/a4j"
+	xmlns:rich="http://richfaces.org/rich"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:mj="http://mojarra.dev.java.net/mojarra_ext">
+
+
+
+<h:outputStylesheet>
+        .optionList {
+        height: 22px;
+        }
+ 
+        .vertical-menu-cell {
+        padding: 0px 4px 0px 4px;
+        }
+    </h:outputStylesheet>
+
+<h:head>
+
+	<style>
+.noRowBorders {
+	border-bottom-width: 0px;
+	border-top-width: 0px;
+	border-left-width: 0px;
+	border-right-width: 0px;
+	color: #000000 !important;
+}
+</style>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<title>IN ADMIN PANEL | Powered by Sharobitech</title>
+	<h:outputStylesheet name="css/style_#{sessionScope.cssId}.css" />
+	<script type="text/javascript" src="js/clockp.js"></script>
+	<script type="text/javascript" src="js/clockh.js"></script>
+	<script type="text/javascript" src="js/jquery.min.js"></script>
+	<script type="text/javascript" src="js/ddaccordion.js"></script>
+	<script type="text/javascript">
+		ddaccordion.init({
+			headerclass : "submenuheader", //Shared CSS class name of headers group
+			contentclass : "submenu", //Shared CSS class name of contents group
+			revealtype : "click", //Reveal content when user clicks or onmouseover the header? Valid value: "click", "clickgo", or "mouseover"
+			mouseoverdelay : 200, //if revealtype="mouseover", set delay in milliseconds before header expands onMouseover
+			collapseprev : true, //Collapse previous content (so only one open at any time)? true/false 
+			defaultexpanded : [], //index of content(s) open by default [index1, index2, etc] [] denotes no content
+			onemustopen : false, //Specify whether at least one header should be open always (so never all headers closed)
+			animatedefault : false, //Should contents open by default be animated into view?
+			persiststate : true, //persist state of opened contents within browser session?
+			toggleclass : [ "", "" ], //Two CSS classes to be applied to the header when it's collapsed and expanded, respectively ["class1", "class2"]
+			togglehtml : [ "suffix",
+					"_$tag______________________________________________",
+					"_$tag_______________________________________________" ], //Additional HTML added to the header when it's collapsed and expanded, respectively  ["position", "html1", "html2"] (see docs)
+			animatespeed : "fast", //speed of animation: integer in milliseconds (ie: 200), or keywords "fast", "normal", or "slow"
+			oninit : function(headers, expandedindices) { //custom code to run when headers have initalized
+				//do nothing
+			},
+			onopenclose : function(header, index, state, isuseractivated) { //custom code to run whenever a header is opened or closed
+				//do nothing
+			}
+		})
+	</script>
+
+	<script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			$('.ask').jConfirmAction();
+		});
+	</script>
+
+
+	<script language="javascript" type="text/javascript"
+		src="js/niceforms.js"></script>
+	<link rel="stylesheet" type="text/css" media="all"
+		href="js/niceforms-default.css" />
+
+
+
+
+</h:head>
+<h:body styleClass="app_body_backgrnd">
+	<f:metadata>
+		<f:viewParam id="id" name="id" value="#{storeMaster.id}" />
+		<f:viewParam id="storeName" name="storeName"
+			value="#{storeMaster.storeName}" />
+		<f:viewParam id="address" name="address"
+			value="#{storeMaster.address}" />
+		<f:viewParam id="chainName" name="chainName"
+			value="#{storeMaster.chainName}" />
+		<f:viewParam id="nameSearch" name="nameSearch"
+			value="#{storeMaster.nameSearch}" />
+		<f:viewParam id="detailsSearch" name="detailsSearch"
+			value="#{storeMaster.detailsSearch}" />
+		<f:viewParam id="latitude" name="latitude"
+			value="#{storeMaster.latitude}" />
+		<f:viewParam id="longitude" name="longitude"
+			value="#{storeMaster.longitude}" />
+		<f:viewParam id="city" name="city" value="#{storeMaster.city}" />
+		<f:viewParam id="state" name="state" value="#{storeMaster.state}" />
+		<f:viewParam id="country" name="country"
+			value="#{storeMaster.country}" />
+		<f:viewParam id="currency" name="currency"
+			value="#{storeMaster.currency}" />
+		<f:viewParam id="phoneNo" name="phoneNo"
+			value="#{storeMaster.phoneNo}" />
+		<f:viewParam id="mobileNo" name="mobileNo"
+			value="#{storeMaster.mobileNo}" />
+		<f:viewParam id="emailId" name="emailId"
+			value="#{storeMaster.emailId}" />
+		<f:viewParam id="category" name="category"
+			value="#{storeMaster.category}" />
+		<f:viewParam id="url" name="url" value="#{storeMaster.url}" />
+		<f:viewParam id="ip" name="ip" value="#{storeMaster.ip}" />
+		<f:viewParam id="operatingSystem" name="operatingSystem"
+			value="#{storeMaster.operatingSystem}" />
+		<f:viewParam id="ram" name="ram" value="#{storeMaster.ram}" />
+		<f:viewParam id="openTimeWeekend" name="openTimeWeekend" value="#{storeMaster.openTimeWeekend}" />
+		<f:viewParam id="closeTimeWeekend" name="closeTimeWeekend" value="#{storeMaster.closeTimeWeekend}" />
+		<f:viewParam id="openTimeHoliday" name="openTimeHoliday" value="#{storeMaster.openTimeHoliday}" />
+		<f:viewParam id="closeTimeHoliday" name="closeTimeHoliday" value="#{storeMaster.closeTimeHoliday}" />
+	
+		<f:viewParam id="tableFlag" name="tableFlag" value="#{storeMaster.tableFlag}" />
+		<f:viewParam id="parcelFlag" name="parcelFlag" value="#{storeMaster.parcelFlag}" />
+		<f:viewParam id="mpayment" name="mpayment" value="#{storeMaster.mpayment}" />
+		<f:viewParam id="kitchenPrintPreview" name="kitchenPrintPreview" value="#{storeMaster.kitchenPrintPreview}" />
+		<f:viewParam id="posmanualPrint" name="posmanualPrint" value="#{storeMaster.posmanualPrint}" />
+		<f:viewParam id="billPrint" name="billPrint" value="#{storeMaster.billPrint}" />
+		<f:viewParam id="cashPayment" name="cashPayment" value="#{storeMaster.cashPayment}" />
+		<f:viewParam id="creditPayment" name="creditPayment" value="#{storeMaster.creditPayment}" />
+		<f:viewParam id="stockStatus" name="stockStatus" value="#{storeMaster.stockStatus}" />
+		<f:viewParam id="fromDes" name="fromDes" value="#{storeMaster.fromDes}" />
+		<f:viewParam id="toDes" name="toDes" value="#{storeMaster.toDes}" />
+		<f:viewParam id="kotResTitleFont" name="kotResTitleFont" value="#{storeMaster.kotResTitleFont}" />
+		<f:viewParam id="kotTextFont" name="kotTextFont" value="#{storeMaster.kotTextFont}" />
+		<f:viewParam id="kotDateTimeFont" name="kotDateTimeFont" value="#{storeMaster.kotDateTimeFont}" />
+		<f:viewParam id="kotTableFont" name="kotTableFont" value="#{storeMaster.kotTableFont}" />
+		<f:viewParam id="kotNoOfPersonFont" name="kotNoOfPersonFont" value="#{storeMaster.kotNoOfPersonFont}" />
+		<f:viewParam id="kotItemTitleFont" name="kotItemTitleFont" value="#{storeMaster.kotItemTitleFont}" />
+		<f:viewParam id="kotItemFont" name="kotItemFont" value="#{storeMaster.kotItemFont}" />
+	
+		
+		<f:viewParam id="kitchenPrint" name="kitchenPrint" value="#{storeMaster.kitchenPrint}" />
+		<f:viewParam id="quality" name="quality" value="#{storeMaster.quality}" />
+	</f:metadata>
+	<f:view locale="#{language.localeCode}">
+
+		<div id="main_container">
+
+			<div class="header">
+				<ui:include src="/page/common/header.xhtml" />
+				<div class="right_header">
+					<h:form>
+						<h:outputText value="#{msg['welcome']}" />
+						<b>#{sessionScope.loggeduser.userId}</b>
+						<h:commandButton value="#{msg['Logout']}"
+							action="#{userController.logout}" styleClass="logoutBtn"></h:commandButton>
+					</h:form>
+				</div>
+
+			</div>
+			<div class="main_content_disp_store" align="center">
+				<!-- <div class="menu"> -->
+				<ui:include src="/page/common/mainMenue_#{sessionScope.cssId}.xhtml" />
+
+				<h:form id="form2">
+					<rich:panel id="userpane" headerClass="tabHeaderBackgrnd"
+						styleClass="panelPos">
+						<div class="tabDesc">
+							<b><h:outputText value="#{msg['List.Of.Stores']}" /></b>
+						</div>
+						<rich:extendedDataTable
+							value="#{storeAddressController.storeMasterLst}" var="storeLst"
+							id="table" styleClass="tabHeightWidth"
+							style="height:auto !important;" selectionMode="none"
+							frozenColumns="0" headerClass="tabHeaderBackgrnd">
+
+							<rich:column width="80px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Store.Id']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.id}" />
+							</rich:column>
+							<rich:column width="150px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Restaurant.Name']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.restaurant.name}" />
+							</rich:column>
+							<rich:column width="150px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Store.Name']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.storeName}" />
+							</rich:column>
+							<rich:column width="400px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Address']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.address}" />
+							</rich:column>
+							<rich:column width="170px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Chain.Name']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.chainName}" />
+							</rich:column>
+							<rich:column width="170px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Name.Search']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.nameSearch}" />
+							</rich:column>
+							<rich:column width="170px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Details.Search']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.detailsSearch}" />
+							</rich:column>
+							<rich:column width="150px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Latitude']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.latitude}" />
+							</rich:column>
+							<rich:column width="150px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Longitude']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.longitude}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['City']}" styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.city}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['State']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.state}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Country']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.country}" />
+							</rich:column>
+							<rich:column width="60px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Currency']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.currency}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Phone.No']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.phoneNo}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Mobile.No']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.mobileNo}" />
+							</rich:column>
+							<rich:column width="170px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Email.Id']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.emailId}" />
+							</rich:column>
+							<rich:column width="80px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Category']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.category}" />
+							</rich:column>
+							<rich:column width="150px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['URL']}" styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.url}" />
+							</rich:column>
+							<rich:column width="120px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['IP.Address']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.ip}" />
+							</rich:column>
+							<rich:column width="90px" style="text-align:left;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['System.OS']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.operatingSystem}" />
+							</rich:column>
+							<rich:column width="70px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['RAM']}" styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.ram}" />
+							</rich:column>
+							<rich:column width="70px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Quality']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.quality}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Open.Time']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.openTime}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Close.Time']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.closeTime}" />
+							</rich:column>
+							<rich:column width="120px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Delivery.Time']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.deliveryTime}" />
+							</rich:column>
+							<rich:column width="120px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Min.Order.Amt']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.minOrderAmt}" />
+							</rich:column>
+							<rich:column width="100px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Free.Delivery']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.freeDelivery}" />
+							</rich:column>
+							<rich:column width="150px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Promotion.Desc']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.promotionDesc}" />
+							</rich:column>
+							<rich:column width="130px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Promotion.Value']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.promotionValue}" />
+							</rich:column>
+							<rich:column width="120px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Promotion.Flag']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.promotionFlag}" />
+							</rich:column>
+							<rich:column width="130px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Activation.Status']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.activeFlag}" />
+							</rich:column>
+							
+							<rich:column width="150px" style="text-align:center;"
+								headerClass="tabHeaderBackgrnd">
+								<f:facet name="header">
+									<h:outputText value="#{msg['Open.Time.weekend']}"
+										styleClass="tabHeaderText" />
+								</f:facet>
+								<h:outputText value="#{storeLst.openTimeWeekend}" />
+							</rich:column>
+							
+							
+							<!-- <rich:column width="60px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Edit" />
+							</f:facet>
+							<h:commandLink value="Edit"
+								action="#{storeAddressController.editStoreMaster}">
+								<f:param name="id" value="#{storeLst.id}" />
+								<f:param name="storeName" value="#{storeLst.storeName}" />
+								<f:param name="address" value="#{storeLst.address}" />
+								<f:param name="chainName" value="#{storeLst.chainName}" />
+								<f:param name="nameSearch" value="#{storeLst.nameSearch}" />
+								<f:param name="detailsSearch" value="#{storeLst.detailsSearch}" />
+								<f:param name="latitude" value="#{storeLst.latitude}" />
+								<f:param name="longitude" value="#{storeLst.longitude}" />
+								<f:param name="city" value="#{storeLst.city}" />
+								<f:param name="state" value="#{storeLst.state}" />
+								<f:param name="country" value="#{storeLst.country}" />
+								<f:param name="currency" value="#{storeLst.currency}" />
+								<f:param name="phoneNo" value="#{storeLst.phoneNo}" />
+								<f:param name="mobileNo" value="#{storeLst.mobileNo}" />
+								<f:param name="emailId" value="#{storeLst.emailId}" />
+								<f:param name="category" value="#{storeLst.category}" />
+								<f:param name="url" value="#{storeLst.url}" />
+								<f:param name="ip" value="#{storeLst.ip}" />
+								<f:param name="operatingSystem"
+									value="#{storeLst.operatingSystem}" />
+								<f:param name="ram" value="#{storeLst.ram}" />
+							</h:commandLink>
+						</rich:column> -->
+							<!-- <rich:column width="60px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Delete" />
+							</f:facet>
+							<h:commandLink value="Delete"
+								onclick="if (! confirm('Do you want to delete ?')) return false"
+								action="#{storeAddressController.deleteStore}">
+								<f:param name="id" value="#{storeLst.id}" />
+							</h:commandLink>
+						</rich:column> -->
+							<!-- <rich:column width="70px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="Activate" />
+							</f:facet>
+							<h:commandLink value="Activate"
+								onclick="if (! confirm('Do you want to activate the selected store ?')) return false"
+								action="#{storeAddressController.setStoreAsActive}">
+								<f:param name="id" value="#{storeLst.id}" />
+							</h:commandLink>
+						</rich:column>
+						<rich:column width="110px" style="text-align:center;">
+							<f:facet name="header">
+								<h:outputText value="De-Activate" />
+							</f:facet>
+							<h:commandLink value="De-Activate"
+								onclick="if (! confirm('Do you want to deactivate the selected store ?')) return false"
+								action="#{storeAddressController.setStoreAsInActive}">
+								<f:param name="id" value="#{storeLst.id}" />
+							</h:commandLink>
+						</rich:column> -->
+
+						</rich:extendedDataTable>
+
+						<rich:extendedDataTable
+							value="#{storeAddressController.storeMasterLst}" var="storeList"
+							styleClass="tabHeightWidth" style="height:auto !important;">
+
+							<rich:column
+								style="text-align:right; border-bottom-width: 0px; border-top-width: 0px; border-left-width: 0px;border-right-width: 0px;color: #000000 !important;"
+								width="980px">
+								<!-- <f:facet name="header">
+								<h:outputText value="Edit" />
+							</f:facet> -->
+								<h:commandLink value="#{msg['Edit']}"
+									action="#{storeAddressController.editStoreMaster}"
+									style="color:#6d2004;">
+									<f:param name="id" value="#{storeList.id}" />
+									<f:param name="storeName" value="#{storeList.storeName}" />
+									<f:param name="address" value="#{storeList.address}" />
+									<f:param name="chainName" value="#{storeList.chainName}" />
+									<f:param name="nameSearch" value="#{storeList.nameSearch}" />
+									<f:param name="detailsSearch"
+										value="#{storeList.detailsSearch}" />
+									<f:param name="latitude" value="#{storeList.latitude}" />
+									<f:param name="longitude" value="#{storeList.longitude}" />
+									<f:param name="city" value="#{storeList.city}" />
+									<f:param name="state" value="#{storeList.state}" />
+									<f:param name="country" value="#{storeList.country}" />
+									<f:param name="currency" value="#{storeList.currency}" />
+									<f:param name="phoneNo" value="#{storeList.phoneNo}" />
+									<f:param name="mobileNo" value="#{storeList.mobileNo}" />
+									<f:param name="emailId" value="#{storeList.emailId}" />
+									<f:param name="category" value="#{storeList.category}" />
+									<f:param name="url" value="#{storeList.url}" />
+									<f:param name="ip" value="#{storeList.ip}" />
+									<f:param name="operatingSystem"
+										value="#{storeList.operatingSystem}" />
+									<f:param name="ram" value="#{storeList.ram}" />
+									<f:param name="quality" value="#{storeList.quality}" />
+									<f:param name="kitchenPrint" value="#{storeList.kitchenPrint}" />
+									<f:param name="openTime" value="#{storeList.openTime}" />
+									<f:param name="closeTime" value="#{storeList.closeTime}" />
+									<f:param name="openTimeWeekend" value="#{storeList.openTimeWeekend}" />
+									<f:param name="closeTimeWeekend" value="#{storeList.closeTimeWeekend}" />
+									<f:param name="openTimeHoliday" value="#{storeList.openTimeHoliday}" />
+									<f:param name="closeTimeHoliday" value="#{storeList.closeTimeHoliday}" />
+									<f:param name="tableFlag" value="#{storeList.tableFlag}" />
+									
+									<f:param name="parcelFlag" value="#{storeList.parcelFlag}" />
+									<f:param name="mpayment" value="#{storeList.mpayment}" />
+									<f:param name="kitchenPrintPreview" value="#{storeList.kitchenPrintPreview}" />
+									<f:param name="posmanualPrint" value="#{storeList.posmanualPrint}" />
+									<f:param name="billPrint" value="#{storeList.billPrint}" />
+									<f:param name="cashPayment" value="#{storeList.cashPayment}" />
+									<f:param name="creditPayment" value="#{storeList.creditPayment}" />
+									<f:param name="stockStatus" value="#{storeList.stockStatus}" />
+									<f:param name="fromDes" value="#{storeList.fromDes}" />
+									<f:param name="toDes" value="#{storeList.toDes}" />
+									<f:param name="kotResTitleFont" value="#{storeList.kotResTitleFont}" />
+									<f:param name="kotTextFont" value="#{storeList.kotTextFont}" />
+									<f:param name="kotDateTimeFont" value="#{storeList.kotDateTimeFont}" />
+									<f:param name="kotTableFont" value="#{storeList.kotTableFont}" />
+									<f:param name="kotNoOfPersonFont" value="#{storeList.kotNoOfPersonFont}" />
+									<f:param name="kotItemTitleFont" value="#{storeList.kotItemTitleFont}" />
+									<f:param name="kotItemTitleFont" value="#{storeList.kotItemTitleFont}" />
+									<f:param name="kotItemFont" value="#{storeList.kotItemFont}" />
+								
+									
+								</h:commandLink>
+								
+							&nbsp;&nbsp;&nbsp;
+							<h:commandLink value="#{msg['Delete']}"
+									onclick="if (! confirm('#{msg['Do.You.Want.To.Delete']} ?')) return false"
+									action="#{storeAddressController.deleteStore}"
+									style="color:#6d2004;">
+									<f:param name="id" value="#{storeList.id}" />
+								</h:commandLink>
+							&nbsp;&nbsp;&nbsp;
+							<h:commandLink value="#{msg['Activate']}"
+									onclick="if (! confirm('#{msg['Do.You.Want.To.Activate.The.Selected.Store']} ?')) return false"
+									action="#{storeAddressController.setStoreAsActive}"
+									style="color:#6d2004;">
+									<f:param name="id" value="#{storeList.id}" />
+								</h:commandLink>
+							&nbsp;&nbsp;&nbsp;
+							<h:commandLink value="#{msg['De.Activate']}"
+									onclick="if (! confirm('#{msg['Do.You.Want.To.Deactivate.The.Selected.Store']} ?')) return false"
+									action="#{storeAddressController.setStoreAsInActive}"
+									style="color:#6d2004;">
+									<f:param name="id" value="#{storeList.id}" />
+								</h:commandLink>
+
+							</rich:column>
+						</rich:extendedDataTable>
+
+					</rich:panel>
+
+				</h:form>
+				<!-- </div> -->
+				<br></br>
+
+
+			</div>
+			<!--end of main content-->
+
+
+			<div class="footer">
+
+				<div class="left_footer">
+					Powered By Sharobi Technologies India Pvt. Ltd.
+				</div>
+				<!--<div class="right_footer"><a href="http://indeziner.com"><img src="js/images/indeziner_logo.gif" alt="" title="" border="0" /></a></div>-->
+
+			</div>
+		</div>
+
+	</f:view>
+</h:body>
+
+
+</html>
